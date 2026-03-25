@@ -35,20 +35,19 @@
         /* 숨김 처리 유틸리티 */
         .hidden-screen { display: none !important; }
         
-        /* 커스텀 스크롤바 */
+        /* 커스텀 스크롤바 (민트색 포인트) */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
     </style>
 </head>
-<body class="bg-black text-gray-100 min-h-screen flex items-center justify-center font-sans selection:bg-blue-500 selection:text-white overflow-hidden relative select-none">
+<body class="bg-black text-zinc-100 min-h-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden relative select-none">
 
     <!-- ==================== 로그인 UI (우측 상단) ==================== -->
     <div class="absolute top-4 right-4 z-50">
         <div id="login-section" class="flex items-center gap-2">
-            <!-- 비로그인 상태: Google 로그인 버튼 -->
-            <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-gray-100 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
+            <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
                 <svg class="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -58,44 +57,42 @@
                 Google 로그인
             </button>
             
-            <!-- 로그인 상태: 프로필 및 로그아웃 버튼 -->
-            <div id="user-profile" class="hidden items-center gap-2 bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-full shadow-lg">
+            <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
                 <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
-                <button onclick="logoutGoogle()" class="text-slate-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
+                <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
             </div>
         </div>
     </div>
 
     <!-- 메인 앱 컨테이너 -->
-    <div id="app-container" class="bg-slate-900 w-full max-w-md h-[100dvh] sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(59,130,246,0.2)] sm:border border-slate-800 relative overflow-hidden flex flex-col">
+    <div id="app-container" class="bg-zinc-900 w-full max-w-md h-[100dvh] sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
 
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
-                <!-- 💡 SOOP 텍스트 대신 로고 이미지 출력 (이미지 없을 시 대비 alt 속성) -->
-                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                <img src="logo.webp" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
-                    천타버스 퀴즈<br><span class="text-lg text-sky-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
+                    천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
-                <p class="text-slate-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
-                <p class="text-slate-400 mt-4 text-center">새로고침시 기록이 초기화될 수 있습니다.</p>
-                <p class="text-slate-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">새로고침시 기록이 초기화될 수 있습니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
             </div>
             
             <div class="space-y-3 pb-8 shrink-0">
-                <button onclick="navTo('screen-mode')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl btn-active shadow-lg shadow-blue-500/30 text-lg transition-colors">
+                <button onclick="navTo('screen-mode')" class="w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 rounded-2xl btn-active shadow-lg shadow-teal-500/30 text-lg transition-colors">
                     도전 하기
                 </button>
                 <div class="flex space-x-3">
-                    <button onclick="navTo('screen-achievements')" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
+                    <button onclick="navTo('screen-achievements')" class="flex-1 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
                         🏆 업적 목록
                     </button>
-                    <button onclick="navTo('screen-highscores')" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
+                    <button onclick="navTo('screen-highscores')" class="flex-1 bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
                         🥇 최고 점수
                     </button>
                 </div>
                 <div class="flex space-x-3">
-                    <button onclick="navTo('screen-settings')" class="w-full bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl btn-active transition-colors">
+                    <button onclick="navTo('screen-settings')" class="w-full bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-white font-bold py-3 rounded-2xl btn-active transition-colors">
                         ⚙️ 환경 설정
                     </button>
                 </div>
@@ -104,13 +101,13 @@
 
         <!-- ==================== 2. 모드 선택 화면 ==================== -->
         <div id="screen-mode" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center text-white shrink-0">모드 선택</h2>
             
             <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1">
-                <button onclick="navTo('screen-difficulty')" class="w-full shrink-0 bg-gradient-to-r from-blue-700 to-blue-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                <button onclick="navTo('screen-difficulty')" class="w-full shrink-0 bg-gradient-to-r from-teal-700 to-teal-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
                     <h3 class="text-2xl font-bold text-white mb-2">천타버스 모드</h3>
-                    <p class="text-blue-100 text-sm">모든 멤버의 문제가 무작위로 등장합니다.</p>
+                    <p class="text-teal-100 text-sm">모든 멤버의 문제가 무작위로 등장합니다.</p>
                 </button>
 
                 <button onclick="startChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-red-700 to-rose-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
@@ -118,48 +115,48 @@
                     <p class="text-red-100 text-sm">목숨 단 1개! 극한의 한계에 도전하세요.</p>
                 </button>
 
-                <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-sky-700 to-cyan-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-zinc-700 to-zinc-600 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
                     <h3 class="text-2xl font-bold text-white mb-2">개별 모드</h3>
-                    <p class="text-sky-100 text-sm">특정 멤버의 문제만 풉니다.</p>
+                    <p class="text-zinc-200 text-sm">특정 멤버의 문제만 풉니다.</p>
                 </button>
             </div>
         </div>
 
         <!-- ==================== 3. 버잘알 모드: 난이도 선택 화면 ==================== -->
         <div id="screen-difficulty" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-mode')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
+            <button onclick="navTo('screen-mode')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">난이도 선택</h2>
             
             <div class="flex-1 flex flex-col space-y-4 overflow-y-auto pb-4 pr-1 min-h-0">
-                <button onclick="startExpertMode('데모')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                <button onclick="startExpertMode('데모')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors">
                     <h3 class="text-3xl font-black text-white mb-2">데모</h3>
-                    <p class="text-slate-300 text-sm">총 10문제 출제</p>
-                    <p class="text-slate-500 text-xs mt-2">점수 보너스 없음</p>
+                    <p class="text-zinc-300 text-sm">총 10문제 출제</p>
+                    <p class="text-zinc-500 text-xs mt-2">점수 보너스 없음</p>
                 </button>
-                <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors">
                     <h3 class="text-3xl font-black text-white mb-2">초보</h3>
-                    <p class="text-slate-300 text-sm">총 30문제 출제</p>
-                    <p class="text-slate-500 text-xs mt-2">점수 보너스 없음</p>
+                    <p class="text-zinc-300 text-sm">총 30문제 출제</p>
+                    <p class="text-zinc-500 text-xs mt-2">점수 보너스 없음</p>
                 </button>
-                <button onclick="startExpertMode('중수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-sky-400 p-6 rounded-2xl btn-active text-center transition-colors">
-                    <h3 class="text-3xl font-black text-sky-400 mb-2">중수</h3>
-                    <p class="text-slate-300 text-sm">총 50문제 출제</p>
-                    <p class="text-sky-400/80 text-xs mt-2 font-bold">+25% 점수 보너스</p>
+                <button onclick="startExpertMode('중수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-300 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-teal-300 mb-2">중수</h3>
+                    <p class="text-zinc-300 text-sm">총 50문제 출제</p>
+                    <p class="text-teal-300/80 text-xs mt-2 font-bold">+25% 점수 보너스</p>
                 </button>
-                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
-                    <h3 class="text-3xl font-black text-blue-500 mb-2">고수</h3>
-                    <p class="text-slate-300 text-sm">총 100문제 출제</p>
-                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+50% 점수 보너스</p>
+                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-teal-400 mb-2">고수</h3>
+                    <p class="text-zinc-300 text-sm">총 100문제 출제</p>
+                    <p class="text-teal-400/80 text-xs mt-2 font-bold">+50% 점수 보너스</p>
                 </button>
-                <button onclick="startExpertMode('전문가')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
-                    <h3 class="text-3xl font-black text-blue-600 mb-2">전문가</h3>
-                    <p class="text-slate-300 text-sm">총 150문제 출제</p>
-                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+75% 점수 보너스</p>
+                <button onclick="startExpertMode('전문가')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-teal-500 mb-2">전문가</h3>
+                    <p class="text-zinc-300 text-sm">총 150문제 출제</p>
+                    <p class="text-teal-500/80 text-xs mt-2 font-bold">+75% 점수 보너스</p>
                 </button>
-                <button onclick="startExpertMode('마스터')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
-                    <h3 class="text-3xl font-black text-blue-700 mb-2">마스터</h3>
-                    <p class="text-slate-300 text-sm">총 200문제 출제</p>
-                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+100% 점수 보너스</p>
+                <button onclick="startExpertMode('마스터')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-600 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-teal-600 mb-2">마스터</h3>
+                    <p class="text-zinc-300 text-sm">총 200문제 출제</p>
+                    <p class="text-teal-600/80 text-xs mt-2 font-bold">+100% 점수 보너스</p>
                 </button>
             </div>
         </div>
@@ -168,14 +165,14 @@
         
         <!-- 개별 모드 -->
         <div id="screen-group" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-mode')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
+            <button onclick="navTo('screen-mode')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">멤버 선택</h2>
             <div id="group-buttons-container" class="flex-1 overflow-y-auto space-y-3 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
 
         <!-- 업적 화면 -->
-        <div id="screen-achievements" class="flex-1 flex flex-col p-6 pb-0 hidden-screen fade-in relative z-10 bg-slate-900 min-h-0">
-            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+        <div id="screen-achievements" class="flex-1 flex flex-col p-6 pb-0 hidden-screen fade-in relative z-10 bg-zinc-900 min-h-0">
+            <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🏆 업적 목록</h2>
             <div id="achievements-container" class="flex-1 overflow-y-auto space-y-3 pb-8 pr-1 min-h-0 content-start">
                 <!-- JS에서 동적 채워짐 -->
@@ -184,7 +181,7 @@
 
         <!-- 최고 점수 화면 -->
         <div id="screen-highscores" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🥇 최고 점수</h2>
             <div id="highscores-container" class="flex-1 overflow-y-auto space-y-4 pb-4 pr-1 min-h-0 content-start">
                 <!-- JS에서 동적 채워짐 -->
@@ -193,33 +190,32 @@
 
         <!-- 환경 설정 화면 -->
         <div id="screen-settings" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">⚙️ 환경 설정</h2>
             
             <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1 min-h-0 content-start">
                 
                 <!-- 사운드(볼륨) 설정 -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
-                    <p class="text-slate-400 mb-4 font-bold">사운드 설정</p>
+                <div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center">
+                    <p class="text-zinc-400 mb-4 font-bold">사운드 설정</p>
                     <div class="flex items-center space-x-4 mb-2">
-                        <span class="text-slate-400 text-xl">🔈</span>
-                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-blue-500 cursor-pointer">
+                        <span class="text-zinc-400 text-xl">🔈</span>
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-teal-400 cursor-pointer">
                         <span class="text-white text-xl">🔊</span>
                     </div>
-                    <p id="volume-text" class="text-center text-sky-400 font-bold text-sm">볼륨: 50%</p>
+                    <p id="volume-text" class="text-center text-teal-400 font-bold text-sm">볼륨: 50%</p>
                 </div>
 
                 <!-- 제작자 이메일 복사 영역 -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
-                    <p class="text-slate-400 mb-4 font-bold">제작자 문의 / 버그 제보</p>
-                    <div class="bg-black/50 p-4 rounded-lg flex items-center justify-between border border-slate-600">
-                        <!-- select-all 클래스로 클릭/드래그시 텍스트가 바로 선택되도록 예외 처리 -->
+                <div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center">
+                    <p class="text-zinc-400 mb-4 font-bold">제작자 문의 / 버그 제보</p>
+                    <div class="bg-black/50 p-4 rounded-lg flex items-center justify-between border border-zinc-600">
                         <span class="text-white font-mono select-all text-sm truncate mr-2">konamp63@gmail.com</span>
-                        <button onclick="copyEmail()" class="shrink-0 text-blue-400 hover:text-blue-300 font-bold text-sm bg-blue-500/20 px-4 py-2 rounded-lg transition-colors btn-active">
+                        <button onclick="copyEmail()" class="shrink-0 text-teal-400 hover:text-teal-300 font-bold text-sm bg-teal-500/20 px-4 py-2 rounded-lg transition-colors btn-active">
                             복사
                         </button>
                     </div>
-                    <p class="text-xs text-slate-500 mt-3">이메일을 직접 드래그하거나 복사 버튼을 눌러주세요.</p>
+                    <p class="text-xs text-zinc-500 mt-3">이메일을 직접 드래그하거나 복사 버튼을 눌러주세요.</p>
                 </div>
 
             </div>
@@ -230,32 +226,32 @@
             
             <!-- 상단 바: 나가기 버튼 -->
             <div class="flex justify-between items-center mb-2 shrink-0">
-                <span class="text-slate-500 text-sm font-bold">플레이 중...</span>
-                <button onclick="exitGame()" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-sm transition-colors btn-active flex items-center gap-1 border border-slate-700">
+                <span class="text-zinc-500 text-sm font-bold">플레이 중...</span>
+                <button onclick="exitGame()" class="text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-sm transition-colors btn-active flex items-center gap-1 border border-zinc-700">
                     <span>🚪</span> 나가기
                 </button>
             </div>
 
             <!-- 타이머 바 -->
-            <div class="shrink-0 w-full bg-slate-800 h-2 sm:h-3 mb-4 rounded-full overflow-hidden">
-                <div id="timer-bar" class="bg-blue-500 h-full w-full transition-all duration-100 ease-linear"></div>
+            <div class="shrink-0 w-full bg-zinc-800 h-2 sm:h-3 mb-4 rounded-full overflow-hidden">
+                <div id="timer-bar" class="bg-teal-400 h-full w-full transition-all duration-100 ease-linear"></div>
             </div>
 
             <!-- 상단 헤더: 체력, 점수 & 문제 번호 -->
             <div class="shrink-0 flex justify-between items-start mb-4">
                 <div class="flex flex-col">
                     <div class="flex items-center gap-2 mb-1">
-                        <span class="text-xs text-slate-400 font-bold">HEALTH</span>
+                        <span class="text-xs text-zinc-400 font-bold">HEALTH</span>
                         <div id="health-display" class="text-red-500 text-lg flex gap-1"></div>
                     </div>
-                    <div class="text-sky-400 font-black text-xl tracking-wider font-mono">
-                        <span id="score-display">0</span> <span class="text-sm text-sky-200 font-normal">pts</span>
+                    <div class="text-teal-400 font-black text-xl tracking-wider font-mono">
+                        <span id="score-display">0</span> <span class="text-sm text-teal-200 font-normal">pts</span>
                     </div>
-                    <div id="combo-display" class="text-yellow-400 font-bold text-sm h-5 transition-opacity opacity-0 mt-1">
+                    <div id="combo-display" class="text-teal-300 font-bold text-sm h-5 transition-opacity opacity-0 mt-1">
                         2 COMBO! (+8)
                     </div>
                 </div>
-                <div id="question-number" class="text-white font-black text-xl bg-blue-600 px-4 py-1.5 rounded-lg shadow-md shadow-blue-600/30">
+                <div id="question-number" class="text-black font-black text-xl bg-teal-500 px-4 py-1.5 rounded-lg shadow-md shadow-teal-500/30">
                     No.01
                 </div>
             </div>
@@ -267,12 +263,12 @@
                 </h2>
             </div>
 
-            <!-- 💡 중앙: 이미지 영역 (항상 렌더링되며 Fallback으로 logo2.png 사용) -->
-            <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-slate-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-slate-800 flex items-center justify-center p-2">
-                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+            <!-- 💡 중앙: 이미지 영역 -->
+            <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2">
+                <img id="game-image" src="logo.webp" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
-                <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-blue-500/20 backdrop-blur-sm hidden z-10">
-                    <span class="text-blue-500 text-[8rem] font-black drop-shadow-lg">O</span>
+                <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10">
+                    <span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span>
                 </div>
                 <div id="overlay-x" class="absolute inset-0 flex items-center justify-center bg-red-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-red-500 text-[8rem] font-black drop-shadow-lg">X</span>
@@ -281,32 +277,32 @@
 
             <!-- 하단: 3개의 선택지 -->
             <div id="game-options" class="shrink-0 space-y-3 mt-auto pb-2">
-                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
             </div>
         </div>
 
         <!-- ==================== 6. 결과 화면 ==================== -->
         <div id="screen-result" class="flex-1 flex flex-col p-6 hidden-screen fade-in items-center justify-center relative z-10 min-h-0">
-            <h2 class="text-2xl font-bold mb-1 text-slate-400 shrink-0">GAME OVER</h2>
+            <h2 class="text-2xl font-bold mb-1 text-zinc-400 shrink-0">GAME OVER</h2>
             <h1 id="rank-display" class="text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] shrink-0">S</h1>
             
-            <div class="bg-slate-800 rounded-2xl p-6 w-full text-center mb-8 border border-slate-700 shrink-0">
-                <p class="text-slate-400 mb-1">최종 점수</p>
+            <div class="bg-zinc-800 rounded-2xl p-6 w-full text-center mb-8 border border-zinc-700 shrink-0">
+                <p class="text-zinc-400 mb-1">최종 점수</p>
                 <p id="final-score" class="text-white font-black text-4xl mb-2">0</p>
-                <p id="rank-desc" class="text-sky-400 font-bold mt-1">랭크 설명</p>
+                <p id="rank-desc" class="text-teal-400 font-bold mt-1">랭크 설명</p>
             </div>
             
             <div class="w-full space-y-3 shrink-0">
-                <button onclick="navTo('screen-main')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl btn-active text-lg transition-colors">
+                <button onclick="navTo('screen-main')" class="w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 rounded-xl btn-active text-lg transition-colors">
                     메인으로 돌아가기
                 </button>
             </div>
         </div>
 
-        <!-- 풋터 (Made by) -->
-        <div class="absolute bottom-1 w-full text-center text-[10px] text-slate-600 z-0 pointer-events-none">
+        <!-- 풋터 -->
+        <div class="absolute bottom-1 w-full text-center text-[10px] text-zinc-600 z-0 pointer-events-none">
             Made by SSG_랜더스
         </div>
 
@@ -314,11 +310,11 @@
 
     <!-- ==================== 나가기 확인 커스텀 모달 ==================== -->
     <div id="exit-modal" class="fixed inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in">
-        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 max-w-xs w-full text-center shadow-2xl">
+        <div class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 max-w-xs w-full text-center shadow-2xl">
             <h3 class="text-xl font-bold text-white mb-2">게임 포기</h3>
-            <p class="text-slate-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p>
+            <p class="text-zinc-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p>
             <div class="flex gap-3">
-                <button onclick="closeExitModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
+                <button onclick="closeExitModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
                 <button onclick="confirmExit()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">나가기</button>
             </div>
         </div>
@@ -327,13 +323,12 @@
     <!-- ==================== 토스트 알림 ==================== -->
     <div id="toast-container" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col items-center space-y-3 w-[90%] max-w-sm pointer-events-none"></div>
 
-    <!-- JavaScript 로직 (Firebase V11 모듈 적용) -->
+    <!-- JavaScript 로직 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // 모듈 내 함수들을 전역으로 사용할 수 있게 window 객체에 연결
         window.navTo = navTo;
         window.startExpertMode = startExpertMode;
         window.startChallengeMode = startChallengeMode;
@@ -345,23 +340,17 @@
         window.loginWithGoogle = loginWithGoogle;
         window.logoutGoogle = logoutGoogle;
 
-        // ==========================================
-        // 🛡️ 보안: 우클릭 및 개발자 도구(F12) 단축키 방지
-        // ==========================================
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
-            if (e.keyCode === 123 || // F12
-               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || // Ctrl+Shift+I
-               (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || // Ctrl+Shift+J
-               (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { // Ctrl+U
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || 
+               (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { 
                 e.preventDefault();
                 return false;
             }
         });
 
-        // ==========================================
-        // 🎵 사운드 시스템 (Web Audio API)
-        // ==========================================
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let masterVolume = 0.5;
 
@@ -404,19 +393,21 @@
             }
         }
 
-        // ==========================================
-        // 📊 Firebase 인증 & Firestore 초기화
-        // ==========================================
         let firebaseConfig = {};
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
         } else {
+            // 💡 주의: 깃허브 등에 배포하실 때 이곳에 파이어베이스 설정값을 꼭 채워넣으셔야 합니다!
             firebaseConfig = {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_PROJECT_ID.appspot.com"
-            };
+  apiKey: "AIzaSyA1AkIU1Ujuxb_G8ujI4QGNRW6Hc8tpfyg",
+  authDomain: "dongpa2026-2fda5.firebaseapp.com",
+  databaseURL: "https://dongpa2026-2fda5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "dongpa2026-2fda5",
+  storageBucket: "dongpa2026-2fda5.firebasestorage.app",
+  messagingSenderId: "1008275615806",
+  appId: "1:1008275615806:web:b3230a2d18a77aecb5216f",
+  measurementId: "G-PPXM8077YX"
+};
         }
 
         const app = initializeApp(firebaseConfig);
@@ -435,7 +426,7 @@
             highscores: { expert: 0, challenge: 0, groups: {} },
             unlockedAchievements: [],
             settings: { volume: 0.5 },
-            totalCorrectAnswers: 0 // 💡 누적 정답 수 필드 추가
+            totalCorrectAnswers: 0 
         };
 
         const mockQuizData = [
@@ -446,16 +437,14 @@
             { id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false },
             { id: "2", name: "버알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false },
             { id: "3", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false },
-            // 💡 누적 정답 업적 기본값 추가
             { id: "4", name: "견습 시청자", desc: "누적 정답 10회를 달성한다.", type: "TOTAL_CORRECT", target: 10, secret: false },
             { id: "5", name: "단골 시청자", desc: "누적 정답 50회를 달성한다.", type: "TOTAL_CORRECT", target: 50, secret: false },
             { id: "6", name: "망령", desc: "누적 정답 100회를 달성한다.", type: "TOTAL_CORRECT", target: 100, secret: false }
         ];
 
-        // 💡 이미지 미리 로딩 (게임 시작시 끊김 방지)
         function preloadImages() {
             const imageUrls = new Set();
-            imageUrls.add('logo2.png'); // 기본 로고 프리로드
+            imageUrls.add('logo.webp');
             getValidQuestions().forEach(q => {
                 if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
             });
@@ -467,7 +456,6 @@
         }
 
         async function initApp() {
-            // 💡 새로고침 데이터 초기화 방지: Firebase Fetch 전에 로컬 데이터를 최우선으로 복원
             const localSave = localStorage.getItem('soop_quiz_userdata');
             if (localSave) {
                 try {
@@ -477,7 +465,6 @@
                 } catch(e) {}
             }
             
-            // 로컬 데이터 기준으로 UI 먼저 적용
             updateVolumeUI();
             setupApp();
 
@@ -487,7 +474,6 @@
                 preloadImages();
             } else {
                 try {
-                    // 브라우저 캐시를 무시하고 항상 최신 데이터를 불러오도록 쿼리스트링(?t=현재시간) 추가
                     const cacheBuster = new Date().getTime();
                     const quizRes = await fetch(`${FIREBASE_DB_URL}/QuizData.json?t=${cacheBuster}`);
                     const achRes = await fetch(`${FIREBASE_DB_URL}/AchievementData.json?t=${cacheBuster}`);
@@ -500,10 +486,9 @@
                     quizDatabase = [...mockQuizData];
                     achievementDatabase = [...defaultAchievements];
                 }
-                preloadImages(); // 네트워크 데이터 로드 완료 후 이미지 프리로드 시작
+                preloadImages(); 
             }
             
-            // 최신 데이터가 반영되었으므로 다시 세팅
             setupApp();
 
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -512,7 +497,6 @@
                 await signInAnonymously(auth).catch(() => {});
             }
 
-            // 초기 히스토리 상태 설정 (뒤로가기 지원용)
             history.replaceState({ screen: 'screen-main' }, '', '#screen-main');
         }
 
@@ -551,7 +535,7 @@
                     userData.settings = parsed.settings || userData.settings;
                     userData.totalCorrectAnswers = parsed.totalCorrectAnswers || userData.totalCorrectAnswers;
                     if (!userData.highscores.groups) userData.highscores.groups = {};
-                    saveUserData(); // 서버 데이터를 로컬에 덮어씀
+                    saveUserData(); 
                 } else {
                     await saveUserDataToFirestore();
                 }
@@ -565,7 +549,6 @@
             }
         }
 
-        // 로컬 스토리지와 클라우드 모두에 데이터 저장 기능 (범용)
         function saveUserData() {
             localStorage.setItem('soop_quiz_userdata', JSON.stringify(userData));
             saveUserDataToFirestore();
@@ -596,7 +579,7 @@
                     });
                     volSlider.addEventListener('change', () => {
                         playSound('click'); 
-                        saveUserData(); // 슬라이더 조절을 끝냈을 때 데이터 저장
+                        saveUserData(); 
                     });
                     volSlider.dataset.listenerAttached = "true";
                 }
@@ -609,12 +592,15 @@
             renderHighscores();
         }
 
-        // ==========================================
-        // 🔐 Google 로그인 기능
-        // ==========================================
         async function loginWithGoogle() {
             playSound('click');
-            // 💡 로컬 환경(파일 직접실행) 구글 로그인 에러 방지 알림
+            
+            // 💡 에러 원인 확인용 1: 설정값 누락 안내
+            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                showToast("⚠️ 파이어베이스 설정(apiKey 등)이 코드에 입력되지 않았습니다. index.html을 수정해주세요.");
+                return;
+            }
+
             if (window.location.protocol === 'file:') {
                 showToast("⚠️ 로컬(내 컴퓨터) 환경에서는 구글 로그인이 불가능합니다. 웹에 배포 후 이용해 주세요.");
                 return;
@@ -628,8 +614,11 @@
                 console.error(error);
                 if (error.code === 'auth/popup-closed-by-user') {
                     showToast("로그인이 취소되었습니다.");
+                } else if (error.code === 'auth/unauthorized-domain') {
+                    // 💡 에러 원인 확인용 2: 도메인 미승인 안내
+                    showToast("⚠️ 파이어베이스 '승인된 도메인'에 현재 주소를 추가해주세요!");
                 } else {
-                    showToast("로그인 오류: (미리보기 환경에서는 팝업이 차단될 수 있습니다)");
+                    showToast("로그인 오류: 파이어베이스 설정을 확인해주세요.");
                 }
             }
         }
@@ -647,9 +636,6 @@
             }
         }
 
-        // ==========================================
-        // 🎮 화면 전환 및 게임 핵심 로직
-        // ==========================================
         let currentScreen = 'screen-main';
         let currentMode = ''; 
         let currentDifficulty = ''; 
@@ -668,7 +654,6 @@
         function navTo(targetScreenId, isPopState = false) {
             if (!isPopState) playSound('click');
             
-            // 게임 화면에서 다른 화면으로 강제 이동될 경우 타이머 정지
             if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') {
                 stopTimer();
             }
@@ -677,27 +662,22 @@
             document.getElementById(targetScreenId).classList.remove('hidden-screen');
             currentScreen = targetScreenId;
             
-            // 브라우저 히스토리에 상태 추가 (뒤로가기 지원용)
             if (!isPopState) {
                 history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
             }
             
             if(targetScreenId === 'screen-achievements') renderAchievements();
             if(targetScreenId === 'screen-highscores') renderHighscores();
-            // 개별모드 진입 시 버튼 새로고침
             if(targetScreenId === 'screen-group') setupGroupButtons();
         }
 
-        // 브라우저 뒤로가기/앞으로가기 이벤트 처리
         window.addEventListener('popstate', (e) => {
             if (currentScreen === 'screen-game') {
-                // 게임 중 뒤로가기 시도시 모달 띄우기 및 히스토리 원상복구
                 history.pushState({ screen: 'screen-game' }, '', '#screen-game');
                 exitGame();
                 return;
             }
 
-            // 모달이 열려있다면 닫기
             document.getElementById('exit-modal').classList.add('hidden');
             
             if (e.state && e.state.screen) {
@@ -748,7 +728,7 @@
             timeLeft = 20;
             const timerBar = document.getElementById('timer-bar');
             timerBar.style.width = '100%';
-            timerBar.className = 'bg-blue-500 h-full w-full transition-all duration-100 ease-linear';
+            timerBar.className = 'bg-teal-400 h-full w-full transition-all duration-100 ease-linear';
             resumeTimer();
         }
 
@@ -760,10 +740,10 @@
                 const percentage = (timeLeft / 20) * 100;
                 timerBar.style.width = `${percentage}%`;
                 
-                if (percentage < 30) timerBar.classList.replace('bg-blue-500', 'bg-red-500');
+                if (percentage < 30) timerBar.classList.replace('bg-teal-400', 'bg-red-500');
                 if (timeLeft <= 0) {
                     clearInterval(timerInterval);
-                    handleAnswer(0, null); // 시간 초과 처리
+                    handleAnswer(0, null); 
                 }
             }, 100);
         }
@@ -789,7 +769,6 @@
             navTo('screen-main');
         }
 
-        // Firebase 데이터에서 유효한 문제만 필터링 (null 값 방지)
         function getValidQuestions() {
             if (!quizDatabase) return [];
             const arr = Array.isArray(quizDatabase) ? quizDatabase : Object.values(quizDatabase);
@@ -807,7 +786,6 @@
             let pool = getValidQuestions();
             if (pool.length === 0) { showToast("문제가 부족합니다."); return; }
 
-            // DB에 등록된 문제가 요구량보다 적어도 반복해서 섞어 정확히 지정된 개수만큼 채워주는 로직
             const buildQuestions = (targetCount) => {
                 let result = [];
                 while (result.length < targetCount) {
@@ -856,7 +834,6 @@
             currentDifficulty = '';
             currentGroup = groupName;
             
-            // 💡 [핵심] 쉼표로 구분된 그룹 문자열 파싱하여 포함 여부 확인
             currentQuestions = getValidQuestions().filter(q => {
                 if (!q.group) return false;
                 const groups = String(q.group).split(',').map(g => g.trim());
@@ -873,7 +850,6 @@
             const container = document.getElementById('group-buttons-container');
             container.innerHTML = '';
             
-            // 💡 [핵심] 모든 문제의 쉼표로 구분된 그룹을 추출하여 고유한 그룹 목록 생성
             let allGroups = [];
             getValidQuestions().forEach(q => {
                 if (q.group) {
@@ -884,15 +860,13 @@
             const uniqueGroups = [...new Set(allGroups)];
             
             if (uniqueGroups.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
+                container.innerHTML = '<p class="text-zinc-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
             }
             
             uniqueGroups.forEach(group => {
                 const btn = document.createElement('button');
-                // 버튼 패딩(p-6 -> p-4), 둥글기(rounded-2xl -> rounded-xl) 조절 및 h-full 제거로 업적 목록과 비슷한 크기 적용
-                btn.className = 'w-full flex items-center justify-between shrink-0 bg-slate-800 hover:bg-slate-700 border border-sky-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
-                // 글자 크기도 text-xl에서 text-lg로 조금 줄여 아담하게 변경
-                btn.innerHTML = `<span class="text-lg">${group}</span> <span class="text-sky-500 text-xs bg-sky-500/10 px-3 py-1.5 rounded-lg">도전</span>`;
+                btn.className = 'w-full flex items-center justify-between shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-teal-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
+                btn.innerHTML = `<span class="text-lg">${group}</span> <span class="text-teal-400 text-xs bg-teal-500/10 px-3 py-1.5 rounded-lg">도전</span>`;
                 btn.onclick = () => startGroupMode(group);
                 container.appendChild(btn);
             });
@@ -918,12 +892,11 @@
             document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
             document.getElementById('game-question').innerText = qData.question;
             
-            // 💡 이미지 처리 (이미지가 없으면 기본 Fallback으로 logo2.png 표시)
             const imgEl = document.getElementById('game-image');
             if (qData.image && qData.image.trim() !== "") {
                 imgEl.src = qData.image;
             } else {
-                imgEl.src = "logo2.png";
+                imgEl.src = "logo.webp";
             }
 
             document.getElementById('overlay-o').classList.add('hidden');
@@ -934,7 +907,7 @@
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach((btn, index) => {
                 btn.innerText = qData.options[index];
-                btn.className = 'choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
+                btn.className = 'choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
                 btn.disabled = false;
                 btn.onclick = () => handleAnswer(index + 1, btn);
             });
@@ -958,8 +931,9 @@
             if (isCorrect) {
                 playSound('correct');
                 if(selectedBtn) {
-                    selectedBtn.classList.replace('bg-slate-800', 'bg-blue-600');
-                    selectedBtn.classList.replace('border-slate-700', 'border-blue-400');
+                    selectedBtn.classList.replace('bg-zinc-800', 'bg-teal-500');
+                    selectedBtn.classList.replace('border-zinc-700', 'border-teal-400');
+                    selectedBtn.classList.replace('text-white', 'text-black');
                 }
                 overlayO.classList.remove('hidden');
                 overlayO.classList.add('pop-in');
@@ -967,7 +941,6 @@
                 combo++;
                 score += (400 * scoreMultiplier) + (combo * 4);
                 
-                // 💡 누적 정답 수 카운트 및 업적 해금 체크
                 userData.totalCorrectAnswers = (userData.totalCorrectAnswers || 0) + 1;
                 checkAchievement('TOTAL_CORRECT', userData.totalCorrectAnswers);
 
@@ -975,11 +948,11 @@
             } else {
                 playSound('wrong');
                 if(selectedBtn) {
-                    selectedBtn.classList.replace('bg-slate-800', 'bg-red-600');
-                    selectedBtn.classList.replace('border-slate-700', 'border-red-400');
+                    selectedBtn.classList.replace('bg-zinc-800', 'bg-red-600');
+                    selectedBtn.classList.replace('border-zinc-700', 'border-red-400');
                 }
-                buttons[qData.answer - 1].classList.replace('bg-slate-800', 'bg-blue-900');
-                buttons[qData.answer - 1].classList.add('border-blue-500', 'opacity-80');
+                buttons[qData.answer - 1].classList.replace('bg-zinc-800', 'bg-teal-900');
+                buttons[qData.answer - 1].classList.add('border-teal-600', 'opacity-80');
 
                 overlayX.classList.remove('hidden');
                 overlayX.classList.add('pop-in');
@@ -1000,30 +973,26 @@
             }, 1200);
         }
 
-        // 💡 동적 랭크 산정: 해당 게임 모드의 문제 수에 비례한 '이론상 만점'을 계산하여 비율로 랭크 부여
         function getRank(finalScore) {
             let maxScore = 0;
             currentQuestions.forEach((_, i) => {
-                // (기본점수) + (올콤보 누적 보너스 점수)
                 maxScore += (400 * scoreMultiplier) + ((i + 1) * 4);
             });
-            if (maxScore === 0) maxScore = 1; // 0나누기 에러 방지
+            if (maxScore === 0) maxScore = 1; 
 
             const ratio = finalScore / maxScore;
 
-            // 오답 없이 클리어(모든 문제 올 콤보) 시 비율이 1.0이 됨
-            if (ratio >= 1.0) return { rank: 'S', color: 'text-yellow-400', desc: "전설적인 천타버스 마스터!" };
-            if (ratio >= 0.85) return { rank: 'A', color: 'text-red-400', desc: "완벽에 가까운 지식" };
-            if (ratio >= 0.70) return { rank: 'B', color: 'text-blue-400', desc: "훌륭한 스트리머 팬" };
-            if (ratio >= 0.50) return { rank: 'C', color: 'text-green-400', desc: "나쁘지 않은 실력" };
-            if (ratio >= 0.25) return { rank: 'D', color: 'text-slate-400', desc: "아직은 뉴비입니다" };
-            return { rank: 'F', color: 'text-slate-600', desc: "방송좀 많이보세요" };
+            if (ratio >= 1.0) return { rank: 'S', color: 'text-teal-400', desc: "전설적인 천타버스 마스터!" };
+            if (ratio >= 0.85) return { rank: 'A', color: 'text-zinc-100', desc: "완벽에 가까운 지식" };
+            if (ratio >= 0.70) return { rank: 'B', color: 'text-zinc-300', desc: "훌륭한 스트리머 팬" };
+            if (ratio >= 0.50) return { rank: 'C', color: 'text-zinc-400', desc: "나쁘지 않은 실력" };
+            if (ratio >= 0.25) return { rank: 'D', color: 'text-zinc-500', desc: "아직은 뉴비입니다" };
+            return { rank: 'F', color: 'text-zinc-600', desc: "방송좀 많이보세요" };
         }
 
         function endGame(isClear) {
             checkAchievement('SCORE_RANK', score);
             
-            // 난이도별 클리어 업적 체크 로직
             if (isClear && currentMode === 'expert') {
                 if (currentDifficulty === '데모') checkAchievement('CLEAR_DEMO');
                 if (currentDifficulty === '초보') checkAchievement('CLEAR_EASY');
@@ -1064,7 +1033,6 @@
                 if (type === 'COMBO' && ach.type === 'COMBO' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
                 if (type === 'SCORE_RANK' && ach.type === 'SCORE_RANK' && value > ach.target) isUnlocked = true;
                 
-                // 클리어 업적 정확한 맵핑
                 if (type === 'CLEAR_DEMO' && ach.type === 'CLEAR_DEMO') isUnlocked = true;
                 if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
                 if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
@@ -1072,14 +1040,12 @@
                 if (type === 'CLEAR_EXPERT' && ach.type === 'CLEAR_EXPERT') isUnlocked = true;
                 if (type === 'CLEAR_MASTER' && ach.type === 'CLEAR_MASTER') isUnlocked = true;
 
-                // 💡 누적 정답 해금 맵핑
                 if (type === 'TOTAL_CORRECT' && ach.type === 'TOTAL_CORRECT' && value >= ach.target) isUnlocked = true;
 
                 if (isUnlocked) {
                     userData.unlockedAchievements.push(ach.id);
                     saveUserData();
                     showToast(`🏆 업적 달성: ${ach.name}`);
-                    // 달성 즉시 업적 목록 갱신
                     if (currentScreen === 'screen-achievements') renderAchievements();
                 }
             });
@@ -1094,13 +1060,13 @@
                 const el = document.createElement('div');
                 
                 if (isUnlocked) {
-                    el.className = 'w-full shrink-0 bg-white rounded-xl p-4 shadow-md border border-gray-200';
+                    el.className = 'w-full shrink-0 bg-white rounded-xl p-4 shadow-md border border-zinc-200';
                     el.innerHTML = `
                         <h4 class="text-black font-bold text-base">${ach.name}</h4>
-                        <p class="text-gray-600 text-xs mt-1 font-medium">${ach.desc}</p>
+                        <p class="text-zinc-600 text-xs mt-1 font-medium">${ach.desc}</p>
                     `;
                 } else {
-                    el.className = 'w-full shrink-0 bg-slate-800 rounded-xl p-4 border border-slate-700 relative flex items-center overflow-hidden';
+                    el.className = 'w-full shrink-0 bg-zinc-800 rounded-xl p-4 border border-zinc-700 relative flex items-center overflow-hidden';
                     const title = ach.secret ? "???" : ach.name;
                     const desc = ach.secret ? "비밀 조건을 달성해 해금하세요." : ach.desc;
                     
@@ -1108,7 +1074,7 @@
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10"><span class="text-2xl">🔒</span></div>
                         <div class="opacity-40 w-full pl-2">
                             <h4 class="text-white font-bold text-base">${title}</h4>
-                            <p class="text-slate-400 text-xs mt-1">${desc}</p>
+                            <p class="text-zinc-400 text-xs mt-1">${desc}</p>
                         </div>
                     `;
                 }
@@ -1119,7 +1085,7 @@
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'bg-blue-600 text-white font-bold px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(37,99,235,0.5)] border border-blue-400 slide-up pointer-events-auto w-full text-center leading-snug text-lg';
+            toast.className = 'bg-teal-500 text-black font-bold px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(45,212,191,0.5)] border border-teal-400 slide-up pointer-events-auto w-full text-center leading-snug text-lg';
             toast.innerText = message;
             
             container.appendChild(toast);
@@ -1134,34 +1100,33 @@
         function renderHighscores() {
             const container = document.getElementById('highscores-container');
             container.innerHTML = `
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
+                <div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-blue-400 font-bold text-xl">천타버스 모드</span>
+                        <span class="text-teal-400 font-bold text-xl">천타버스 모드</span>
                         <span class="text-white font-black text-2xl">${userData.highscores.expert.toLocaleString()} 점</span>
                     </div>
                     <div class="flex justify-between items-center mb-4">
                         <span class="text-red-400 font-bold text-xl">챌린지 모드</span>
                         <span class="text-white font-black text-2xl">${userData.highscores.challenge.toLocaleString()} 점</span>
                     </div>
-                    <!-- 💡 총 누적 정답 수 표시 -->
-                    <div class="flex justify-between items-center border-t border-slate-700 pt-4 mt-2">
-                        <span class="text-green-400 font-bold text-sm">총 누적 정답 수</span>
-                        <span class="text-slate-300 font-bold text-lg">${(userData.totalCorrectAnswers || 0).toLocaleString()} 회</span>
+                    <div class="flex justify-between items-center border-t border-zinc-700 pt-4 mt-2">
+                        <span class="text-teal-300 font-bold text-sm">총 누적 정답 수</span>
+                        <span class="text-zinc-300 font-bold text-lg">${(userData.totalCorrectAnswers || 0).toLocaleString()} 회</span>
                     </div>
                 </div>
-                <h3 class="text-sky-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
+                <h3 class="text-teal-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
             `;
 
             const groupKeys = Object.keys(userData.highscores.groups);
             if (groupKeys.length === 0) {
-                container.innerHTML += `<p class="text-slate-500 text-center py-6 bg-slate-800 rounded-xl border border-slate-700 shrink-0">기록이 없습니다.</p>`;
+                container.innerHTML += `<p class="text-zinc-500 text-center py-6 bg-zinc-800 rounded-xl border border-zinc-700 shrink-0">기록이 없습니다.</p>`;
             } else {
                 groupKeys.sort((a, b) => userData.highscores.groups[b] - userData.highscores.groups[a])
                          .slice(0, 3)
                          .forEach(group => {
                     container.innerHTML += `
-                        <div class="flex justify-between items-center bg-slate-800 rounded-xl p-5 border border-slate-700 shrink-0">
-                            <span class="text-slate-300 font-bold text-lg">${group}</span>
+                        <div class="flex justify-between items-center bg-zinc-800 rounded-xl p-5 border border-zinc-700 shrink-0">
+                            <span class="text-zinc-300 font-bold text-lg">${group}</span>
                             <span class="text-white font-black text-xl">${userData.highscores.groups[group].toLocaleString()} 점</span>
                         </div>
                     `;
@@ -1169,7 +1134,6 @@
             }
         }
 
-        // 모듈 환경에서는 스크립트가 지연 실행되므로, DOMContentLoaded 이벤트를 사용하거나 즉시 실행합니다.
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initApp);
         } else {
