@@ -42,7 +42,6 @@
         ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
     </style>
 </head>
-<!-- select-none 클래스를 추가하여 전체 텍스트 드래그 및 선택 방지 -->
 <body class="bg-black text-gray-100 min-h-screen flex items-center justify-center font-sans selection:bg-blue-500 selection:text-white overflow-hidden relative select-none">
 
     <!-- ==================== 로그인 UI (우측 상단) ==================== -->
@@ -73,7 +72,8 @@
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
-                <div class="text-6xl font-black text-blue-500 mb-2 tracking-tighter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">SOOP</div>
+                <!-- 💡 SOOP 텍스트 대신 로고 이미지 출력 (이미지 없을 시 대비 alt 속성) -->
+                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
                     천타버스 퀴즈<br><span class="text-lg text-sky-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
@@ -151,12 +151,12 @@
                     <p class="text-slate-300 text-sm">총 100문제 출제</p>
                     <p class="text-blue-500/80 text-xs mt-2 font-bold">+50% 점수 보너스</p>
                 </button>
-                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                <button onclick="startExpertMode('전문가')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
                     <h3 class="text-3xl font-black text-blue-600 mb-2">전문가</h3>
                     <p class="text-slate-300 text-sm">총 150문제 출제</p>
                     <p class="text-blue-500/80 text-xs mt-2 font-bold">+75% 점수 보너스</p>
                 </button>
-                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                <button onclick="startExpertMode('마스터')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
                     <h3 class="text-3xl font-black text-blue-700 mb-2">마스터</h3>
                     <p class="text-slate-300 text-sm">총 200문제 출제</p>
                     <p class="text-blue-500/80 text-xs mt-2 font-bold">+100% 점수 보너스</p>
@@ -267,10 +267,9 @@
                 </h2>
             </div>
 
-            <!-- 중앙: 이미지 영역 (draggable="false" 로 이미지 끌기 방지) -->
+            <!-- 💡 중앙: 이미지 영역 (항상 렌더링되며 Fallback으로 logo2.png 사용) -->
             <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-slate-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-slate-800 flex items-center justify-center p-2">
-                <img id="game-image" src="" alt="Question Image" class="w-full h-full object-contain hidden" draggable="false">
-                <span id="no-image-text" class="text-slate-600 font-medium text-sm">관련 이미지 없음</span>
+                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-blue-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-blue-500 text-[8rem] font-black drop-shadow-lg">O</span>
@@ -435,25 +434,57 @@
         let userData = {
             highscores: { expert: 0, challenge: 0, groups: {} },
             unlockedAchievements: [],
-            settings: { volume: 0.5 }
+            settings: { volume: 0.5 },
+            totalCorrectAnswers: 0 // 💡 누적 정답 수 필드 추가
         };
 
         const mockQuizData = [
-            // 쉼표로 그룹을 여러 개 지정한 예시 데이터 추가
-            { question: "이 스트리머의 상징적인 색깔은?", options: ["보라색", "빨간색", "노란색"], answer: 1, group: "홀로라이브, 글로벌", image: "" },
-            { question: "다음 중 이 그룹에 속하지 않는 멤버는?", options: ["멤버A", "멤버B", "멤버C"], answer: 3, group: "이세계아이돌", image: "" },
-            { question: "이 장면에서 나온 유행어는?", options: ["오히려 좋아", "레게노", "가보자고"], answer: 2, group: "왁타버스", image: "" }
+            { question: "이 스트리머의 상징적인 색깔은?", options: ["보라색", "빨간색", "노란색"], answer: 1, group: "홀로라이브, 글로벌", image: "" }
         ];
+        
         const defaultAchievements = [
             { id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false },
             { id: "2", name: "버알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false },
-            { id: "3", name: "5연속 정답!", desc: "버잘알 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false }
+            { id: "3", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false },
+            // 💡 누적 정답 업적 기본값 추가
+            { id: "4", name: "견습 시청자", desc: "누적 정답 10회를 달성한다.", type: "TOTAL_CORRECT", target: 10, secret: false },
+            { id: "5", name: "단골 시청자", desc: "누적 정답 50회를 달성한다.", type: "TOTAL_CORRECT", target: 50, secret: false },
+            { id: "6", name: "망령", desc: "누적 정답 100회를 달성한다.", type: "TOTAL_CORRECT", target: 100, secret: false }
         ];
 
+        // 💡 이미지 미리 로딩 (게임 시작시 끊김 방지)
+        function preloadImages() {
+            const imageUrls = new Set();
+            imageUrls.add('logo2.png'); // 기본 로고 프리로드
+            getValidQuestions().forEach(q => {
+                if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
+            });
+            
+            imageUrls.forEach(url => {
+                const img = new Image();
+                img.src = url;
+            });
+        }
+
         async function initApp() {
+            // 💡 새로고침 데이터 초기화 방지: Firebase Fetch 전에 로컬 데이터를 최우선으로 복원
+            const localSave = localStorage.getItem('soop_quiz_userdata');
+            if (localSave) {
+                try {
+                    const parsed = JSON.parse(localSave);
+                    userData = { ...userData, ...parsed };
+                    if (typeof userData.totalCorrectAnswers === 'undefined') userData.totalCorrectAnswers = 0;
+                } catch(e) {}
+            }
+            
+            // 로컬 데이터 기준으로 UI 먼저 적용
+            updateVolumeUI();
+            setupApp();
+
             if (USE_MOCK_DATA) {
                 quizDatabase = [...mockQuizData];
                 achievementDatabase = [...defaultAchievements];
+                preloadImages();
             } else {
                 try {
                     // 브라우저 캐시를 무시하고 항상 최신 데이터를 불러오도록 쿼리스트링(?t=현재시간) 추가
@@ -469,10 +500,10 @@
                     quizDatabase = [...mockQuizData];
                     achievementDatabase = [...defaultAchievements];
                 }
+                preloadImages(); // 네트워크 데이터 로드 완료 후 이미지 프리로드 시작
             }
             
-            // 데이터 로드 후 즉시 초기화 실행 (로컬 환경 지원 목적)
-            updateVolumeUI();
+            // 최신 데이터가 반영되었으므로 다시 세팅
             setupApp();
 
             if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -518,7 +549,9 @@
                     userData.highscores = parsed.highscores || userData.highscores;
                     userData.unlockedAchievements = parsed.unlockedAchievements || userData.unlockedAchievements;
                     userData.settings = parsed.settings || userData.settings;
+                    userData.totalCorrectAnswers = parsed.totalCorrectAnswers || userData.totalCorrectAnswers;
                     if (!userData.highscores.groups) userData.highscores.groups = {};
+                    saveUserData(); // 서버 데이터를 로컬에 덮어씀
                 } else {
                     await saveUserDataToFirestore();
                 }
@@ -581,6 +614,12 @@
         // ==========================================
         async function loginWithGoogle() {
             playSound('click');
+            // 💡 로컬 환경(파일 직접실행) 구글 로그인 에러 방지 알림
+            if (window.location.protocol === 'file:') {
+                showToast("⚠️ 로컬(내 컴퓨터) 환경에서는 구글 로그인이 불가능합니다. 웹에 배포 후 이용해 주세요.");
+                return;
+            }
+
             const provider = new GoogleAuthProvider();
             try {
                 await signInWithPopup(auth, provider);
@@ -600,7 +639,8 @@
             try {
                 await signOut(auth);
                 showToast("로그아웃 되었습니다. (오프라인 모드 전환)");
-                userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { volume: 0.5 } };
+                userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { volume: 0.5 }, totalCorrectAnswers: 0 };
+                saveUserData();
                 await signInAnonymously(auth);
             } catch (error) {
                 showToast("로그아웃 오류가 발생했습니다.");
@@ -791,7 +831,7 @@
             } else if (difficulty === '전문가') {
                 currentQuestions = buildQuestions(150);
                 scoreMultiplier = 1.75;
-                } else if (difficulty === '마스터') {
+            } else if (difficulty === '마스터') {
                 currentQuestions = buildQuestions(200);
                 scoreMultiplier = 2.0;
             }
@@ -844,7 +884,7 @@
             const uniqueGroups = [...new Set(allGroups)];
             
             if (uniqueGroups.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 text-center w-full mt-4">생성된 그룹/크루가 없습니다.</p>';
+                container.innerHTML = '<p class="text-slate-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
             }
             
             uniqueGroups.forEach(group => {
@@ -878,16 +918,12 @@
             document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
             document.getElementById('game-question').innerText = qData.question;
             
+            // 💡 이미지 처리 (이미지가 없으면 기본 Fallback으로 logo2.png 표시)
             const imgEl = document.getElementById('game-image');
-            const noImgEl = document.getElementById('no-image-text');
             if (qData.image && qData.image.trim() !== "") {
                 imgEl.src = qData.image;
-                imgEl.classList.remove('hidden');
-                noImgEl.classList.add('hidden');
             } else {
-                imgEl.src = "";
-                imgEl.classList.add('hidden');
-                noImgEl.classList.remove('hidden');
+                imgEl.src = "logo2.png";
             }
 
             document.getElementById('overlay-o').classList.add('hidden');
@@ -930,6 +966,11 @@
                 
                 combo++;
                 score += (400 * scoreMultiplier) + (combo * 4);
+                
+                // 💡 누적 정답 수 카운트 및 업적 해금 체크
+                userData.totalCorrectAnswers = (userData.totalCorrectAnswers || 0) + 1;
+                checkAchievement('TOTAL_CORRECT', userData.totalCorrectAnswers);
+
                 if (currentQIndex === 0) checkAchievement('FIRST_RIGHT');
             } else {
                 playSound('wrong');
@@ -959,19 +1000,30 @@
             }, 1200);
         }
 
+        // 💡 동적 랭크 산정: 해당 게임 모드의 문제 수에 비례한 '이론상 만점'을 계산하여 비율로 랭크 부여
         function getRank(finalScore) {
-            if (finalScore > 200000) return { rank: 'S', color: 'text-yellow-400', desc: "전설적인 버잘알!" };
-            if (finalScore >= 160000) return { rank: 'A', color: 'text-red-400', desc: "완벽에 가까운 지식" };
-            if (finalScore >= 120000) return { rank: 'B', color: 'text-blue-400', desc: "훌륭한 스트리머 팬" };
-            if (finalScore >= 80000) return { rank: 'C', color: 'text-green-400', desc: "나쁘지 않은 실력" };
-            if (finalScore >= 40000) return { rank: 'D', color: 'text-slate-400', desc: "아직은 뉴비입니다" };
+            let maxScore = 0;
+            currentQuestions.forEach((_, i) => {
+                // (기본점수) + (올콤보 누적 보너스 점수)
+                maxScore += (400 * scoreMultiplier) + ((i + 1) * 4);
+            });
+            if (maxScore === 0) maxScore = 1; // 0나누기 에러 방지
+
+            const ratio = finalScore / maxScore;
+
+            // 오답 없이 클리어(모든 문제 올 콤보) 시 비율이 1.0이 됨
+            if (ratio >= 1.0) return { rank: 'S', color: 'text-yellow-400', desc: "전설적인 천타버스 마스터!" };
+            if (ratio >= 0.85) return { rank: 'A', color: 'text-red-400', desc: "완벽에 가까운 지식" };
+            if (ratio >= 0.70) return { rank: 'B', color: 'text-blue-400', desc: "훌륭한 스트리머 팬" };
+            if (ratio >= 0.50) return { rank: 'C', color: 'text-green-400', desc: "나쁘지 않은 실력" };
+            if (ratio >= 0.25) return { rank: 'D', color: 'text-slate-400', desc: "아직은 뉴비입니다" };
             return { rank: 'F', color: 'text-slate-600', desc: "방송좀 많이보세요" };
         }
 
         function endGame(isClear) {
             checkAchievement('SCORE_RANK', score);
             
-            // 난이도별 클리어 업적 체크 로직 추가
+            // 난이도별 클리어 업적 체크 로직
             if (isClear && currentMode === 'expert') {
                 if (currentDifficulty === '데모') checkAchievement('CLEAR_DEMO');
                 if (currentDifficulty === '초보') checkAchievement('CLEAR_EASY');
@@ -1011,14 +1063,24 @@
                 if (type === 'PASS_EXPERT' && ach.type === 'PASS_EXPERT' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
                 if (type === 'COMBO' && ach.type === 'COMBO' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
                 if (type === 'SCORE_RANK' && ach.type === 'SCORE_RANK' && value > ach.target) isUnlocked = true;
+                
+                // 클리어 업적 정확한 맵핑
+                if (type === 'CLEAR_DEMO' && ach.type === 'CLEAR_DEMO') isUnlocked = true;
                 if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
                 if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
                 if (type === 'CLEAR_HARD' && ach.type === 'CLEAR_HARD') isUnlocked = true;
+                if (type === 'CLEAR_EXPERT' && ach.type === 'CLEAR_EXPERT') isUnlocked = true;
+                if (type === 'CLEAR_MASTER' && ach.type === 'CLEAR_MASTER') isUnlocked = true;
+
+                // 💡 누적 정답 해금 맵핑
+                if (type === 'TOTAL_CORRECT' && ach.type === 'TOTAL_CORRECT' && value >= ach.target) isUnlocked = true;
 
                 if (isUnlocked) {
                     userData.unlockedAchievements.push(ach.id);
                     saveUserData();
                     showToast(`🏆 업적 달성: ${ach.name}`);
+                    // 달성 즉시 업적 목록 갱신
+                    if (currentScreen === 'screen-achievements') renderAchievements();
                 }
             });
         }
@@ -1074,12 +1136,17 @@
             container.innerHTML = `
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-blue-400 font-bold text-xl">버잘알 모드</span>
+                        <span class="text-blue-400 font-bold text-xl">천타버스 모드</span>
                         <span class="text-white font-black text-2xl">${userData.highscores.expert.toLocaleString()} 점</span>
                     </div>
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center mb-4">
                         <span class="text-red-400 font-bold text-xl">챌린지 모드</span>
                         <span class="text-white font-black text-2xl">${userData.highscores.challenge.toLocaleString()} 점</span>
+                    </div>
+                    <!-- 💡 총 누적 정답 수 표시 -->
+                    <div class="flex justify-between items-center border-t border-slate-700 pt-4 mt-2">
+                        <span class="text-green-400 font-bold text-sm">총 누적 정답 수</span>
+                        <span class="text-slate-300 font-bold text-lg">${(userData.totalCorrectAnswers || 0).toLocaleString()} 회</span>
                     </div>
                 </div>
                 <h3 class="text-sky-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
