@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>천타버스 퀴즈</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 화면 전환 애니메이션 */
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* O/X 팝업 애니메이션 */
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* 토스트 팝업 애니메이션 */
+        .slide-up { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        /* 클릭 효과 */
+        .btn-active:active { transform: scale(0.96); }
+
+        /* 숨김 처리 유틸리티 */
+        .hidden-screen { display: none !important; }
+        
+        /* 커스텀 스크롤바 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+    </style>
+</head>
+<!-- select-none 클래스를 추가하여 전체 텍스트 드래그 및 선택 방지 -->
+<body class="bg-black text-gray-100 min-h-screen flex items-center justify-center font-sans selection:bg-blue-500 selection:text-white overflow-hidden relative select-none">
+
+    <!-- ==================== 로그인 UI (우측 상단) ==================== -->
+    <div class="absolute top-4 right-4 z-50">
+        <div id="login-section" class="flex items-center gap-2">
+            <!-- 비로그인 상태: Google 로그인 버튼 -->
+            <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-gray-100 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google 로그인
+            </button>
+            
+            <!-- 로그인 상태: 프로필 및 로그아웃 버튼 -->
+            <div id="user-profile" class="hidden items-center gap-2 bg-slate-800 border border-slate-700 px-4 py-1.5 rounded-full shadow-lg">
+                <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
+                <button onclick="logoutGoogle()" class="text-slate-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 앱 컨테이너 -->
+    <div id="app-container" class="bg-slate-900 w-full max-w-md h-[100dvh] sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(59,130,246,0.2)] sm:border border-slate-800 relative overflow-hidden flex flex-col">
+
+        <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
+        <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
+            <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
+                <div class="text-6xl font-black text-blue-500 mb-2 tracking-tighter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">SOOP</div>
+                <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
+                    천타버스 퀴즈<br><span class="text-lg text-sky-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
+                </h1>
+                <p class="text-slate-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
+                <p class="text-slate-400 mt-4 text-center">새로고침시 기록이 초기화됩니다.</p>
+            </div>
+            
+            <div class="space-y-3 pb-8 shrink-0">
+                <button onclick="navTo('screen-mode')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl btn-active shadow-lg shadow-blue-500/30 text-lg transition-colors">
+                    도전 하기
+                </button>
+                <div class="flex space-x-3">
+                    <button onclick="navTo('screen-achievements')" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
+                        🏆 업적 목록
+                    </button>
+                    <button onclick="navTo('screen-highscores')" class="flex-1 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-4 rounded-2xl btn-active transition-colors">
+                        🥇 최고 점수
+                    </button>
+                </div>
+                <div class="flex space-x-3">
+                    <button onclick="navTo('screen-settings')" class="w-full bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white font-bold py-3 rounded-2xl btn-active transition-colors">
+                        ⚙️ 환경 설정
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== 2. 모드 선택 화면 ==================== -->
+        <div id="screen-mode" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
+            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <h2 class="text-2xl font-bold mb-6 text-center text-white shrink-0">모드 선택</h2>
+            
+            <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1">
+                <button onclick="navTo('screen-difficulty')" class="w-full shrink-0 bg-gradient-to-r from-blue-700 to-blue-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-white mb-2">천타버스 모드</h3>
+                    <p class="text-blue-100 text-sm">모든 멤버의 문제가 무작위로 등장합니다.</p>
+                </button>
+
+                <button onclick="startChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-red-700 to-rose-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-white mb-2">챌린지 모드</h3>
+                    <p class="text-red-100 text-sm">목숨 단 1개! 극한의 한계에 도전하세요.</p>
+                </button>
+
+                <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-sky-700 to-cyan-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold text-white mb-2">개별 모드</h3>
+                    <p class="text-sky-100 text-sm">특정 멤버의 문제만 풉니다.</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== 3. 버잘알 모드: 난이도 선택 화면 ==================== -->
+        <div id="screen-difficulty" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
+            <button onclick="navTo('screen-mode')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
+            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">난이도 선택</h2>
+            
+            <div class="flex-1 flex flex-col space-y-4 overflow-y-auto pb-4 pr-1 min-h-0">
+                <button onclick="startExpertMode('데모')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-white mb-2">데모</h3>
+                    <p class="text-slate-300 text-sm">총 10문제 출제</p>
+                    <p class="text-slate-500 text-xs mt-2">점수 보너스 없음</p>
+                </button>
+                <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-white mb-2">초보</h3>
+                    <p class="text-slate-300 text-sm">총 30문제 출제</p>
+                    <p class="text-slate-500 text-xs mt-2">점수 보너스 없음</p>
+                </button>
+                <button onclick="startExpertMode('중수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-sky-400 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-sky-400 mb-2">중수</h3>
+                    <p class="text-slate-300 text-sm">총 50문제 출제</p>
+                    <p class="text-sky-400/80 text-xs mt-2 font-bold">+25% 점수 보너스</p>
+                </button>
+                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-blue-500 mb-2">고수</h3>
+                    <p class="text-slate-300 text-sm">총 100문제 출제</p>
+                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+50% 점수 보너스</p>
+                </button>
+                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-blue-600 mb-2">전문가</h3>
+                    <p class="text-slate-300 text-sm">총 150문제 출제</p>
+                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+75% 점수 보너스</p>
+                </button>
+                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-600 hover:border-blue-500 p-6 rounded-2xl btn-active text-center transition-colors">
+                    <h3 class="text-3xl font-black text-blue-700 mb-2">마스터</h3>
+                    <p class="text-slate-300 text-sm">총 200문제 출제</p>
+                    <p class="text-blue-500/80 text-xs mt-2 font-bold">+100% 점수 보너스</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== 4. 개별모드, 업적, 최고점수, 환경 설정 ==================== -->
+        
+        <!-- 개별 모드 -->
+        <div id="screen-group" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
+            <button onclick="navTo('screen-mode')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
+            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">멤버 선택</h2>
+            <div id="group-buttons-container" class="flex-1 overflow-y-auto space-y-3 pb-4 pr-1 min-h-0 content-start"></div>
+        </div>
+
+        <!-- 업적 화면 -->
+        <div id="screen-achievements" class="flex-1 flex flex-col p-6 pb-0 hidden-screen fade-in relative z-10 bg-slate-900 min-h-0">
+            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🏆 업적 목록</h2>
+            <div id="achievements-container" class="flex-1 overflow-y-auto space-y-3 pb-8 pr-1 min-h-0 content-start">
+                <!-- JS에서 동적 채워짐 -->
+            </div>
+        </div>
+
+        <!-- 최고 점수 화면 -->
+        <div id="screen-highscores" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
+            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🥇 최고 점수</h2>
+            <div id="highscores-container" class="flex-1 overflow-y-auto space-y-4 pb-4 pr-1 min-h-0 content-start">
+                <!-- JS에서 동적 채워짐 -->
+            </div>
+        </div>
+
+        <!-- 환경 설정 화면 -->
+        <div id="screen-settings" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
+            <button onclick="navTo('screen-main')" class="self-start text-sky-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">⚙️ 환경 설정</h2>
+            
+            <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1 min-h-0 content-start">
+                
+                <!-- 사운드(볼륨) 설정 -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
+                    <p class="text-slate-400 mb-4 font-bold">사운드 설정</p>
+                    <div class="flex items-center space-x-4 mb-2">
+                        <span class="text-slate-400 text-xl">🔈</span>
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-blue-500 cursor-pointer">
+                        <span class="text-white text-xl">🔊</span>
+                    </div>
+                    <p id="volume-text" class="text-center text-sky-400 font-bold text-sm">볼륨: 50%</p>
+                </div>
+
+                <!-- 제작자 이메일 복사 영역 -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
+                    <p class="text-slate-400 mb-4 font-bold">제작자 문의 / 버그 제보</p>
+                    <div class="bg-black/50 p-4 rounded-lg flex items-center justify-between border border-slate-600">
+                        <!-- select-all 클래스로 클릭/드래그시 텍스트가 바로 선택되도록 예외 처리 -->
+                        <span class="text-white font-mono select-all text-sm truncate mr-2">konamp63@gmail.com</span>
+                        <button onclick="copyEmail()" class="shrink-0 text-blue-400 hover:text-blue-300 font-bold text-sm bg-blue-500/20 px-4 py-2 rounded-lg transition-colors btn-active">
+                            복사
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3">이메일을 직접 드래그하거나 복사 버튼을 눌러주세요.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== 5. 플레이(게임) 화면 ==================== -->
+        <div id="screen-game" class="flex-1 flex flex-col p-4 sm:p-6 hidden-screen bg-black relative z-10 min-h-0">
+            
+            <!-- 상단 바: 나가기 버튼 -->
+            <div class="flex justify-between items-center mb-2 shrink-0">
+                <span class="text-slate-500 text-sm font-bold">플레이 중...</span>
+                <button onclick="exitGame()" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-sm transition-colors btn-active flex items-center gap-1 border border-slate-700">
+                    <span>🚪</span> 나가기
+                </button>
+            </div>
+
+            <!-- 타이머 바 -->
+            <div class="shrink-0 w-full bg-slate-800 h-2 sm:h-3 mb-4 rounded-full overflow-hidden">
+                <div id="timer-bar" class="bg-blue-500 h-full w-full transition-all duration-100 ease-linear"></div>
+            </div>
+
+            <!-- 상단 헤더: 체력, 점수 & 문제 번호 -->
+            <div class="shrink-0 flex justify-between items-start mb-4">
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs text-slate-400 font-bold">HEALTH</span>
+                        <div id="health-display" class="text-red-500 text-lg flex gap-1"></div>
+                    </div>
+                    <div class="text-sky-400 font-black text-xl tracking-wider font-mono">
+                        <span id="score-display">0</span> <span class="text-sm text-sky-200 font-normal">pts</span>
+                    </div>
+                    <div id="combo-display" class="text-yellow-400 font-bold text-sm h-5 transition-opacity opacity-0 mt-1">
+                        2 COMBO! (+8)
+                    </div>
+                </div>
+                <div id="question-number" class="text-white font-black text-xl bg-blue-600 px-4 py-1.5 rounded-lg shadow-md shadow-blue-600/30">
+                    No.01
+                </div>
+            </div>
+
+            <!-- 중앙 상단: 질문 내용 -->
+            <div class="shrink-0 min-h-[4rem] max-h-[20vh] overflow-y-auto flex items-center justify-center mb-4 px-2 pr-1 custom-scrollbar">
+                <h2 id="game-question" class="text-xl sm:text-2xl font-bold text-center leading-snug break-words text-white w-full">
+                    질문이 여기에 표시됩니다.
+                </h2>
+            </div>
+
+            <!-- 중앙: 이미지 영역 (draggable="false" 로 이미지 끌기 방지) -->
+            <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-slate-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-slate-800 flex items-center justify-center p-2">
+                <img id="game-image" src="" alt="Question Image" class="w-full h-full object-contain hidden" draggable="false">
+                <span id="no-image-text" class="text-slate-600 font-medium text-sm">관련 이미지 없음</span>
+                
+                <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-blue-500/20 backdrop-blur-sm hidden z-10">
+                    <span class="text-blue-500 text-[8rem] font-black drop-shadow-lg">O</span>
+                </div>
+                <div id="overlay-x" class="absolute inset-0 flex items-center justify-center bg-red-500/20 backdrop-blur-sm hidden z-10">
+                    <span class="text-red-500 text-[8rem] font-black drop-shadow-lg">X</span>
+                </div>
+            </div>
+
+            <!-- 하단: 3개의 선택지 -->
+            <div id="game-options" class="shrink-0 space-y-3 mt-auto pb-2">
+                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+            </div>
+        </div>
+
+        <!-- ==================== 6. 결과 화면 ==================== -->
+        <div id="screen-result" class="flex-1 flex flex-col p-6 hidden-screen fade-in items-center justify-center relative z-10 min-h-0">
+            <h2 class="text-2xl font-bold mb-1 text-slate-400 shrink-0">GAME OVER</h2>
+            <h1 id="rank-display" class="text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] shrink-0">S</h1>
+            
+            <div class="bg-slate-800 rounded-2xl p-6 w-full text-center mb-8 border border-slate-700 shrink-0">
+                <p class="text-slate-400 mb-1">최종 점수</p>
+                <p id="final-score" class="text-white font-black text-4xl mb-2">0</p>
+                <p id="rank-desc" class="text-sky-400 font-bold mt-1">랭크 설명</p>
+            </div>
+            
+            <div class="w-full space-y-3 shrink-0">
+                <button onclick="navTo('screen-main')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl btn-active text-lg transition-colors">
+                    메인으로 돌아가기
+                </button>
+            </div>
+        </div>
+
+        <!-- 풋터 (Made by) -->
+        <div class="absolute bottom-1 w-full text-center text-[10px] text-slate-600 z-0 pointer-events-none">
+            Made by SSG_랜더스
+        </div>
+
+    </div>
+
+    <!-- ==================== 나가기 확인 커스텀 모달 ==================== -->
+    <div id="exit-modal" class="fixed inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in">
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 max-w-xs w-full text-center shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-2">게임 포기</h3>
+            <p class="text-slate-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p>
+            <div class="flex gap-3">
+                <button onclick="closeExitModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
+                <button onclick="confirmExit()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">나가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 토스트 알림 ==================== -->
+    <div id="toast-container" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col items-center space-y-3 w-[90%] max-w-sm pointer-events-none"></div>
+
+    <!-- JavaScript 로직 (Firebase V11 모듈 적용) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // 모듈 내 함수들을 전역으로 사용할 수 있게 window 객체에 연결
+        window.navTo = navTo;
+        window.startExpertMode = startExpertMode;
+        window.startChallengeMode = startChallengeMode;
+        window.startGroupMode = startGroupMode;
+        window.exitGame = exitGame;
+        window.closeExitModal = closeExitModal;
+        window.confirmExit = confirmExit;
+        window.copyEmail = copyEmail;
+        window.loginWithGoogle = loginWithGoogle;
+        window.logoutGoogle = logoutGoogle;
+
+        // ==========================================
+        // 🛡️ 보안: 우클릭 및 개발자 도구(F12) 단축키 방지
+        // ==========================================
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.keyCode === 123 || // F12
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || // Ctrl+Shift+I
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || // Ctrl+Shift+J
+               (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { // Ctrl+U
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // ==========================================
+        // 🎵 사운드 시스템 (Web Audio API)
+        // ==========================================
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let masterVolume = 0.5;
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (masterVolume <= 0) return;
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(400, now);
+                oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.05);
+                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                oscillator.start(now);
+                oscillator.stop(now + 0.1);
+            } else if (type === 'correct') {
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(600, now);
+                oscillator.frequency.setValueAtTime(800, now + 0.1);
+                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
+                gainNode.gain.linearRampToValueAtTime(masterVolume * 0.5, now + 0.2);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, now);
+                oscillator.frequency.exponentialRampToValueAtTime(80, now + 0.3);
+                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                oscillator.start(now);
+                oscillator.stop(now + 0.3);
+            }
+        }
+
+        // ==========================================
+        // 📊 Firebase 인증 & Firestore 초기화
+        // ==========================================
+        let firebaseConfig = {};
+        if (typeof __firebase_config !== 'undefined') {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+            firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_PROJECT_ID.appspot.com"
+            };
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'soop-quiz';
+
+        const USE_MOCK_DATA = false; 
+        const FIREBASE_DB_URL = "https://dongpa2026-2fda5-default-rtdb.asia-southeast1.firebasedatabase.app";
+        
+        let quizDatabase = [];
+        let achievementDatabase = [];
+        let currentUser = null;
+
+        let userData = {
+            highscores: { expert: 0, challenge: 0, groups: {} },
+            unlockedAchievements: [],
+            settings: { volume: 0.5 }
+        };
+
+        const mockQuizData = [
+            // 쉼표로 그룹을 여러 개 지정한 예시 데이터 추가
+            { question: "이 스트리머의 상징적인 색깔은?", options: ["보라색", "빨간색", "노란색"], answer: 1, group: "홀로라이브, 글로벌", image: "" },
+            { question: "다음 중 이 그룹에 속하지 않는 멤버는?", options: ["멤버A", "멤버B", "멤버C"], answer: 3, group: "이세계아이돌", image: "" },
+            { question: "이 장면에서 나온 유행어는?", options: ["오히려 좋아", "레게노", "가보자고"], answer: 2, group: "왁타버스", image: "" }
+        ];
+        const defaultAchievements = [
+            { id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false },
+            { id: "2", name: "버알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false },
+            { id: "3", name: "5연속 정답!", desc: "버잘알 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false }
+        ];
+
+        async function initApp() {
+            if (USE_MOCK_DATA) {
+                quizDatabase = [...mockQuizData];
+                achievementDatabase = [...defaultAchievements];
+            } else {
+                try {
+                    // 브라우저 캐시를 무시하고 항상 최신 데이터를 불러오도록 쿼리스트링(?t=현재시간) 추가
+                    const cacheBuster = new Date().getTime();
+                    const quizRes = await fetch(`${FIREBASE_DB_URL}/QuizData.json?t=${cacheBuster}`);
+                    const achRes = await fetch(`${FIREBASE_DB_URL}/AchievementData.json?t=${cacheBuster}`);
+                    
+                    quizDatabase = await quizRes.json() || [];
+                    achievementDatabase = await achRes.json() || defaultAchievements;
+                } catch (error) {
+                    console.error("데이터 로드 실패", error);
+                    showToast("데이터를 불러오는데 실패하여 기본 데이터로 시작합니다.");
+                    quizDatabase = [...mockQuizData];
+                    achievementDatabase = [...defaultAchievements];
+                }
+            }
+            
+            // 데이터 로드 후 즉시 초기화 실행 (로컬 환경 지원 목적)
+            updateVolumeUI();
+            setupApp();
+
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
+            } else {
+                await signInAnonymously(auth).catch(() => {});
+            }
+
+            // 초기 히스토리 상태 설정 (뒤로가기 지원용)
+            history.replaceState({ screen: 'screen-main' }, '', '#screen-main');
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (user) {
+                const isAnonymous = user.isAnonymous;
+                const btnLogin = document.getElementById('btn-google-login');
+                const profile = document.getElementById('user-profile');
+                const userName = document.getElementById('user-name');
+                
+                if (!isAnonymous) {
+                    btnLogin.classList.add('hidden');
+                    profile.classList.remove('hidden');
+                    profile.classList.add('flex');
+                    userName.innerText = user.displayName || "User";
+                } else {
+                    btnLogin.classList.remove('hidden');
+                    profile.classList.add('hidden');
+                    profile.classList.remove('flex');
+                }
+
+                await loadDataFromFirestore(user.uid);
+            }
+        });
+
+        async function loadDataFromFirestore(uid) {
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'data', 'saveFile');
+                const docSnap = await getDoc(userDocRef);
+                
+                if (docSnap.exists()) {
+                    const parsed = docSnap.data();
+                    userData.highscores = parsed.highscores || userData.highscores;
+                    userData.unlockedAchievements = parsed.unlockedAchievements || userData.unlockedAchievements;
+                    userData.settings = parsed.settings || userData.settings;
+                    if (!userData.highscores.groups) userData.highscores.groups = {};
+                } else {
+                    await saveUserDataToFirestore();
+                }
+                
+                updateVolumeUI();
+                setupApp();
+            } catch (error) {
+                console.error("Firestore read error", error);
+                updateVolumeUI();
+                setupApp();
+            }
+        }
+
+        // 로컬 스토리지와 클라우드 모두에 데이터 저장 기능 (범용)
+        function saveUserData() {
+            localStorage.setItem('soop_quiz_userdata', JSON.stringify(userData));
+            saveUserDataToFirestore();
+        }
+
+        async function saveUserDataToFirestore() {
+            if (!currentUser) return;
+            try {
+                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'saveFile');
+                await setDoc(userDocRef, userData);
+            } catch (error) {
+                console.error("Firestore write error", error);
+            }
+        }
+
+        function updateVolumeUI() {
+            const volSlider = document.getElementById('volume-slider');
+            if(volSlider) {
+                volSlider.value = userData.settings.volume;
+                masterVolume = userData.settings.volume;
+                document.getElementById('volume-text').innerText = `볼륨: ${Math.round(masterVolume * 100)}%`;
+                
+                if (!volSlider.dataset.listenerAttached) {
+                    volSlider.addEventListener('input', (e) => {
+                        masterVolume = parseFloat(e.target.value);
+                        userData.settings.volume = masterVolume;
+                        document.getElementById('volume-text').innerText = `볼륨: ${Math.round(masterVolume * 100)}%`;
+                    });
+                    volSlider.addEventListener('change', () => {
+                        playSound('click'); 
+                        saveUserData(); // 슬라이더 조절을 끝냈을 때 데이터 저장
+                    });
+                    volSlider.dataset.listenerAttached = "true";
+                }
+            }
+        }
+
+        function setupApp() {
+            setupGroupButtons();
+            renderAchievements();
+            renderHighscores();
+        }
+
+        // ==========================================
+        // 🔐 Google 로그인 기능
+        // ==========================================
+        async function loginWithGoogle() {
+            playSound('click');
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+                showToast("구글 계정으로 로그인되었습니다! 데이터가 클라우드에 연동됩니다.");
+            } catch (error) {
+                console.error(error);
+                if (error.code === 'auth/popup-closed-by-user') {
+                    showToast("로그인이 취소되었습니다.");
+                } else {
+                    showToast("로그인 오류: (미리보기 환경에서는 팝업이 차단될 수 있습니다)");
+                }
+            }
+        }
+
+        async function logoutGoogle() {
+            playSound('click');
+            try {
+                await signOut(auth);
+                showToast("로그아웃 되었습니다. (오프라인 모드 전환)");
+                userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { volume: 0.5 } };
+                await signInAnonymously(auth);
+            } catch (error) {
+                showToast("로그아웃 오류가 발생했습니다.");
+            }
+        }
+
+        // ==========================================
+        // 🎮 화면 전환 및 게임 핵심 로직
+        // ==========================================
+        let currentScreen = 'screen-main';
+        let currentMode = ''; 
+        let currentDifficulty = ''; 
+        let currentGroup = ''; 
+        let currentQuestions = [];
+        let currentQIndex = 0;
+        let health = 5;
+        let score = 0;
+        let scoreMultiplier = 1.0;
+        let combo = 0;
+        let isAnswering = false;
+
+        let timerInterval;
+        let timeLeft = 20;
+
+        function navTo(targetScreenId, isPopState = false) {
+            if (!isPopState) playSound('click');
+            
+            // 게임 화면에서 다른 화면으로 강제 이동될 경우 타이머 정지
+            if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') {
+                stopTimer();
+            }
+
+            document.getElementById(currentScreen).classList.add('hidden-screen');
+            document.getElementById(targetScreenId).classList.remove('hidden-screen');
+            currentScreen = targetScreenId;
+            
+            // 브라우저 히스토리에 상태 추가 (뒤로가기 지원용)
+            if (!isPopState) {
+                history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
+            }
+            
+            if(targetScreenId === 'screen-achievements') renderAchievements();
+            if(targetScreenId === 'screen-highscores') renderHighscores();
+            // 개별모드 진입 시 버튼 새로고침
+            if(targetScreenId === 'screen-group') setupGroupButtons();
+        }
+
+        // 브라우저 뒤로가기/앞으로가기 이벤트 처리
+        window.addEventListener('popstate', (e) => {
+            if (currentScreen === 'screen-game') {
+                // 게임 중 뒤로가기 시도시 모달 띄우기 및 히스토리 원상복구
+                history.pushState({ screen: 'screen-game' }, '', '#screen-game');
+                exitGame();
+                return;
+            }
+
+            // 모달이 열려있다면 닫기
+            document.getElementById('exit-modal').classList.add('hidden');
+            
+            if (e.state && e.state.screen) {
+                navTo(e.state.screen, true);
+            } else {
+                navTo('screen-main', true);
+            }
+        });
+
+        function updateHealthUI() {
+            const container = document.getElementById('health-display');
+            container.innerHTML = '';
+            const maxHealth = currentMode === 'challenge' ? 1 : 5;
+            for (let i = 0; i < maxHealth; i++) {
+                if (i < health) container.innerHTML += '<span>❤️</span>';
+                else container.innerHTML += '<span class="opacity-30">🤍</span>';
+            }
+        }
+
+        function updateScoreUI() {
+            document.getElementById('score-display').innerText = score.toLocaleString();
+            const comboEl = document.getElementById('combo-display');
+            if (combo > 1) {
+                comboEl.innerText = `${combo} COMBO! (+${combo * 4})`;
+                comboEl.classList.remove('opacity-0');
+            } else {
+                comboEl.classList.add('opacity-0');
+            }
+        }
+
+        function copyEmail() {
+            playSound('click');
+            const email = 'konamp63@gmail.com';
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(email).then(() => showToast("이메일 주소가 복사되었습니다.")).catch(() => showToast("복사 실패. 직접 드래그해주세요."));
+            } else {
+                const textArea = document.createElement("textarea");
+                textArea.value = email;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try { document.execCommand('copy'); showToast("이메일 주소가 복사되었습니다."); } catch (err) { }
+                document.body.removeChild(textArea);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 20;
+            const timerBar = document.getElementById('timer-bar');
+            timerBar.style.width = '100%';
+            timerBar.className = 'bg-blue-500 h-full w-full transition-all duration-100 ease-linear';
+            resumeTimer();
+        }
+
+        function resumeTimer() {
+            clearInterval(timerInterval);
+            const timerBar = document.getElementById('timer-bar');
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                const percentage = (timeLeft / 20) * 100;
+                timerBar.style.width = `${percentage}%`;
+                
+                if (percentage < 30) timerBar.classList.replace('bg-blue-500', 'bg-red-500');
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleAnswer(0, null); // 시간 초과 처리
+                }
+            }, 100);
+        }
+
+        function stopTimer() { clearInterval(timerInterval); }
+
+        function exitGame() {
+            playSound('click');
+            if (isAnswering) return; 
+            stopTimer();
+            document.getElementById('exit-modal').classList.remove('hidden');
+        }
+
+        function closeExitModal() {
+            playSound('click');
+            document.getElementById('exit-modal').classList.add('hidden');
+            resumeTimer();
+        }
+
+        function confirmExit() {
+            playSound('click');
+            document.getElementById('exit-modal').classList.add('hidden');
+            navTo('screen-main');
+        }
+
+        // Firebase 데이터에서 유효한 문제만 필터링 (null 값 방지)
+        function getValidQuestions() {
+            if (!quizDatabase) return [];
+            const arr = Array.isArray(quizDatabase) ? quizDatabase : Object.values(quizDatabase);
+            return arr.filter(q => q && q.question);
+        }
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function startExpertMode(difficulty) {
+            playSound('click');
+            currentMode = 'expert';
+            currentDifficulty = difficulty;
+            currentGroup = '';
+            
+            let pool = getValidQuestions();
+            if (pool.length === 0) { showToast("문제가 부족합니다."); return; }
+
+            // DB에 등록된 문제가 요구량보다 적어도 반복해서 섞어 정확히 지정된 개수만큼 채워주는 로직
+            const buildQuestions = (targetCount) => {
+                let result = [];
+                while (result.length < targetCount) {
+                    result = result.concat(shuffle([...pool]));
+                }
+                return result.slice(0, targetCount);
+            };
+
+            if (difficulty === '데모') {
+                currentQuestions = buildQuestions(10);
+                scoreMultiplier = 1.0;
+            } else if (difficulty === '초보') {
+                currentQuestions = buildQuestions(30);
+                scoreMultiplier = 1.0;
+            } else if (difficulty === '중수') {
+                currentQuestions = buildQuestions(50);
+                scoreMultiplier = 1.25;
+            } else if (difficulty === '고수') {
+                currentQuestions = buildQuestions(100);
+                scoreMultiplier = 1.5;
+            } else if (difficulty === '전문가') {
+                currentQuestions = buildQuestions(150);
+                scoreMultiplier = 1.75;
+                } else if (difficulty === '마스터') {
+                currentQuestions = buildQuestions(200);
+                scoreMultiplier = 2.0;
+            }
+            startGame(5);
+        }
+
+        function startChallengeMode() {
+            playSound('click');
+            currentMode = 'challenge';
+            currentDifficulty = '';
+            currentGroup = '';
+            currentQuestions = [];
+            let pool = getValidQuestions();
+            for(let i=0; i<45; i++) currentQuestions = currentQuestions.concat(shuffle([...pool]));
+            scoreMultiplier = 2.0; 
+            startGame(1);
+        }
+
+        function startGroupMode(groupName) {
+            playSound('click');
+            currentMode = 'group';
+            currentDifficulty = '';
+            currentGroup = groupName;
+            
+            // 💡 [핵심] 쉼표로 구분된 그룹 문자열 파싱하여 포함 여부 확인
+            currentQuestions = getValidQuestions().filter(q => {
+                if (!q.group) return false;
+                const groups = String(q.group).split(',').map(g => g.trim());
+                return groups.includes(groupName);
+            });
+
+            shuffle(currentQuestions);
+            scoreMultiplier = 1.0;
+            if (currentQuestions.length === 0) { showToast("문제가 없습니다."); return; }
+            startGame(5);
+        }
+
+        function setupGroupButtons() {
+            const container = document.getElementById('group-buttons-container');
+            container.innerHTML = '';
+            
+            // 💡 [핵심] 모든 문제의 쉼표로 구분된 그룹을 추출하여 고유한 그룹 목록 생성
+            let allGroups = [];
+            getValidQuestions().forEach(q => {
+                if (q.group) {
+                    const splitGroups = String(q.group).split(',').map(g => g.trim()).filter(g => g !== "");
+                    allGroups = allGroups.concat(splitGroups);
+                }
+            });
+            const uniqueGroups = [...new Set(allGroups)];
+            
+            if (uniqueGroups.length === 0) {
+                container.innerHTML = '<p class="text-slate-500 text-center w-full mt-4">생성된 그룹/크루가 없습니다.</p>';
+            }
+            
+            uniqueGroups.forEach(group => {
+                const btn = document.createElement('button');
+                // 버튼 패딩(p-6 -> p-4), 둥글기(rounded-2xl -> rounded-xl) 조절 및 h-full 제거로 업적 목록과 비슷한 크기 적용
+                btn.className = 'w-full flex items-center justify-between shrink-0 bg-slate-800 hover:bg-slate-700 border border-sky-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
+                // 글자 크기도 text-xl에서 text-lg로 조금 줄여 아담하게 변경
+                btn.innerHTML = `<span class="text-lg">${group}</span> <span class="text-sky-500 text-xs bg-sky-500/10 px-3 py-1.5 rounded-lg">도전</span>`;
+                btn.onclick = () => startGroupMode(group);
+                container.appendChild(btn);
+            });
+        }
+
+        function startGame(initialHealth) {
+            health = initialHealth;
+            score = 0;
+            combo = 0;
+            currentQIndex = 0;
+            updateHealthUI();
+            updateScoreUI();
+            navTo('screen-game');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswering = false;
+            if (currentQIndex >= currentQuestions.length) { endGame(true); return; }
+
+            const qData = currentQuestions[currentQIndex];
+            
+            document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
+            document.getElementById('game-question').innerText = qData.question;
+            
+            const imgEl = document.getElementById('game-image');
+            const noImgEl = document.getElementById('no-image-text');
+            if (qData.image && qData.image.trim() !== "") {
+                imgEl.src = qData.image;
+                imgEl.classList.remove('hidden');
+                noImgEl.classList.add('hidden');
+            } else {
+                imgEl.src = "";
+                imgEl.classList.add('hidden');
+                noImgEl.classList.remove('hidden');
+            }
+
+            document.getElementById('overlay-o').classList.add('hidden');
+            document.getElementById('overlay-o').classList.remove('pop-in');
+            document.getElementById('overlay-x').classList.add('hidden');
+            document.getElementById('overlay-x').classList.remove('pop-in');
+
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach((btn, index) => {
+                btn.innerText = qData.options[index];
+                btn.className = 'choice-btn w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-4 px-6 rounded-xl border border-slate-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
+                btn.disabled = false;
+                btn.onclick = () => handleAnswer(index + 1, btn);
+            });
+
+            startTimer();
+        }
+
+        function handleAnswer(selectedIndex, selectedBtn) {
+            if (isAnswering) return;
+            isAnswering = true;
+            stopTimer();
+
+            const qData = currentQuestions[currentQIndex];
+            const isCorrect = (selectedIndex === qData.answer);
+            const buttons = document.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const overlayO = document.getElementById('overlay-o');
+            const overlayX = document.getElementById('overlay-x');
+
+            if (isCorrect) {
+                playSound('correct');
+                if(selectedBtn) {
+                    selectedBtn.classList.replace('bg-slate-800', 'bg-blue-600');
+                    selectedBtn.classList.replace('border-slate-700', 'border-blue-400');
+                }
+                overlayO.classList.remove('hidden');
+                overlayO.classList.add('pop-in');
+                
+                combo++;
+                score += (400 * scoreMultiplier) + (combo * 4);
+                if (currentQIndex === 0) checkAchievement('FIRST_RIGHT');
+            } else {
+                playSound('wrong');
+                if(selectedBtn) {
+                    selectedBtn.classList.replace('bg-slate-800', 'bg-red-600');
+                    selectedBtn.classList.replace('border-slate-700', 'border-red-400');
+                }
+                buttons[qData.answer - 1].classList.replace('bg-slate-800', 'bg-blue-900');
+                buttons[qData.answer - 1].classList.add('border-blue-500', 'opacity-80');
+
+                overlayX.classList.remove('hidden');
+                overlayX.classList.add('pop-in');
+                
+                health--;
+                combo = 0;
+                if (currentQIndex === 0) checkAchievement('FIRST_WRONG');
+            }
+
+            updateHealthUI();
+            updateScoreUI();
+            checkAchievement('PASS_EXPERT', currentQIndex + 1);
+            checkAchievement('COMBO', combo);
+
+            setTimeout(() => {
+                if (health <= 0) endGame(false);
+                else { currentQIndex++; loadQuestion(); }
+            }, 1200);
+        }
+
+        function getRank(finalScore) {
+            if (finalScore > 200000) return { rank: 'S', color: 'text-yellow-400', desc: "전설적인 버잘알!" };
+            if (finalScore >= 160000) return { rank: 'A', color: 'text-red-400', desc: "완벽에 가까운 지식" };
+            if (finalScore >= 120000) return { rank: 'B', color: 'text-blue-400', desc: "훌륭한 스트리머 팬" };
+            if (finalScore >= 80000) return { rank: 'C', color: 'text-green-400', desc: "나쁘지 않은 실력" };
+            if (finalScore >= 40000) return { rank: 'D', color: 'text-slate-400', desc: "아직은 뉴비입니다" };
+            return { rank: 'F', color: 'text-slate-600', desc: "방송좀 많이보세요" };
+        }
+
+        function endGame(isClear) {
+            checkAchievement('SCORE_RANK', score);
+            
+            // 난이도별 클리어 업적 체크 로직 추가
+            if (isClear && currentMode === 'expert') {
+                if (currentDifficulty === '데모') checkAchievement('CLEAR_DEMO');
+                if (currentDifficulty === '초보') checkAchievement('CLEAR_EASY');
+                if (currentDifficulty === '중수') checkAchievement('CLEAR_NORMAL');
+                if (currentDifficulty === '고수') checkAchievement('CLEAR_HARD');
+                if (currentDifficulty === '전문가') checkAchievement('CLEAR_EXPERT');
+                if (currentDifficulty === '마스터') checkAchievement('CLEAR_MASTER');
+            }
+            
+            const finalScore = Math.floor(score);
+            if (currentMode === 'expert' && finalScore > userData.highscores.expert) userData.highscores.expert = finalScore;
+            if (currentMode === 'challenge' && finalScore > userData.highscores.challenge) userData.highscores.challenge = finalScore;
+            if (currentMode === 'group') {
+                if (!userData.highscores.groups[currentGroup] || finalScore > userData.highscores.groups[currentGroup]) {
+                    userData.highscores.groups[currentGroup] = finalScore;
+                }
+            }
+            saveUserData();
+
+            navTo('screen-result');
+            const rankData = getRank(finalScore);
+            const rankEl = document.getElementById('rank-display');
+            rankEl.innerText = rankData.rank;
+            rankEl.className = `text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_currentColor] ${rankData.color} shrink-0`;
+            document.getElementById('final-score').innerText = finalScore.toLocaleString();
+            document.getElementById('rank-desc').innerText = rankData.desc;
+            document.getElementById('rank-desc').className = `font-bold mt-1 ${rankData.color}`;
+        }
+
+        function checkAchievement(type, value = 0) {
+            achievementDatabase.forEach(ach => {
+                if (userData.unlockedAchievements.includes(ach.id)) return;
+                
+                let isUnlocked = false;
+                if (type === 'FIRST_RIGHT' && ach.type === 'FIRST_RIGHT') isUnlocked = true;
+                if (type === 'FIRST_WRONG' && ach.type === 'FIRST_WRONG') isUnlocked = true;
+                if (type === 'PASS_EXPERT' && ach.type === 'PASS_EXPERT' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
+                if (type === 'COMBO' && ach.type === 'COMBO' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
+                if (type === 'SCORE_RANK' && ach.type === 'SCORE_RANK' && value > ach.target) isUnlocked = true;
+                if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
+                if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
+                if (type === 'CLEAR_HARD' && ach.type === 'CLEAR_HARD') isUnlocked = true;
+
+                if (isUnlocked) {
+                    userData.unlockedAchievements.push(ach.id);
+                    saveUserData();
+                    showToast(`🏆 업적 달성: ${ach.name}`);
+                }
+            });
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievements-container');
+            container.innerHTML = '';
+            
+            achievementDatabase.forEach(ach => {
+                const isUnlocked = userData.unlockedAchievements.includes(ach.id);
+                const el = document.createElement('div');
+                
+                if (isUnlocked) {
+                    el.className = 'w-full shrink-0 bg-white rounded-xl p-4 shadow-md border border-gray-200';
+                    el.innerHTML = `
+                        <h4 class="text-black font-bold text-base">${ach.name}</h4>
+                        <p class="text-gray-600 text-xs mt-1 font-medium">${ach.desc}</p>
+                    `;
+                } else {
+                    el.className = 'w-full shrink-0 bg-slate-800 rounded-xl p-4 border border-slate-700 relative flex items-center overflow-hidden';
+                    const title = ach.secret ? "???" : ach.name;
+                    const desc = ach.secret ? "비밀 조건을 달성해 해금하세요." : ach.desc;
+                    
+                    el.innerHTML = `
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10"><span class="text-2xl">🔒</span></div>
+                        <div class="opacity-40 w-full pl-2">
+                            <h4 class="text-white font-bold text-base">${title}</h4>
+                            <p class="text-slate-400 text-xs mt-1">${desc}</p>
+                        </div>
+                    `;
+                }
+                container.appendChild(el);
+            });
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-blue-600 text-white font-bold px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(37,99,235,0.5)] border border-blue-400 slide-up pointer-events-auto w-full text-center leading-snug text-lg';
+            toast.innerText = message;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -20px)';
+                toast.style.transition = 'all 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function renderHighscores() {
+            const container = document.getElementById('highscores-container');
+            container.innerHTML = `
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shrink-0 flex flex-col justify-center">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-blue-400 font-bold text-xl">버잘알 모드</span>
+                        <span class="text-white font-black text-2xl">${userData.highscores.expert.toLocaleString()} 점</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-red-400 font-bold text-xl">챌린지 모드</span>
+                        <span class="text-white font-black text-2xl">${userData.highscores.challenge.toLocaleString()} 점</span>
+                    </div>
+                </div>
+                <h3 class="text-sky-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
+            `;
+
+            const groupKeys = Object.keys(userData.highscores.groups);
+            if (groupKeys.length === 0) {
+                container.innerHTML += `<p class="text-slate-500 text-center py-6 bg-slate-800 rounded-xl border border-slate-700 shrink-0">기록이 없습니다.</p>`;
+            } else {
+                groupKeys.sort((a, b) => userData.highscores.groups[b] - userData.highscores.groups[a])
+                         .slice(0, 3)
+                         .forEach(group => {
+                    container.innerHTML += `
+                        <div class="flex justify-between items-center bg-slate-800 rounded-xl p-5 border border-slate-700 shrink-0">
+                            <span class="text-slate-300 font-bold text-lg">${group}</span>
+                            <span class="text-white font-black text-xl">${userData.highscores.groups[group].toLocaleString()} 점</span>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // 모듈 환경에서는 스크립트가 지연 실행되므로, DOMContentLoaded 이벤트를 사용하거나 즉시 실행합니다.
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+    </script>
+</body>
+</html>
