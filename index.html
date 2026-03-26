@@ -22,11 +22,11 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* 토스트 팝업 애니메이션 */
+        /* 💡 토스트 팝업 애니메이션 (이중 중앙정렬 밀림 현상 해결: X축 이동 제거) */
         .slide-up { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes slideUp {
-            from { opacity: 0; transform: translate(-50%, -20px); }
-            to { opacity: 1; transform: translate(-50%, 0); }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* 클릭 효과 및 모바일 탭 하이라이트 제거 */
@@ -275,7 +275,6 @@
             </div>
 
             <!-- 하단: 3개의 선택지 및 다음 버튼 영역 -->
-            <!-- 💡 안전한 높이 확보를 위해 pb-2에서 pb-4로 늘림 -->
             <div class="shrink-0 w-full mt-auto pb-4">
                 <div id="game-options" class="space-y-3">
                     <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
@@ -284,7 +283,6 @@
                 </div>
                 
                 <!-- 다음 문제 넘어가기 버튼 (실루엣 퀴즈 완료 시 나타남) -->
-                <!-- 💡 slide-up 대신 fade-in 사용으로 화면 이탈 방지 -->
                 <button id="btn-next" onclick="nextQuestion()" class="hidden w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 px-6 rounded-xl border border-teal-400 transition duration-200 btn-active text-lg shadow-lg shadow-teal-500/30 fade-in">
                     다음 문제로 넘어가기 ➔
                 </button>
@@ -732,13 +730,11 @@
             navTo('screen-main');
         }
 
-        // 💡 다음 문제 진행 로직 공통 함수화
         function proceedToNext() {
             if (health <= 0) endGame(false);
             else { currentQIndex++; loadQuestion(); }
         }
 
-        // 💡 실루엣 퀴즈용: 다음 문제 수동 넘어가기
         function nextQuestion() {
             playSound('click');
             document.getElementById('btn-next').classList.add('hidden');
@@ -834,14 +830,13 @@
             document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
             document.getElementById('game-question').innerText = qData.question;
             
-            // UI 초기화: 선택지 보이기, 다음 버튼 숨기기
             document.getElementById('game-options').classList.remove('hidden');
             document.getElementById('btn-next').classList.add('hidden');
 
             const imgEl = document.getElementById('game-image');
             imgEl.style.transition = "none";
             imgEl.style.opacity = 1;
-            imgEl.style.filter = "none"; // 블러 효과 리셋
+            imgEl.style.filter = "none"; 
             imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
 
             document.getElementById('overlay-o').classList.add('hidden');
@@ -887,7 +882,6 @@
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach(btn => btn.disabled = true);
 
-            // 💡 실루엣 이미지 정답 공개 시 블러 애니메이션 연출
             const imgEl = document.getElementById('game-image');
             if (isSilhouette) {
                 imgEl.style.filter = "blur(8px)";
@@ -942,20 +936,17 @@
             checkAchievement('PASS_EXPERT', currentQIndex + 1);
             checkAchievement('COMBO', combo);
 
-            // 💡 문제 진행 방식 분기 (실루엣 vs 일반)
             if (isSilhouette) {
-                // 실루엣인 경우: 1.2초 뒤 O/X와 선택지를 숨기고 '다음 버튼' 노출
                 setTimeout(() => {
                     overlayO.classList.add('hidden');
                     overlayX.classList.add('hidden');
                     
-                    document.getElementById('game-options').classList.add('hidden'); // 선택지 가리기
+                    document.getElementById('game-options').classList.add('hidden'); 
                     const btnNext = document.getElementById('btn-next');
                     btnNext.innerText = (health <= 0) ? "결과 보기 ➔" : "다음 문제로 넘어가기 ➔";
                     btnNext.classList.remove('hidden');
                 }, 1200);
             } else {
-                // 일반 문제인 경우: 기존처럼 1.2초 뒤 자동 다음 문제 진행
                 setTimeout(() => {
                     proceedToNext();
                 }, 1200);
@@ -1023,7 +1014,7 @@
                 if (type === 'CLEAR_DEMO' && ach.type === 'CLEAR_DEMO') isUnlocked = true;
                 if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
                 if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
-                if (type === 'CLEAR_HARD' && ach.type === 'CLEAR_HARD') isUnlocked = true;
+                if (type === 'CLEAR_HARD' && 라ch.type === 'CLEAR_HARD') isUnlocked = true;
                 if (type === 'CLEAR_EXPERT' && ach.type === 'CLEAR_EXPERT') isUnlocked = true;
                 if (type === 'CLEAR_MASTER' && ach.type === 'CLEAR_MASTER') isUnlocked = true;
 
@@ -1078,7 +1069,8 @@
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -20px)';
+                // 💡 애니메이션 X축 이동 없이 위로만 사라지게 수정
+                toast.style.transform = 'translateY(-20px)';
                 toast.style.transition = 'all 0.3s';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
