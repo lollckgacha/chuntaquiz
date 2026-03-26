@@ -22,7 +22,7 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* 💡 토스트 팝업 애니메이션 (이중 중앙정렬 밀림 현상 해결: X축 이동 제거) */
+        /* 토스트 팝업 애니메이션 */
         .slide-up { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(-20px); }
@@ -36,40 +36,57 @@
         /* 숨김 처리 유틸리티 */
         .hidden-screen { display: none !important; }
         
-        /* 커스텀 스크롤바 (민트색 포인트) */
+        /* 커스텀 스크롤바 */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+
+        /* 반응형 게임 컨테이너: 9:16 비율 유지 및 자동 크기 조절 */
+        .game-container {
+            width: 100%;
+            height: 100dvh;
+            margin: 0 auto;
+        }
+        @media (min-width: 640px) {
+            .game-container {
+                height: 95dvh;           
+                width: auto;             
+                aspect-ratio: 9 / 16;    
+                max-height: 95dvh;
+                max-width: calc(100vw - 2rem); 
+            }
+        }
     </style>
 </head>
-<body class="bg-black text-zinc-100 h-[100dvh] w-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden relative select-none">
-
-    <!-- ==================== 로그인 UI (우측 상단, 메인화면에서만 보임) ==================== -->
-    <div id="login-section" class="absolute top-4 right-4 z-50 flex items-center gap-2 transition-opacity duration-300">
-        <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
-            <svg class="w-4 h-4" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Google 로그인
-        </button>
-        
-        <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
-            <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
-            <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
-        </div>
-    </div>
+<!-- 보안: 우클릭, 드래그, 텍스트 선택 원천 차단 -->
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false" class="bg-black text-zinc-100 h-[100dvh] w-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden select-none">
 
     <!-- 메인 앱 컨테이너 -->
-    <div id="app-container" class="bg-zinc-900 w-full h-full max-w-md sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
+    <div id="app-container" class="game-container bg-zinc-900 sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
+
+        <!-- ==================== 로그인 UI (우측 상단, 메인화면에서만 보임) ==================== -->
+        <div id="login-section" class="absolute top-4 right-4 z-50 flex items-center gap-2 transition-opacity duration-300">
+            <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
+                <svg class="w-4 h-4" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Google 로그인
+            </button>
+            
+            <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
+                <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
+                <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
+            </div>
+        </div>
 
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
-            <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
-                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+            <div class="flex-1 flex flex-col items-center justify-center mt-6 shrink-0">
+                <img src="logo.webp" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
                     천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
@@ -78,7 +95,7 @@
                 <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
             </div>
             
-            <div class="space-y-3 pb-8 shrink-0">
+            <div class="space-y-3 pb-4 shrink-0">
                 <button onclick="navTo('screen-mode')" class="w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 rounded-2xl btn-active shadow-lg shadow-teal-500/30 text-lg transition-colors">
                     도전 하기
                 </button>
@@ -256,15 +273,15 @@
             </div>
 
             <!-- 중앙 상단: 질문 내용 -->
-            <div class="shrink-0 min-h-[4rem] max-h-[20vh] overflow-y-auto flex items-center justify-center mb-4 px-2 pr-1 custom-scrollbar">
+            <div class="shrink-0 min-h-[4rem] max-h-[15vh] sm:max-h-[20vh] overflow-y-auto flex items-center justify-center mb-4 px-2 pr-1 custom-scrollbar">
                 <h2 id="game-question" class="text-xl sm:text-2xl font-bold text-center leading-snug break-words text-white w-full">
                     질문이 여기에 표시됩니다.
                 </h2>
             </div>
 
-            <!-- 중앙: 이미지 영역 -->
-            <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2">
-                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+            <!-- 중앙: 이미지 영역 (💡 id 속성과 부드러운 배경색 전환 효과 추가) -->
+            <div id="image-container" class="flex-1 min-h-[80px] sm:min-h-[150px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-4 sm:mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2 transition-colors duration-500">
+                <img id="game-image" src="logo.webp" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span>
@@ -275,14 +292,17 @@
             </div>
 
             <!-- 하단: 3개의 선택지 및 다음 버튼 영역 -->
-            <div class="shrink-0 w-full mt-auto pb-4">
-                <div id="game-options" class="space-y-3">
-                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+            <div class="shrink-0 w-full mt-auto pb-2 sm:pb-4">
+                <div id="game-options" class="space-y-2 sm:space-y-3">
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
                 </div>
                 
-                <!-- 다음 문제 넘어가기 버튼 (실루엣 퀴즈 완료 시 나타남) -->
+                <!-- 💡 정답 표시 영역 (실루엣/확대 퀴즈 완료 시 나타남) -->
+                <div id="correct-answer-display" class="hidden w-full text-center text-teal-300 font-bold mb-3 text-lg sm:text-xl fade-in"></div>
+
+                <!-- 다음 문제 넘어가기 버튼 -->
                 <button id="btn-next" onclick="nextQuestion()" class="hidden w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 px-6 rounded-xl border border-teal-400 transition duration-200 btn-active text-lg shadow-lg shadow-teal-500/30 fade-in">
                     다음 문제로 넘어가기 ➔
                 </button>
@@ -312,22 +332,22 @@
             Made by SSG_랜더스
         </div>
 
-    </div>
-
-    <!-- ==================== 나가기 확인 커스텀 모달 ==================== -->
-    <div id="exit-modal" class="fixed inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in">
-        <div class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 max-w-xs w-full text-center shadow-2xl">
-            <h3 class="text-xl font-bold text-white mb-2">게임 포기</h3>
-            <p class="text-zinc-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p>
-            <div class="flex gap-3">
-                <button onclick="closeExitModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
-                <button onclick="confirmExit()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">나가기</button>
+        <!-- ==================== 나가기 확인 커스텀 모달 ==================== -->
+        <div id="exit-modal" class="absolute inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in">
+            <div class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 max-w-xs w-full text-center shadow-2xl">
+                <h3 class="text-xl font-bold text-white mb-2">게임 포기</h3>
+                <p class="text-zinc-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeExitModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
+                    <button onclick="confirmExit()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">나가기</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 토스트 알림 -->
-    <div id="toast-container" class="fixed top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
+        <!-- 토스트 알림 -->
+        <div id="toast-container" class="absolute top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
+
+    </div>
 
     <!-- JavaScript 로직 -->
     <script type="module">
@@ -345,18 +365,30 @@
         window.copyEmail = copyEmail;
         window.loginWithGoogle = loginWithGoogle;
         window.logoutGoogle = logoutGoogle;
-        window.nextQuestion = nextQuestion; // 전역 바인딩
+        window.nextQuestion = nextQuestion; 
 
-        document.addEventListener('contextmenu', e => e.preventDefault());
+        // 보안 로직 유지
         document.addEventListener('keydown', e => {
             if (e.keyCode === 123 || 
                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || 
                (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 67 || e.key === 'C' || e.key === 'c')) || 
                (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { 
                 e.preventDefault();
                 return false;
             }
         });
+
+        setInterval(() => {
+            try {
+                const before = new Date().getTime();
+                debugger; 
+                const after = new Date().getTime();
+                if (after - before > 100) {
+                    document.body.innerHTML = "<div class='flex items-center justify-center h-screen w-screen bg-black text-teal-400 text-xl font-bold'>개발자 도구가 감지되었습니다. 보안을 위해 화면을 차단합니다.</div>";
+                }
+            } catch(e) {}
+        }, 2000);
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let masterVolume = 0.5;
@@ -428,14 +460,60 @@
             totalCorrectAnswers: 0 
         };
 
-        const mockQuizData = [{ question: "데이터 로딩 중...", options: ["...", "...", "..."], answer: 1, group: "", image: "" }];
-        const defaultAchievements = [{ id: "1", name: "천타잘알의 기질", desc: "첫 문제의 정답을 맞힌다.", type: "FIRST_RIGHT", target: 0, secret: false }];
+        const mockQuizData = [
+            { question: "다음 멤버의 생일은?", options: ["2월 26일", "6월 22일", "7월 24일"], answer: 2, group: "천양", image: "images/chunyang.webp" },
+            { question: "다음 멤버의 생일은?", options: ["2월 8일", "8월 2일", "8월 20일"], answer: 3, group: "달타", image: "images/dalta.png" },
+            { question: "다음 멤버의 생일은?", options: ["1월 1일", "6월 6일", "12월 31일"], answer: 3, group: "임하밍", image: "images/haming.png" },
+            { question: "다음 멤버의 생일은?", options: ["10월 25일", "11월 25일", "12월 25일"], answer: 1, group: "한아밍", image: "images/hanaming.png" },
+            { question: "다음 멤버의 생일은?", options: ["1월 2일", "1월 22일", "2월 2일"], answer: 2, group: "카푸", image: "images/kapu.png" },
+            { question: "다음 멤버의 생일은?", options: ["8월 8일", "9월 9일", "10월 10일"], answer: 1, group: "캬앙", image: "images/kyang.png" },
+            { question: "다음 멤버의 생일은?", options: ["1월 28일", "8월 12일", "12월 8일"], answer: 3, group: "마다옴", image: "images/madaom.png" },
+            { question: "다음 멤버의 MBTI는?", options: ["ISTP", "INFP", "ISFP"], answer: 1, group: "나나문", image: "images/nanamoon.png" },
+            { question: "다음 멤버의 MBTI는?", options: ["ISTP", "INFP", "ISFP"], answer: 1, group: "파니", image: "images/pani.png" },
+            { question: "다음 멤버의 MBTI는?", options: ["INTP", "ENTP", "ISTP"], answer: 1, group: "김웰로", image: "images/wello.png" },
+            { question: "다음 멤버의 반려동물 이름은?", options: ["마또", "망고", "당고"], answer: 1, group: "마다옴", image: "images/madaom.png" },
+            { question: "다음 멤버의 반려동물 이름은?", options: ["아토", "체리", "마루"], answer: 3, group: "모카", image: "images/moca.png" },
+            { question: "다음 멤버의 반려동물 이름이 아닌것은?", options: ["두부", "콩이", "먼지"], answer: 2, group: "김웰로", image: "images/wello.png" },
+            { question: "다음 스트리머의 OGQ 이모티콘 이름이 아닌것은?", options: ["처니티콘", "민트만두콘", "블롭티콘"], answer: 3, group: "천양", image: "images/chunyang.webp" },
+            { question: "다음 스트리머의 OGQ 이모티콘 이름은?", options: ["달달하이! 난 꿀즙이", "달달한 꿀즙이", "양봉장의 꿀즙이들"], answer: 1, group: "달타", image: "images/dalta.png" },
+            { question: "다음 스트리머의 OGQ 이모티콘 이름이 아닌것은?", options: ["귀여운 늑대 울푸의 하루", "카푸가 와써요라", "귀여운 늑대 울푸의 일상"], answer: 1, group: "카푸", image: "images/kapu.png" },
+            { question: "다음 멤버의 SOOP 닉네임은?", options: ["나나문", "나나문☆", "나나문_"], answer: 1, group: "나나문", image: "images/nanamoon.png" },
+            { question: "다음 멤버의 SOOP 닉네임은?", options: ["파니_", "파니", "파니:b"], answer: 1, group: "파니", image: "images/pani.png" },
+            { question: "다음 멤버의 SOOP 닉네임은?", options: ["김웰로_", "웰로", "김웰로"], answer: 3, group: "김웰로", image: "images/wello.png" },
+            { question: "다음 멤버가 소속된 그룹명은?", options: ["BLYZ", "VLYZ", "VLEEZ"], answer: 2, group: "문모모", image: "images/moonmomo.png" },
+            { question: "다음 멤버가 소속된 그룹명은?", options: ["U:RL", "UR:L", "URL:"], answer: 2, group: "모카", image: "images/moca.png" },
+            { question: "다음 멤버의 오리지널곡이 아닌것은?", options: ["닿을 수 있게", "Watch Me", "여름의 한 조각"], answer: 3, group: "문모모", image: "images/moonmomo.png" },
+            { question: "다음 멤버가 릴동파2에서 메달을 딴 종목이 아닌것은?", options: ["스키점프", "스켈레톤", "봅슬레이"], answer: 3, group: "문모모", image: "images/moonmomo.png" },
+            { question: "다음 멤버가 릴동파2에서 메달을 딴 종목은?", options: ["피겨스케이팅", "포인트컬링", "봅슬레이"], answer: 1, group: "한아밍", image: "images/hanaming.png" },
+            { question: "다음 멤버의 종족은?", options: ["검은 고양이", "달에서 온 마녀", "달의 요정"], answer: 2, group: "나나문", image: "images/nanamoon.png" }
+        ];
+
+        const defaultAchievements = [
+            { id: "1", name: "천타잘알의 기질", desc: "첫 문제의 정답을 맞힌다.", type: "FIRST_RIGHT", target: 0, secret: false },
+            { id: "2", name: "천타알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false },
+            { id: "3", name: "천타버스 초보", desc: "천타버스 모드 초보 난이도를 클리어한다.", type: "CLEAR_EASY", target: 0, secret: false },
+            { id: "4", name: "천타버스 중수", desc: "천타버스 모드 중수 난이도를 클리어한다.", type: "CLEAR_NORMAL", target: 0, secret: false },
+            { id: "5", name: "천타버스 고수", desc: "천타버스 모드 고수 난이도를 클리어한다.", type: "CLEAR_HARD", target: 0, secret: false },
+            { id: "6", name: "천타버스 전문가", desc: "천타버스 모드 전문가 난이도를 클리어한다.", type: "CLEAR_EXPERT", target: 0, secret: false },
+            { id: "7", name: "천타버스 마스터", desc: "천타버스 모드 마스터 난이도를 클리어한다.", type: "CLEAR_MASTER", target: 0, secret: false },
+            { id: "8", name: "천타버스 유동", desc: "천타버스 모드에서 10번째 문제를 통과한다.", type: "PASS_EXPERT", target: 10, secret: false },
+            { id: "9", name: "천타버스 애청자", desc: "천타버스 모드에서 30번째 문제를 통과한다.", type: "PASS_EXPERT", target: 30, secret: false },
+            { id: "10", name: "천타버스 팬클럽", desc: "천타버스 모드에서 50번째 문제를 통과한다.", type: "PASS_EXPERT", target: 50, secret: false },
+            { id: "11", name: "천타버스 구독팬", desc: "누적 정답 10회를 달성한다.", type: "TOTAL_CORRECT", target: 10, secret: false },
+            { id: "12", name: "천타버스 열혈팬", desc: "누적 정답 50회를 달성한다.", type: "TOTAL_CORRECT", target: 50, secret: false },
+            { id: "13", name: "천타버스 회장님", desc: "누적 정답 100회를 달성한다.", type: "TOTAL_CORRECT", target: 100, secret: false },
+            { id: "14", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false }
+        ];
 
         function preloadImages() {
             const imageUrls = new Set();
-            imageUrls.add('logo2.png');
+            imageUrls.add('logo.webp');
             getValidQuestions().forEach(q => {
-                if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
+                if (q.image && q.image.trim() !== "") {
+                    imageUrls.add(q.image);
+                    if (q.image.includes('_sil.')) imageUrls.add(q.image.replace('_sil.', '.'));
+                    if (q.image.includes('_zoom.')) imageUrls.add(q.image.replace('_zoom.', '.'));
+                }
             });
             imageUrls.forEach(url => { const img = new Image(); img.src = url; });
         }
@@ -461,7 +539,7 @@
                 quizDatabase = await quizRes.json() || [];
                 achievementDatabase = await achRes.json() || defaultAchievements;
             } catch (error) {
-                showToast("데이터 연결 실패. 기본 데이터로 시작합니다.");
+                console.warn("데이터 연결 실패. 기본 데이터로 시작합니다.");
                 quizDatabase = [...mockQuizData];
                 achievementDatabase = [...defaultAchievements];
             }
@@ -622,9 +700,12 @@
         let timerInterval;
         let timeLeft = 20;
 
-        function navTo(targetScreenId, isPopState = false) {
+        function navTo(targetScreenId, isPopState = false, replace = false) {
             if (!isPopState) playSound('click');
-            if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') stopTimer();
+            
+            if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') {
+                stopTimer();
+            }
 
             const loginSection = document.getElementById('login-section');
             if (loginSection) {
@@ -639,7 +720,13 @@
             document.getElementById(targetScreenId).classList.remove('hidden-screen');
             currentScreen = targetScreenId;
             
-            if (!isPopState) history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
+            if (!isPopState) {
+                if (replace) {
+                    history.replaceState({ screen: targetScreenId }, '', `#${targetScreenId}`);
+                } else {
+                    history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
+                }
+            }
             
             if(targetScreenId === 'screen-achievements') renderAchievements();
             if(targetScreenId === 'screen-highscores') renderHighscores();
@@ -647,13 +734,20 @@
         }
 
         window.addEventListener('popstate', (e) => {
-            if (currentScreen === 'screen-game') {
-                history.pushState({ screen: 'screen-game' }, '', '#screen-game');
-                exitGame(); return;
-            }
             document.getElementById('exit-modal').classList.add('hidden');
-            if (e.state && e.state.screen) navTo(e.state.screen, true);
-            else navTo('screen-main', true);
+            
+            const targetScreen = (e.state && e.state.screen) ? e.state.screen : 'screen-main';
+            
+            if (currentScreen === 'screen-game' && targetScreen !== 'screen-game') {
+                stopTimer();
+            }
+
+            if (targetScreen === 'screen-game') {
+                navTo('screen-main', true, true);
+                return;
+            }
+            
+            navTo(targetScreen, true);
         });
 
         function updateHealthUI() {
@@ -705,7 +799,10 @@
                 const percentage = (timeLeft / 20) * 100;
                 timerBar.style.width = `${percentage}%`;
                 if (percentage < 30) timerBar.classList.replace('bg-teal-400', 'bg-red-500');
-                if (timeLeft <= 0) { clearInterval(timerInterval); handleAnswer(0, null); }
+                if (timeLeft <= 0) { 
+                    clearInterval(timerInterval); 
+                    handleAnswer(0, null); 
+                }
             }, 100);
         }
 
@@ -713,21 +810,21 @@
 
         function exitGame() {
             playSound('click');
-            if (isAnswering) return; 
-            stopTimer();
+            if (isAnswering && document.getElementById('btn-next').classList.contains('hidden')) return; 
+            
             document.getElementById('exit-modal').classList.remove('hidden');
         }
 
         function closeExitModal() {
             playSound('click');
             document.getElementById('exit-modal').classList.add('hidden');
-            resumeTimer();
         }
 
         function confirmExit() {
             playSound('click');
             document.getElementById('exit-modal').classList.add('hidden');
-            navTo('screen-main');
+            stopTimer();
+            navTo('screen-main', false, true); 
         }
 
         function proceedToNext() {
@@ -738,6 +835,7 @@
         function nextQuestion() {
             playSound('click');
             document.getElementById('btn-next').classList.add('hidden');
+            document.getElementById('correct-answer-display').classList.add('hidden'); // 정답 표시 숨기기
             proceedToNext();
         }
 
@@ -819,7 +917,9 @@
 
         function startGame(initialHealth) {
             health = initialHealth; score = 0; combo = 0; currentQIndex = 0;
-            updateHealthUI(); updateScoreUI(); navTo('screen-game'); loadQuestion();
+            updateHealthUI(); updateScoreUI(); 
+            navTo('screen-game', false, true); 
+            loadQuestion();
         }
 
         function loadQuestion() {
@@ -832,12 +932,24 @@
             
             document.getElementById('game-options').classList.remove('hidden');
             document.getElementById('btn-next').classList.add('hidden');
+            document.getElementById('correct-answer-display').classList.add('hidden'); // 정답 표시 숨기기
 
             const imgEl = document.getElementById('game-image');
+            const imgContainer = document.getElementById('image-container'); 
+            
             imgEl.style.transition = "none";
             imgEl.style.opacity = 1;
             imgEl.style.filter = "none"; 
-            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
+            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo.webp";
+
+            const isSilhouette = qData.image && qData.image.includes('_sil.');
+            if (isSilhouette) {
+                imgContainer.classList.remove('bg-zinc-900', 'border-zinc-800');
+                imgContainer.classList.add('bg-zinc-200', 'border-zinc-300');
+            } else {
+                imgContainer.classList.remove('bg-zinc-200', 'border-zinc-300');
+                imgContainer.classList.add('bg-zinc-900', 'border-zinc-800');
+            }
 
             document.getElementById('overlay-o').classList.add('hidden');
             document.getElementById('overlay-o').classList.remove('pop-in');
@@ -859,7 +971,7 @@
                     btn.innerText = optText;
                 }
 
-                btn.className = 'choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
+                btn.className = 'choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
                 btn.disabled = false;
                 btn.onclick = () => {
                     btn.blur(); 
@@ -875,22 +987,33 @@
             isAnswering = true;
             stopTimer();
 
+            document.getElementById('exit-modal').classList.add('hidden');
+
             const qData = currentQuestions[currentQIndex];
             const isCorrect = (selectedIndex === qData.answer);
-            const isSilhouette = qData.image && qData.image.includes('_sil.');
+            
+            const isSpecialImage = qData.image && (qData.image.includes('_sil.') || qData.image.includes('_zoom.'));
+            const isSilhouette = qData.image && qData.image.includes('_sil.'); 
             
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach(btn => btn.disabled = true);
 
             const imgEl = document.getElementById('game-image');
-            if (isSilhouette) {
+            const imgContainer = document.getElementById('image-container'); 
+            
+            if (isSpecialImage) {
                 imgEl.style.filter = "blur(8px)";
                 imgEl.style.opacity = 0.6;
                 imgEl.style.transition = "all 0.4s ease-in-out";
                 setTimeout(() => {
-                    imgEl.src = qData.image.replace('_sil.', '.');
+                    imgEl.src = qData.image.replace('_sil.', '.').replace('_zoom.', '.');
                     imgEl.style.filter = "blur(0px)";
                     imgEl.style.opacity = 1;
+                    
+                    if (isSilhouette) {
+                        imgContainer.classList.remove('bg-zinc-200', 'border-zinc-300');
+                        imgContainer.classList.add('bg-zinc-900', 'border-zinc-800');
+                    }
                 }, 300);
             }
 
@@ -920,8 +1043,10 @@
                     selectedBtn.classList.replace('bg-zinc-800', 'bg-red-600');
                     selectedBtn.classList.replace('border-zinc-700', 'border-red-400');
                 }
-                buttons[qData.answer - 1].classList.replace('bg-zinc-800', 'bg-teal-900');
-                buttons[qData.answer - 1].classList.add('border-teal-600', 'opacity-80');
+                if(selectedIndex > 0 && selectedIndex <= 3) {
+                    buttons[qData.answer - 1].classList.replace('bg-zinc-800', 'bg-teal-900');
+                    buttons[qData.answer - 1].classList.add('border-teal-600', 'opacity-80');
+                }
 
                 overlayX.classList.remove('hidden');
                 overlayX.classList.add('pop-in');
@@ -936,15 +1061,30 @@
             checkAchievement('PASS_EXPERT', currentQIndex + 1);
             checkAchievement('COMBO', combo);
 
-            if (isSilhouette) {
+            if (isSpecialImage) {
                 setTimeout(() => {
                     overlayO.classList.add('hidden');
                     overlayX.classList.add('hidden');
                     
                     document.getElementById('game-options').classList.add('hidden'); 
+                    
+                    // 💡 정답 표시 영역 업데이트 로직
+                    const correctText = qData.options[qData.answer - 1];
+                    const correctAnswerDisplay = document.getElementById('correct-answer-display');
+                    
+                    // 퍼스널 컬러 문제(색상 코드)인 경우 컬러 칩 추가
+                    if (/^#([0-9A-F]{3}){1,2}$/i.test(correctText.trim())) {
+                        correctAnswerDisplay.innerHTML = `<span class="text-white">정답:</span> <span class="inline-block w-5 h-5 rounded-sm border border-zinc-500 align-middle ml-1" style="background-color: ${correctText.trim()};"></span> ${correctText.trim()}`;
+                    } else {
+                        correctAnswerDisplay.innerHTML = `<span class="text-white">정답:</span> ${correctText}`;
+                    }
+                    correctAnswerDisplay.classList.remove('hidden');
+
                     const btnNext = document.getElementById('btn-next');
                     btnNext.innerText = (health <= 0) ? "결과 보기 ➔" : "다음 문제로 넘어가기 ➔";
                     btnNext.classList.remove('hidden');
+                    
+                    isAnswering = false; 
                 }, 1200);
             } else {
                 setTimeout(() => {
@@ -990,7 +1130,7 @@
             }
             saveUserData();
 
-            navTo('screen-result');
+            navTo('screen-result', false, true);
             const rankData = getRank(finalScore);
             const rankEl = document.getElementById('rank-display');
             rankEl.innerText = rankData.rank;
@@ -1014,7 +1154,7 @@
                 if (type === 'CLEAR_DEMO' && ach.type === 'CLEAR_DEMO') isUnlocked = true;
                 if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
                 if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
-                if (type === 'CLEAR_HARD' && 라ch.type === 'CLEAR_HARD') isUnlocked = true;
+                if (type === 'CLEAR_HARD' && ach.type === 'CLEAR_HARD') isUnlocked = true;
                 if (type === 'CLEAR_EXPERT' && ach.type === 'CLEAR_EXPERT') isUnlocked = true;
                 if (type === 'CLEAR_MASTER' && ach.type === 'CLEAR_MASTER') isUnlocked = true;
 
@@ -1069,7 +1209,6 @@
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                // 💡 애니메이션 X축 이동 없이 위로만 사라지게 수정
                 toast.style.transform = 'translateY(-20px)';
                 toast.style.transition = 'all 0.3s';
                 setTimeout(() => toast.remove(), 300);
@@ -1093,7 +1232,7 @@
                         <span class="text-zinc-300 font-bold text-lg">${(userData.totalCorrectAnswers || 0).toLocaleString()} 회</span>
                     </div>
                 </div>
-                <h3 class="text-teal-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
+                <h3 class="text-teal-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">멤버별 최고 기록 (Top 3)</h3>
             `;
 
             const groupKeys = Object.keys(userData.highscores.groups);
