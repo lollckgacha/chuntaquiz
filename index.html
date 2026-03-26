@@ -86,13 +86,12 @@
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <div class="flex-1 flex flex-col items-center justify-center mt-6 shrink-0">
-                <img src="logo.webp" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
                     천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
-                <p class="text-zinc-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
-                <p class="text-zinc-400 mt-4 text-center">새로고침시 기록이 초기화될 수 있습니다.</p>
-                <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">제작자 메일로 퀴즈 문제 제공 환영입니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">제작자 메일은 환경설정에 있습니다.</p>
             </div>
             
             <div class="space-y-3 pb-4 shrink-0">
@@ -108,7 +107,7 @@
                     </button>
                 </div>
                 <div class="flex space-x-3">
-                    <button onclick="navTo('screen-settings')" class="w-full bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-white font-bold py-3 rounded-2xl btn-active transition-colors">
+                    <button onclick="openSettings('screen-main')" class="w-full bg-zinc-800 border border-zinc-700 hover:bg-zinc-700 text-white font-bold py-3 rounded-2xl btn-active transition-colors">
                         ⚙️ 환경 설정
                     </button>
                 </div>
@@ -132,7 +131,7 @@
                 </button>
 
                 <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-zinc-700 to-zinc-600 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
-                    <h3 class="text-2xl font-bold text-white mb-2">개별 모드</h3>
+                    <h3 class="text-2xl font-bold text-white mb-2">멤버 모드</h3>
                     <p class="text-zinc-200 text-sm">특정 멤버의 문제만 풉니다.</p>
                 </button>
             </div>
@@ -144,11 +143,6 @@
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">난이도 선택</h2>
             
             <div class="flex-1 flex flex-col space-y-4 overflow-y-auto pb-4 pr-1 min-h-0">
-                <button onclick="startExpertMode('데모')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors">
-                    <h3 class="text-3xl font-black text-white mb-2">데모</h3>
-                    <p class="text-zinc-300 text-sm">총 10문제 출제</p>
-                    <p class="text-zinc-500 text-xs mt-2">점수 보너스 없음</p>
-                </button>
                 <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors">
                     <h3 class="text-3xl font-black text-white mb-2">초보</h3>
                     <p class="text-zinc-300 text-sm">총 30문제 출제</p>
@@ -177,9 +171,9 @@
             </div>
         </div>
 
-        <!-- ==================== 4. 개별모드, 업적, 최고점수, 환경 설정 ==================== -->
+        <!-- ==================== 4. 멤버모드, 업적, 최고점수, 환경 설정 ==================== -->
         
-        <!-- 개별 모드 -->
+        <!-- 멤버 모드 -->
         <div id="screen-group" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-mode')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">멤버 선택</h2>
@@ -189,37 +183,54 @@
         <!-- 업적 화면 -->
         <div id="screen-achievements" class="flex-1 flex flex-col p-6 pb-0 hidden-screen fade-in relative z-10 bg-zinc-900 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
-            <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🏆 업적 목록</h2>
-            <div id="achievements-container" class="flex-1 overflow-y-auto space-y-3 pb-8 pr-1 min-h-0 content-start">
-                <!-- JS에서 동적 채워짐 -->
-            </div>
+            <h2 class="text-2xl font-bold mb-2 text-center shrink-0">🏆 업적 목록</h2>
+            <p class="text-zinc-400 text-sm text-center mb-6 shrink-0">숨겨진 히든 업적 해금에 도전해보세요!</p>
+            <div id="achievements-container" class="flex-1 overflow-y-auto space-y-3 pb-8 pr-1 min-h-0 content-start"></div>
         </div>
 
         <!-- 최고 점수 화면 -->
         <div id="screen-highscores" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🥇 최고 점수</h2>
-            <div id="highscores-container" class="flex-1 overflow-y-auto space-y-4 pb-4 pr-1 min-h-0 content-start">
-                <!-- JS에서 동적 채워짐 -->
-            </div>
+            <div id="highscores-container" class="flex-1 overflow-y-auto space-y-4 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
 
         <!-- 환경 설정 화면 -->
         <div id="screen-settings" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
-            <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
+            <button id="settings-back-btn" onclick="closeSettings()" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">⚙️ 환경 설정</h2>
             
             <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1 min-h-0 content-start">
                 
-                <!-- 사운드(볼륨) 설정 -->
+                <!-- 사운드(볼륨) 설정 분리 -->
                 <div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center">
                     <p class="text-zinc-400 mb-4 font-bold">사운드 설정</p>
-                    <div class="flex items-center space-x-4 mb-2">
-                        <span class="text-zinc-400 text-xl">🔈</span>
-                        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-teal-400 cursor-pointer">
-                        <span class="text-white text-xl">🔊</span>
+                    
+                    <!-- 배경음 설정 -->
+                    <div class="mb-4">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-zinc-300 text-sm font-bold">배경음 (BGM)</span>
+                            <span id="bgm-volume-text" class="text-teal-400 font-bold text-sm">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-zinc-500 text-lg">🔈</span>
+                            <input type="range" id="bgm-volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-teal-400 cursor-pointer">
+                            <span class="text-white text-lg">🔊</span>
+                        </div>
                     </div>
-                    <p id="volume-text" class="text-center text-teal-400 font-bold text-sm">볼륨: 50%</p>
+
+                    <!-- 효과음 설정 -->
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-zinc-300 text-sm font-bold">효과음 (SFX)</span>
+                            <span id="sfx-volume-text" class="text-teal-400 font-bold text-sm">50%</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-zinc-500 text-lg">🔈</span>
+                            <input type="range" id="sfx-volume-slider" min="0" max="1" step="0.1" value="0.5" class="w-full accent-teal-400 cursor-pointer">
+                            <span class="text-white text-lg">🔊</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 제작자 이메일 복사 영역 -->
@@ -234,15 +245,26 @@
                     <p class="text-xs text-zinc-500 mt-3">이메일을 직접 드래그하거나 복사 버튼을 눌러주세요.</p>
                 </div>
 
+                <!-- 데이터 초기화 위험 구역 -->
+                <div class="bg-zinc-800 rounded-xl p-6 border border-red-900/50 shrink-0 flex flex-col justify-center mt-4">
+                    <p class="text-red-400 mb-2 font-bold">데이터 초기화</p>
+                    <button onclick="openResetModal()" class="w-full bg-red-600/20 hover:bg-red-600 text-red-500 hover:text-white font-bold py-3 rounded-lg transition-colors border border-red-500/50 btn-active">
+                        데이터 초기화
+                    </button>
+                    <p class="text-xs text-zinc-500 mt-3 text-center">모든 점수와 업적이 기기 및 클라우드에서 삭제됩니다.</p>
+                </div>
+
             </div>
         </div>
 
         <!-- ==================== 5. 플레이(게임) 화면 ==================== -->
         <div id="screen-game" class="flex-1 flex flex-col p-4 sm:p-6 hidden-screen bg-black relative z-10 min-h-0">
             
-            <!-- 상단 바: 나가기 버튼 -->
+            <!-- 상단 바: 환경설정 및 나가기 버튼 -->
             <div class="flex justify-between items-center mb-2 shrink-0">
-                <span class="text-zinc-500 text-sm font-bold">플레이 중...</span>
+                <button onclick="openSettings('screen-game')" class="text-zinc-400 hover:text-white text-2xl transition-colors btn-active flex items-center p-1 w-10 h-10 justify-center rounded-lg hover:bg-zinc-800">
+                    ⚙️
+                </button>
                 <button onclick="exitGame()" class="text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-sm transition-colors btn-active flex items-center gap-1 border border-zinc-700">
                     <span>🚪</span> 나가기
                 </button>
@@ -279,9 +301,9 @@
                 </h2>
             </div>
 
-            <!-- 중앙: 이미지 영역 (💡 id 속성과 부드러운 배경색 전환 효과 추가) -->
+            <!-- 중앙: 이미지 영역 -->
             <div id="image-container" class="flex-1 min-h-[80px] sm:min-h-[150px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-4 sm:mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2 transition-colors duration-500">
-                <img id="game-image" src="logo.webp" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span>
@@ -299,7 +321,7 @@
                     <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
                 </div>
                 
-                <!-- 💡 정답 표시 영역 (실루엣/확대 퀴즈 완료 시 나타남) -->
+                <!-- 정답 표시 영역 -->
                 <div id="correct-answer-display" class="hidden w-full text-center text-teal-300 font-bold mb-3 text-lg sm:text-xl fade-in"></div>
 
                 <!-- 다음 문제 넘어가기 버튼 -->
@@ -344,6 +366,18 @@
             </div>
         </div>
 
+        <!-- 데이터 초기화 전용 커스텀 모달 -->
+        <div id="reset-modal" class="absolute inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in">
+            <div class="bg-zinc-800 p-6 rounded-2xl border border-red-900/50 max-w-xs w-full text-center shadow-2xl">
+                <h3 class="text-xl font-bold text-red-500 mb-2">데이터 초기화</h3>
+                <p class="text-zinc-400 text-sm mb-6">모든 최고 점수와 업적이 삭제됩니다.<br>정말 초기화하시겠습니까?</p>
+                <div class="flex gap-3">
+                    <button onclick="closeResetModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button>
+                    <button onclick="confirmReset()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">초기화</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 토스트 알림 -->
         <div id="toast-container" class="absolute top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
 
@@ -366,8 +400,14 @@
         window.loginWithGoogle = loginWithGoogle;
         window.logoutGoogle = logoutGoogle;
         window.nextQuestion = nextQuestion; 
+        
+        window.openSettings = openSettings;
+        window.closeSettings = closeSettings;
+        window.openResetModal = openResetModal;
+        window.closeResetModal = closeResetModal;
+        window.confirmReset = confirmReset;
 
-        // 보안 로직 유지
+        // 보안 로직
         document.addEventListener('keydown', e => {
             if (e.keyCode === 123 || 
                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || 
@@ -390,12 +430,23 @@
             } catch(e) {}
         }, 2000);
 
+        // 오디오 시스템: 효과음(sfxVolume)과 배경음(bgmVolume) 분리
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let masterVolume = 0.5;
+        let sfxVolume = 0.5;
+        let bgmVolume = 0.5;
+        
+        const bgmAudio = new Audio('chunta.mp3');
+        bgmAudio.loop = true;
+
+        document.body.addEventListener('click', () => {
+            if(bgmAudio.paused && bgmVolume > 0) {
+                bgmAudio.play().catch(e => console.warn("BGM Play prevented:", e));
+            }
+        }, {once: true});
 
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (masterVolume <= 0) return;
+            if (sfxVolume <= 0) return;
 
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
@@ -408,7 +459,7 @@
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(400, now);
                 oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.05);
-                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
+                gainNode.gain.setValueAtTime(sfxVolume * 0.5, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
                 oscillator.start(now);
                 oscillator.stop(now + 0.1);
@@ -416,8 +467,8 @@
                 oscillator.type = 'triangle';
                 oscillator.frequency.setValueAtTime(600, now);
                 oscillator.frequency.setValueAtTime(800, now + 0.1);
-                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
-                gainNode.gain.linearRampToValueAtTime(masterVolume * 0.5, now + 0.2);
+                gainNode.gain.setValueAtTime(sfxVolume * 0.5, now);
+                gainNode.gain.linearRampToValueAtTime(sfxVolume * 0.5, now + 0.2);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
                 oscillator.start(now);
                 oscillator.stop(now + 0.4);
@@ -425,7 +476,7 @@
                 oscillator.type = 'sawtooth';
                 oscillator.frequency.setValueAtTime(150, now);
                 oscillator.frequency.exponentialRampToValueAtTime(80, now + 0.3);
-                gainNode.gain.setValueAtTime(masterVolume * 0.5, now);
+                gainNode.gain.setValueAtTime(sfxVolume * 0.5, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 oscillator.start(now);
                 oscillator.stop(now + 0.3);
@@ -453,10 +504,11 @@
         let achievementDatabase = [];
         let currentUser = null;
 
+        // 초기 데이터 세팅 변경 (볼륨 분리 호환용)
         let userData = {
             highscores: { expert: 0, challenge: 0, groups: {} },
             unlockedAchievements: [],
-            settings: { volume: 0.5 },
+            settings: { sfxVolume: 0.5, bgmVolume: 0.5 },
             totalCorrectAnswers: 0 
         };
 
@@ -485,7 +537,8 @@
             { question: "다음 멤버의 오리지널곡이 아닌것은?", options: ["닿을 수 있게", "Watch Me", "여름의 한 조각"], answer: 3, group: "문모모", image: "images/moonmomo.png" },
             { question: "다음 멤버가 릴동파2에서 메달을 딴 종목이 아닌것은?", options: ["스키점프", "스켈레톤", "봅슬레이"], answer: 3, group: "문모모", image: "images/moonmomo.png" },
             { question: "다음 멤버가 릴동파2에서 메달을 딴 종목은?", options: ["피겨스케이팅", "포인트컬링", "봅슬레이"], answer: 1, group: "한아밍", image: "images/hanaming.png" },
-            { question: "다음 멤버의 종족은?", options: ["검은 고양이", "달에서 온 마녀", "달의 요정"], answer: 2, group: "나나문", image: "images/nanamoon.png" }
+            { question: "다음 멤버의 종족은?", options: ["검은 고양이", "달에서 온 마녀", "달의 요정"], answer: 2, group: "나나문", image: "images/nanamoon.png" },
+            { question: "다음 멤버의 오리지널곡 이름은?", options: ["Stay Tonight", "닿을 수 있게", "여름의 한 조각"], answer: 1, group: "문모모", image: "images/moonmomo.png" }
         ];
 
         const defaultAchievements = [
@@ -502,12 +555,24 @@
             { id: "11", name: "천타버스 구독팬", desc: "누적 정답 10회를 달성한다.", type: "TOTAL_CORRECT", target: 10, secret: false },
             { id: "12", name: "천타버스 열혈팬", desc: "누적 정답 50회를 달성한다.", type: "TOTAL_CORRECT", target: 50, secret: false },
             { id: "13", name: "천타버스 회장님", desc: "누적 정답 100회를 달성한다.", type: "TOTAL_CORRECT", target: 100, secret: false },
-            { id: "14", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false }
+            { id: "14", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false },
+            { id: "15", name: "천양바라기", desc: "천양 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_천양", target: 0, secret: false },
+            { id: "16", name: "달타바라기", desc: "달타 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_달타", target: 0, secret: false },
+            { id: "17", name: "임하밍바라기", desc: "임하밍 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_임하밍", target: 0, secret: false },
+            { id: "18", name: "한아밍바라기", desc: "한아밍 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_한아밍", target: 0, secret: false },
+            { id: "19", name: "카푸바라기", desc: "카푸 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_카푸", target: 0, secret: false },
+            { id: "20", name: "캬앙바라기", desc: "캬앙 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_캬앙", target: 0, secret: false },
+            { id: "21", name: "마다옴바라기", desc: "마다옴 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_마다옴", target: 0, secret: false },
+            { id: "22", name: "모카바라기", desc: "모카 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_모카", target: 0, secret: false },
+            { id: "23", name: "문모모바라기", desc: "문모모 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_문모모", target: 0, secret: false },
+            { id: "24", name: "나나문바라기", desc: "나나문 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_나나문", target: 0, secret: false },
+            { id: "25", name: "파니바라기", desc: "파니 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_파니", target: 0, secret: false },
+            { id: "26", name: "김웰로바라기", desc: "김웰로 멤버 모드를 클리어한다.", type: "CLEAR_GROUP_김웰로", target: 0, secret: false }
         ];
 
         function preloadImages() {
             const imageUrls = new Set();
-            imageUrls.add('logo.webp');
+            imageUrls.add('logo2.png');
             getValidQuestions().forEach(q => {
                 if (q.image && q.image.trim() !== "") {
                     imageUrls.add(q.image);
@@ -627,23 +692,57 @@
         }
 
         function updateVolumeUI() {
-            const volSlider = document.getElementById('volume-slider');
-            if(volSlider) {
-                volSlider.value = userData.settings.volume;
-                masterVolume = userData.settings.volume;
-                document.getElementById('volume-text').innerText = `볼륨: ${Math.round(masterVolume * 100)}%`;
+            if (userData.settings.volume !== undefined) {
+                userData.settings.sfxVolume = userData.settings.volume;
+                userData.settings.bgmVolume = userData.settings.volume;
+                delete userData.settings.volume;
+            }
+            if (userData.settings.sfxVolume === undefined) userData.settings.sfxVolume = 0.5;
+            if (userData.settings.bgmVolume === undefined) userData.settings.bgmVolume = 0.5;
+
+            sfxVolume = userData.settings.sfxVolume;
+            bgmVolume = userData.settings.bgmVolume;
+
+            const bgmSlider = document.getElementById('bgm-volume-slider');
+            const sfxSlider = document.getElementById('sfx-volume-slider');
+
+            if(bgmSlider) {
+                bgmSlider.value = bgmVolume;
+                bgmAudio.volume = bgmVolume * 0.4; 
+                document.getElementById('bgm-volume-text').innerText = `${Math.round(bgmVolume * 100)}%`;
                 
-                if (!volSlider.dataset.listenerAttached) {
-                    volSlider.addEventListener('input', (e) => {
-                        masterVolume = parseFloat(e.target.value);
-                        userData.settings.volume = masterVolume;
-                        document.getElementById('volume-text').innerText = `볼륨: ${Math.round(masterVolume * 100)}%`;
+                if (!bgmSlider.dataset.listenerAttached) {
+                    bgmSlider.addEventListener('input', (e) => {
+                        bgmVolume = parseFloat(e.target.value);
+                        userData.settings.bgmVolume = bgmVolume;
+                        bgmAudio.volume = bgmVolume * 0.4; 
+                        document.getElementById('bgm-volume-text').innerText = `${Math.round(bgmVolume * 100)}%`;
                     });
-                    volSlider.addEventListener('change', () => {
+                    bgmSlider.addEventListener('change', () => {
+                        saveUserData(); 
+                        if(bgmAudio.paused && bgmVolume > 0) {
+                            bgmAudio.play().catch(e => {});
+                        }
+                    });
+                    bgmSlider.dataset.listenerAttached = "true";
+                }
+            }
+
+            if(sfxSlider) {
+                sfxSlider.value = sfxVolume;
+                document.getElementById('sfx-volume-text').innerText = `${Math.round(sfxVolume * 100)}%`;
+                
+                if (!sfxSlider.dataset.listenerAttached) {
+                    sfxSlider.addEventListener('input', (e) => {
+                        sfxVolume = parseFloat(e.target.value);
+                        userData.settings.sfxVolume = sfxVolume;
+                        document.getElementById('sfx-volume-text').innerText = `${Math.round(sfxVolume * 100)}%`;
+                    });
+                    sfxSlider.addEventListener('change', () => {
                         playSound('click'); 
                         saveUserData(); 
                     });
-                    volSlider.dataset.listenerAttached = "true";
+                    sfxSlider.dataset.listenerAttached = "true";
                 }
             }
         }
@@ -652,6 +751,41 @@
             setupGroupButtons();
             renderAchievements();
             renderHighscores();
+        }
+
+        function openResetModal() {
+            playSound('click');
+            document.getElementById('reset-modal').classList.remove('hidden');
+        }
+        
+        function closeResetModal() {
+            playSound('click');
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+
+        async function confirmReset() {
+            playSound('click');
+            userData = {
+                highscores: { expert: 0, challenge: 0, groups: {} },
+                unlockedAchievements: [],
+                settings: { sfxVolume: 0.5, bgmVolume: 0.5 }, 
+                totalCorrectAnswers: 0 
+            };
+            localStorage.removeItem('soop_quiz_userdata');
+            
+            if (currentUser && !currentUser.isAnonymous) {
+                try {
+                    const userRef = ref(db, 'users/' + currentUser.uid + '/saveFile');
+                    await set(userRef, userData);
+                } catch(e) {}
+            }
+            
+            showToast("데이터가 모두 초기화되었습니다.");
+            document.getElementById('reset-modal').classList.add('hidden');
+            
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
         }
 
         async function loginWithGoogle() {
@@ -676,7 +810,7 @@
             playSound('click');
             try {
                 await signOut(auth);
-                userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { volume: 0.5 }, totalCorrectAnswers: 0 };
+                userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { sfxVolume: 0.5, bgmVolume: 0.5 }, totalCorrectAnswers: 0 };
                 localStorage.setItem('soop_quiz_userdata', JSON.stringify(userData));
                 setupApp();
                 showToast("로그아웃 되었습니다. (오프라인 모드 전환)");
@@ -700,9 +834,32 @@
         let timerInterval;
         let timeLeft = 20;
 
-        function navTo(targetScreenId, isPopState = false, replace = false) {
-            if (!isPopState) playSound('click');
+        let previousScreen = 'screen-main'; 
+
+        function openSettings(fromScreen) {
+            playSound('click');
             
+            if (fromScreen === 'screen-game') {
+                if (isAnswering) return; 
+                stopTimer(); 
+            }
+            
+            previousScreen = fromScreen;
+            document.getElementById('settings-back-btn').innerText = fromScreen === 'screen-game' ? '← 게임으로 돌아가기' : '← 메인으로';
+            navTo('screen-settings');
+        }
+
+        function closeSettings() {
+            playSound('click');
+            if (previousScreen === 'screen-game') {
+                navTo('screen-game', false, true); 
+                if (!isAnswering) resumeTimer();
+            } else {
+                navTo('screen-main');
+            }
+        }
+
+        function navTo(targetScreenId, isPopState = false, replace = false) {
             if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') {
                 stopTimer();
             }
@@ -743,6 +900,12 @@
             }
 
             if (targetScreen === 'screen-game') {
+                if (currentScreen === 'screen-settings' && previousScreen === 'screen-game') {
+                    navTo('screen-game', true, true);
+                    if (!isAnswering) resumeTimer(); 
+                    return;
+                }
+                
                 navTo('screen-main', true, true);
                 return;
             }
@@ -835,7 +998,7 @@
         function nextQuestion() {
             playSound('click');
             document.getElementById('btn-next').classList.add('hidden');
-            document.getElementById('correct-answer-display').classList.add('hidden'); // 정답 표시 숨기기
+            document.getElementById('correct-answer-display').classList.add('hidden');
             proceedToNext();
         }
 
@@ -859,8 +1022,8 @@
                 return result.slice(0, targetCount);
             };
 
-            if (difficulty === '데모') { currentQuestions = buildQuestions(10); scoreMultiplier = 1.0; }
-            else if (difficulty === '초보') { currentQuestions = buildQuestions(30); scoreMultiplier = 1.0; }
+            
+            if (difficulty === '초보') { currentQuestions = buildQuestions(30); scoreMultiplier = 1.0; }
             else if (difficulty === '중수') { currentQuestions = buildQuestions(50); scoreMultiplier = 1.25; }
             else if (difficulty === '고수') { currentQuestions = buildQuestions(100); scoreMultiplier = 1.5; }
             else if (difficulty === '전문가') { currentQuestions = buildQuestions(150); scoreMultiplier = 1.75; }
@@ -932,7 +1095,7 @@
             
             document.getElementById('game-options').classList.remove('hidden');
             document.getElementById('btn-next').classList.add('hidden');
-            document.getElementById('correct-answer-display').classList.add('hidden'); // 정답 표시 숨기기
+            document.getElementById('correct-answer-display').classList.add('hidden');
 
             const imgEl = document.getElementById('game-image');
             const imgContainer = document.getElementById('image-container'); 
@@ -940,7 +1103,7 @@
             imgEl.style.transition = "none";
             imgEl.style.opacity = 1;
             imgEl.style.filter = "none"; 
-            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo.webp";
+            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
 
             const isSilhouette = qData.image && qData.image.includes('_sil.');
             if (isSilhouette) {
@@ -1033,6 +1196,7 @@
                 combo++;
                 score += (400 * scoreMultiplier) + (combo * 4);
                 
+                // 누적 정답 수 증가 및 검사
                 userData.totalCorrectAnswers = (userData.totalCorrectAnswers || 0) + 1;
                 checkAchievement('TOTAL_CORRECT', userData.totalCorrectAnswers);
 
@@ -1068,11 +1232,9 @@
                     
                     document.getElementById('game-options').classList.add('hidden'); 
                     
-                    // 💡 정답 표시 영역 업데이트 로직
                     const correctText = qData.options[qData.answer - 1];
                     const correctAnswerDisplay = document.getElementById('correct-answer-display');
                     
-                    // 퍼스널 컬러 문제(색상 코드)인 경우 컬러 칩 추가
                     if (/^#([0-9A-F]{3}){1,2}$/i.test(correctText.trim())) {
                         correctAnswerDisplay.innerHTML = `<span class="text-white">정답:</span> <span class="inline-block w-5 h-5 rounded-sm border border-zinc-500 align-middle ml-1" style="background-color: ${correctText.trim()};"></span> ${correctText.trim()}`;
                     } else {
@@ -1100,24 +1262,28 @@
 
             const ratio = finalScore / maxScore;
 
-            if (ratio >= 1.0) return { rank: 'S', color: 'text-teal-400', desc: "전설적인 천타버스 마스터!" };
-            if (ratio >= 0.85) return { rank: 'A', color: 'text-zinc-100', desc: "완벽에 가까운 지식" };
-            if (ratio >= 0.70) return { rank: 'B', color: 'text-zinc-300', desc: "훌륭한 스트리머 팬" };
-            if (ratio >= 0.50) return { rank: 'C', color: 'text-zinc-400', desc: "나쁘지 않은 실력" };
-            if (ratio >= 0.25) return { rank: 'D', color: 'text-zinc-500', desc: "아직은 뉴비입니다" };
-            return { rank: 'F', color: 'text-zinc-600', desc: "방송좀 많이보세요" };
+            if (ratio >= 1.0) return { rank: 'S', color: 'text-teal-400', desc: "최강! 천타버스! 오오오!" };
+            if (ratio >= 0.85) return { rank: 'A', color: 'text-zinc-100', desc: "이제는 거의 천타버스 매니저" };
+            if (ratio >= 0.70) return { rank: 'B', color: 'text-zinc-300', desc: "이정도면 천타버스 찐팬" };
+            if (ratio >= 0.50) return { rank: 'C', color: 'text-zinc-400', desc: "조금씩 천타버스에 천며드는중" };
+            if (ratio >= 0.25) return { rank: 'D', color: 'text-zinc-500', desc: "갓 유입된 천타버스 뉴비" };
+            return { rank: 'F', color: 'text-zinc-600', desc: "천타버스에 많은 관심 바랍니다." };
         }
 
         function endGame(isClear) {
             checkAchievement('SCORE_RANK', score);
             
             if (isClear && currentMode === 'expert') {
-                if (currentDifficulty === '데모') checkAchievement('CLEAR_DEMO');
                 if (currentDifficulty === '초보') checkAchievement('CLEAR_EASY');
                 if (currentDifficulty === '중수') checkAchievement('CLEAR_NORMAL');
                 if (currentDifficulty === '고수') checkAchievement('CLEAR_HARD');
                 if (currentDifficulty === '전문가') checkAchievement('CLEAR_EXPERT');
                 if (currentDifficulty === '마스터') checkAchievement('CLEAR_MASTER');
+            }
+
+            // 💡 멤버(멤버) 모드 클리어 업적 트리거
+            if (isClear && currentMode === 'group') {
+                checkAchievement('CLEAR_GROUP', currentGroup);
             }
             
             const finalScore = Math.floor(score);
@@ -1151,14 +1317,17 @@
                 if (type === 'COMBO' && ach.type === 'COMBO' && currentMode === 'expert' && value >= ach.target) isUnlocked = true;
                 if (type === 'SCORE_RANK' && ach.type === 'SCORE_RANK' && value > ach.target) isUnlocked = true;
                 
-                if (type === 'CLEAR_DEMO' && ach.type === 'CLEAR_DEMO') isUnlocked = true;
                 if (type === 'CLEAR_EASY' && ach.type === 'CLEAR_EASY') isUnlocked = true;
                 if (type === 'CLEAR_NORMAL' && ach.type === 'CLEAR_NORMAL') isUnlocked = true;
                 if (type === 'CLEAR_HARD' && ach.type === 'CLEAR_HARD') isUnlocked = true;
                 if (type === 'CLEAR_EXPERT' && ach.type === 'CLEAR_EXPERT') isUnlocked = true;
                 if (type === 'CLEAR_MASTER' && ach.type === 'CLEAR_MASTER') isUnlocked = true;
 
+                // 누적 정답수 체크
                 if (type === 'TOTAL_CORRECT' && ach.type === 'TOTAL_CORRECT' && value >= ach.target) isUnlocked = true;
+
+                // 💡 멤버별 클리어 체크 (스프레드시트에서 CLEAR_GROUP_멤버이름 으로 작성된 것과 일치하는지 확인)
+                if (type === 'CLEAR_GROUP' && ach.type === ('CLEAR_GROUP_' + value)) isUnlocked = true;
 
                 if (isUnlocked) {
                     userData.unlockedAchievements.push(ach.id);
@@ -1178,7 +1347,9 @@
                 const el = document.createElement('div');
                 
                 if (isUnlocked) {
-                    el.className = 'w-full shrink-0 bg-white rounded-xl p-4 shadow-md border border-zinc-200';
+                    // 일반 업적은 민트색, 히든(비밀) 업적은 금색 테두리 적용
+                    const borderColor = ach.secret ? 'border-yellow-400' : 'border-teal-400';
+                    el.className = `w-full shrink-0 bg-white rounded-xl p-4 shadow-md border-2 ${borderColor}`;
                     el.innerHTML = `
                         <h4 class="text-black font-bold text-base">${ach.name}</h4>
                         <p class="text-zinc-600 text-xs mt-1 font-medium">${ach.desc}</p>
@@ -1186,7 +1357,7 @@
                 } else {
                     el.className = 'w-full shrink-0 bg-zinc-800 rounded-xl p-4 border border-zinc-700 relative flex items-center overflow-hidden';
                     const title = ach.secret ? "???" : ach.name;
-                    const desc = ach.secret ? "비밀 조건을 달성해 해금하세요." : ach.desc;
+                    const desc = ach.secret ? "히든 조건을 달성해 해금하세요." : ach.desc;
                     
                     el.innerHTML = `
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10"><span class="text-2xl">🔒</span></div>
