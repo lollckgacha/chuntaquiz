@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>천타버스 퀴즈</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -29,8 +29,9 @@
             to { opacity: 1; transform: translate(-50%, 0); }
         }
 
-        /* 클릭 효과 */
+        /* 클릭 효과 및 모바일 탭 하이라이트 제거 */
         .btn-active:active { transform: scale(0.96); }
+        * { -webkit-tap-highlight-color: transparent; }
 
         /* 숨김 처리 유틸리티 */
         .hidden-screen { display: none !important; }
@@ -42,30 +43,31 @@
         ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
     </style>
 </head>
-<body class="bg-black text-zinc-100 min-h-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden relative select-none">
+<!-- 💡 모바일 주소창 대응을 위해 h-[100dvh] 및 전체 오버플로우 방지 적용 -->
+<body class="bg-black text-zinc-100 h-[100dvh] w-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden relative select-none">
 
-    <!-- ==================== 로그인 UI (우측 상단) ==================== -->
-    <div class="absolute top-4 right-4 z-50">
-        <div id="login-section" class="flex items-center gap-2">
-            <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
-                <svg class="w-4 h-4" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                Google 로그인
-            </button>
-            
-            <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
-                <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
-                <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
-            </div>
+    <!-- ==================== 로그인 UI (우측 상단, 메인화면에서만 보임) ==================== -->
+    <div id="login-section" class="absolute top-4 right-4 z-50 flex items-center gap-2 transition-opacity duration-300">
+        <!-- 비로그인 상태: Google 로그인 버튼 -->
+        <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Google 로그인
+        </button>
+        
+        <!-- 로그인 상태: 프로필 및 로그아웃 버튼 -->
+        <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
+            <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
+            <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
         </div>
     </div>
 
     <!-- 메인 앱 컨테이너 -->
-    <div id="app-container" class="bg-zinc-900 w-full max-w-md h-[100dvh] sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
+    <div id="app-container" class="bg-zinc-900 w-full h-full max-w-md sm:h-[90vh] sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
 
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
@@ -75,7 +77,7 @@
                     천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
                 <p class="text-zinc-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
-                <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 언제나 환영입니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
             </div>
             
             <div class="space-y-3 pb-8 shrink-0">
@@ -276,9 +278,9 @@
 
             <!-- 하단: 3개의 선택지 -->
             <div id="game-options" class="shrink-0 space-y-3 mt-auto pb-2">
-                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
             </div>
         </div>
 
@@ -319,14 +321,14 @@
         </div>
     </div>
 
-    <!-- ==================== 토스트 알림 ==================== -->
-    <div id="toast-container" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[9999] flex flex-col items-center space-y-3 w-[90%] max-w-sm pointer-events-none"></div>
+    <!-- 💡 토스트 알림 (모바일에서도 절대 안잘리게 top-12 및 너비 제한 조정) -->
+    <div id="toast-container" class="fixed top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
 
     <!-- JavaScript 로직 -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
         window.navTo = navTo;
         window.startExpertMode = startExpertMode;
@@ -392,29 +394,21 @@
             }
         }
 
-        let firebaseConfig = {};
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-            // 💡 주의: 깃허브 등에 배포하실 때 이곳에 파이어베이스 설정값을 꼭 채워넣으셔야 합니다!
-            firebaseConfig = {
-  apiKey: "AIzaSyA1AkIU1Ujuxb_G8ujI4QGNRW6Hc8tpfyg",
-  authDomain: "dongpa2026-2fda5.firebaseapp.com",
-  databaseURL: "https://dongpa2026-2fda5-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "dongpa2026-2fda5",
-  storageBucket: "dongpa2026-2fda5.firebasestorage.app",
-  messagingSenderId: "1008275615806",
-  appId: "1:1008275615806:web:b3230a2d18a77aecb5216f",
-  measurementId: "G-PPXM8077YX"
-};
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1AkIU1Ujuxb_G8ujI4QGNRW6Hc8tpfyg",
+            authDomain: "dongpa2026-2fda5.firebaseapp.com",
+            databaseURL: "https://dongpa2026-2fda5-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "dongpa2026-2fda5",
+            storageBucket: "dongpa2026-2fda5.firebasestorage.app",
+            messagingSenderId: "1008275615806",
+            appId: "1:1008275615806:web:b3230a2d18a77aecb5216f",
+            measurementId: "G-PPXM8077YX"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'soop-quiz';
+        const db = getDatabase(app);
 
-        const USE_MOCK_DATA = false; 
         const FIREBASE_DB_URL = "https://dongpa2026-2fda5-default-rtdb.asia-southeast1.firebasedatabase.app";
         
         let quizDatabase = [];
@@ -428,18 +422,8 @@
             totalCorrectAnswers: 0 
         };
 
-        const mockQuizData = [
-            { question: "이 스트리머의 상징적인 색깔은?", options: ["보라색", "빨간색", "노란색"], answer: 1, group: "홀로라이브, 글로벌", image: "" }
-        ];
-        
-        const defaultAchievements = [
-            { id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false },
-            { id: "2", name: "버알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false },
-            { id: "3", name: "5연속 정답!", desc: "천타버스 모드에서 5문제를 연속해서 맞춘다.", type: "COMBO", target: 5, secret: false },
-            { id: "4", name: "견습 시청자", desc: "누적 정답 10회를 달성한다.", type: "TOTAL_CORRECT", target: 10, secret: false },
-            { id: "5", name: "단골 시청자", desc: "누적 정답 50회를 달성한다.", type: "TOTAL_CORRECT", target: 50, secret: false },
-            { id: "6", name: "망령", desc: "누적 정답 100회를 달성한다.", type: "TOTAL_CORRECT", target: 100, secret: false }
-        ];
+        const mockQuizData = [{ question: "데이터 로딩 중...", options: ["...", "...", "..."], answer: 1, group: "", image: "" }];
+        const defaultAchievements = [{ id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false }];
 
         function preloadImages() {
             const imageUrls = new Set();
@@ -447,11 +431,7 @@
             getValidQuestions().forEach(q => {
                 if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
             });
-            
-            imageUrls.forEach(url => {
-                const img = new Image();
-                img.src = url;
-            });
+            imageUrls.forEach(url => { const img = new Image(); img.src = url; });
         }
 
         async function initApp() {
@@ -467,68 +447,54 @@
             updateVolumeUI();
             setupApp();
 
-            if (USE_MOCK_DATA) {
+            try {
+                const cacheBuster = new Date().getTime();
+                const quizRes = await fetch(`${FIREBASE_DB_URL}/QuizData.json?t=${cacheBuster}`);
+                const achRes = await fetch(`${FIREBASE_DB_URL}/AchievementData.json?t=${cacheBuster}`);
+                
+                quizDatabase = await quizRes.json() || [];
+                achievementDatabase = await achRes.json() || defaultAchievements;
+            } catch (error) {
+                showToast("데이터 연결 실패. 기본 데이터로 시작합니다.");
                 quizDatabase = [...mockQuizData];
                 achievementDatabase = [...defaultAchievements];
-                preloadImages();
-            } else {
-                try {
-                    const cacheBuster = new Date().getTime();
-                    const quizRes = await fetch(`${FIREBASE_DB_URL}/QuizData.json?t=${cacheBuster}`);
-                    const achRes = await fetch(`${FIREBASE_DB_URL}/AchievementData.json?t=${cacheBuster}`);
-                    
-                    quizDatabase = await quizRes.json() || [];
-                    achievementDatabase = await achRes.json() || defaultAchievements;
-                } catch (error) {
-                    console.error("데이터 로드 실패", error);
-                    showToast("데이터를 불러오는데 실패하여 기본 데이터로 시작합니다.");
-                    quizDatabase = [...mockQuizData];
-                    achievementDatabase = [...defaultAchievements];
-                }
-                preloadImages(); 
             }
-            
+            preloadImages(); 
             setupApp();
 
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token).catch(() => signInAnonymously(auth));
-            } else {
-                await signInAnonymously(auth).catch(() => {});
-            }
-
+            await signInAnonymously(auth).catch(() => {});
             history.replaceState({ screen: 'screen-main' }, '', '#screen-main');
         }
 
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
+            const btnLogin = document.getElementById('btn-google-login');
+            const profile = document.getElementById('user-profile');
+            const userName = document.getElementById('user-name');
+            
             if (user) {
                 const isAnonymous = user.isAnonymous;
-                const btnLogin = document.getElementById('btn-google-login');
-                const profile = document.getElementById('user-profile');
-                const userName = document.getElementById('user-name');
-                
                 if (!isAnonymous) {
                     btnLogin.classList.add('hidden');
                     profile.classList.remove('hidden');
                     profile.classList.add('flex');
                     userName.innerText = user.displayName || "User";
+                    await loadDataFromFirebase(user.uid);
                 } else {
                     btnLogin.classList.remove('hidden');
                     profile.classList.add('hidden');
                     profile.classList.remove('flex');
                 }
-
-                await loadDataFromFirestore(user.uid);
             }
         });
 
-        async function loadDataFromFirestore(uid) {
+        async function loadDataFromFirebase(uid) {
             try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', uid, 'data', 'saveFile');
-                const docSnap = await getDoc(userDocRef);
+                const userRef = ref(db, 'users/' + uid + '/saveFile');
+                const snapshot = await get(userRef);
                 
-                if (docSnap.exists()) {
-                    const parsed = docSnap.data();
+                if (snapshot.exists()) {
+                    const parsed = snapshot.val();
                     userData.highscores = parsed.highscores || userData.highscores;
                     userData.unlockedAchievements = parsed.unlockedAchievements || userData.unlockedAchievements;
                     userData.settings = parsed.settings || userData.settings;
@@ -536,30 +502,29 @@
                     if (!userData.highscores.groups) userData.highscores.groups = {};
                     saveUserData(); 
                 } else {
-                    await saveUserDataToFirestore();
+                    await saveUserDataToFirebase();
                 }
                 
                 updateVolumeUI();
                 setupApp();
             } catch (error) {
-                console.error("Firestore read error", error);
-                updateVolumeUI();
-                setupApp();
+                console.error("Firebase read error", error);
+                showToast("데이터 불러오기에 실패했습니다. 권한 규칙을 확인해주세요.");
             }
         }
 
         function saveUserData() {
             localStorage.setItem('soop_quiz_userdata', JSON.stringify(userData));
-            saveUserDataToFirestore();
+            saveUserDataToFirebase();
         }
 
-        async function saveUserDataToFirestore() {
-            if (!currentUser) return;
+        async function saveUserDataToFirebase() {
+            if (!currentUser || currentUser.isAnonymous) return;
             try {
-                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'data', 'saveFile');
-                await setDoc(userDocRef, userData);
+                const userRef = ref(db, 'users/' + currentUser.uid + '/saveFile');
+                await set(userRef, userData);
             } catch (error) {
-                console.error("Firestore write error", error);
+                console.error("Firebase write error", error);
             }
         }
 
@@ -593,13 +558,6 @@
 
         async function loginWithGoogle() {
             playSound('click');
-            
-            // 💡 에러 원인 확인용 1: 설정값 누락 안내
-            if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-                showToast("⚠️ 파이어베이스 설정(apiKey 등)이 코드에 입력되지 않았습니다. index.html을 수정해주세요.");
-                return;
-            }
-
             if (window.location.protocol === 'file:') {
                 showToast("⚠️ 로컬(내 컴퓨터) 환경에서는 구글 로그인이 불가능합니다. 웹에 배포 후 이용해 주세요.");
                 return;
@@ -611,14 +569,8 @@
                 showToast("구글 계정으로 로그인되었습니다! 데이터가 클라우드에 연동됩니다.");
             } catch (error) {
                 console.error(error);
-                if (error.code === 'auth/popup-closed-by-user') {
-                    showToast("로그인이 취소되었습니다.");
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    // 💡 에러 원인 확인용 2: 도메인 미승인 안내
-                    showToast("⚠️ 파이어베이스 '승인된 도메인'에 현재 주소를 추가해주세요!");
-                } else {
-                    showToast("로그인 오류: 파이어베이스 설정을 확인해주세요.");
-                }
+                if (error.code === 'auth/popup-closed-by-user') showToast("로그인이 취소되었습니다.");
+                else showToast("로그인 오류가 발생했습니다.");
             }
         }
 
@@ -652,18 +604,22 @@
 
         function navTo(targetScreenId, isPopState = false) {
             if (!isPopState) playSound('click');
-            
-            if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') {
-                stopTimer();
+            if (currentScreen === 'screen-game' && targetScreenId !== 'screen-game') stopTimer();
+
+            const loginSection = document.getElementById('login-section');
+            if (loginSection) {
+                if (targetScreenId === 'screen-main') {
+                    loginSection.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    loginSection.classList.add('opacity-0', 'pointer-events-none');
+                }
             }
 
             document.getElementById(currentScreen).classList.add('hidden-screen');
             document.getElementById(targetScreenId).classList.remove('hidden-screen');
             currentScreen = targetScreenId;
             
-            if (!isPopState) {
-                history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
-            }
+            if (!isPopState) history.pushState({ screen: targetScreenId }, '', `#${targetScreenId}`);
             
             if(targetScreenId === 'screen-achievements') renderAchievements();
             if(targetScreenId === 'screen-highscores') renderHighscores();
@@ -673,17 +629,11 @@
         window.addEventListener('popstate', (e) => {
             if (currentScreen === 'screen-game') {
                 history.pushState({ screen: 'screen-game' }, '', '#screen-game');
-                exitGame();
-                return;
+                exitGame(); return;
             }
-
             document.getElementById('exit-modal').classList.add('hidden');
-            
-            if (e.state && e.state.screen) {
-                navTo(e.state.screen, true);
-            } else {
-                navTo('screen-main', true);
-            }
+            if (e.state && e.state.screen) navTo(e.state.screen, true);
+            else navTo('screen-main', true);
         });
 
         function updateHealthUI() {
@@ -702,9 +652,7 @@
             if (combo > 1) {
                 comboEl.innerText = `${combo} COMBO! (+${combo * 4})`;
                 comboEl.classList.remove('opacity-0');
-            } else {
-                comboEl.classList.add('opacity-0');
-            }
+            } else comboEl.classList.add('opacity-0');
         }
 
         function copyEmail() {
@@ -714,9 +662,7 @@
                 navigator.clipboard.writeText(email).then(() => showToast("이메일 주소가 복사되었습니다.")).catch(() => showToast("복사 실패. 직접 드래그해주세요."));
             } else {
                 const textArea = document.createElement("textarea");
-                textArea.value = email;
-                document.body.appendChild(textArea);
-                textArea.select();
+                textArea.value = email; document.body.appendChild(textArea); textArea.select();
                 try { document.execCommand('copy'); showToast("이메일 주소가 복사되었습니다."); } catch (err) { }
                 document.body.removeChild(textArea);
             }
@@ -738,12 +684,8 @@
                 timeLeft -= 0.1;
                 const percentage = (timeLeft / 20) * 100;
                 timerBar.style.width = `${percentage}%`;
-                
                 if (percentage < 30) timerBar.classList.replace('bg-teal-400', 'bg-red-500');
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleAnswer(0, null); 
-                }
+                if (timeLeft <= 0) { clearInterval(timerInterval); handleAnswer(0, null); }
             }, 100);
         }
 
@@ -778,49 +720,28 @@
 
         function startExpertMode(difficulty) {
             playSound('click');
-            currentMode = 'expert';
-            currentDifficulty = difficulty;
-            currentGroup = '';
-            
+            currentMode = 'expert'; currentDifficulty = difficulty; currentGroup = '';
             let pool = getValidQuestions();
             if (pool.length === 0) { showToast("문제가 부족합니다."); return; }
 
             const buildQuestions = (targetCount) => {
                 let result = [];
-                while (result.length < targetCount) {
-                    result = result.concat(shuffle([...pool]));
-                }
+                while (result.length < targetCount) result = result.concat(shuffle([...pool]));
                 return result.slice(0, targetCount);
             };
 
-            if (difficulty === '데모') {
-                currentQuestions = buildQuestions(10);
-                scoreMultiplier = 1.0;
-            } else if (difficulty === '초보') {
-                currentQuestions = buildQuestions(30);
-                scoreMultiplier = 1.0;
-            } else if (difficulty === '중수') {
-                currentQuestions = buildQuestions(50);
-                scoreMultiplier = 1.25;
-            } else if (difficulty === '고수') {
-                currentQuestions = buildQuestions(100);
-                scoreMultiplier = 1.5;
-            } else if (difficulty === '전문가') {
-                currentQuestions = buildQuestions(150);
-                scoreMultiplier = 1.75;
-            } else if (difficulty === '마스터') {
-                currentQuestions = buildQuestions(200);
-                scoreMultiplier = 2.0;
-            }
+            if (difficulty === '데모') { currentQuestions = buildQuestions(10); scoreMultiplier = 1.0; }
+            else if (difficulty === '초보') { currentQuestions = buildQuestions(30); scoreMultiplier = 1.0; }
+            else if (difficulty === '중수') { currentQuestions = buildQuestions(50); scoreMultiplier = 1.25; }
+            else if (difficulty === '고수') { currentQuestions = buildQuestions(100); scoreMultiplier = 1.5; }
+            else if (difficulty === '전문가') { currentQuestions = buildQuestions(150); scoreMultiplier = 1.75; }
+            else if (difficulty === '마스터') { currentQuestions = buildQuestions(200); scoreMultiplier = 2.0; }
             startGame(5);
         }
 
         function startChallengeMode() {
             playSound('click');
-            currentMode = 'challenge';
-            currentDifficulty = '';
-            currentGroup = '';
-            currentQuestions = [];
+            currentMode = 'challenge'; currentDifficulty = ''; currentGroup = ''; currentQuestions = [];
             let pool = getValidQuestions();
             for(let i=0; i<45; i++) currentQuestions = currentQuestions.concat(shuffle([...pool]));
             scoreMultiplier = 2.0; 
@@ -829,16 +750,12 @@
 
         function startGroupMode(groupName) {
             playSound('click');
-            currentMode = 'group';
-            currentDifficulty = '';
-            currentGroup = groupName;
-            
+            currentMode = 'group'; currentDifficulty = ''; currentGroup = groupName;
             currentQuestions = getValidQuestions().filter(q => {
                 if (!q.group) return false;
                 const groups = String(q.group).split(',').map(g => g.trim());
                 return groups.includes(groupName);
             });
-
             shuffle(currentQuestions);
             scoreMultiplier = 1.0;
             if (currentQuestions.length === 0) { showToast("문제가 없습니다."); return; }
@@ -858,28 +775,20 @@
             });
             const uniqueGroups = [...new Set(allGroups)];
             
-            if (uniqueGroups.length === 0) {
-                container.innerHTML = '<p class="text-zinc-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
-            }
+            if (uniqueGroups.length === 0) container.innerHTML = '<p class="text-zinc-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
             
             uniqueGroups.forEach(group => {
                 const btn = document.createElement('button');
-                btn.className = 'w-full flex items-center justify-between shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-teal-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
+                btn.className = 'w-full flex items-center justify-between shrink-0 bg-zinc-800 border border-teal-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
                 btn.innerHTML = `<span class="text-lg">${group}</span> <span class="text-teal-400 text-xs bg-teal-500/10 px-3 py-1.5 rounded-lg">도전</span>`;
-                btn.onclick = () => startGroupMode(group);
+                btn.onclick = () => { btn.blur(); startGroupMode(group); }; 
                 container.appendChild(btn);
             });
         }
 
         function startGame(initialHealth) {
-            health = initialHealth;
-            score = 0;
-            combo = 0;
-            currentQIndex = 0;
-            updateHealthUI();
-            updateScoreUI();
-            navTo('screen-game');
-            loadQuestion();
+            health = initialHealth; score = 0; combo = 0; currentQIndex = 0;
+            updateHealthUI(); updateScoreUI(); navTo('screen-game'); loadQuestion();
         }
 
         function loadQuestion() {
@@ -887,16 +796,11 @@
             if (currentQIndex >= currentQuestions.length) { endGame(true); return; }
 
             const qData = currentQuestions[currentQIndex];
-            
             document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
             document.getElementById('game-question').innerText = qData.question;
             
             const imgEl = document.getElementById('game-image');
-            if (qData.image && qData.image.trim() !== "") {
-                imgEl.src = qData.image;
-            } else {
-                imgEl.src = "logo2.png";
-            }
+            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
 
             document.getElementById('overlay-o').classList.add('hidden');
             document.getElementById('overlay-o').classList.remove('pop-in');
@@ -905,10 +809,28 @@
 
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach((btn, index) => {
-                btn.innerText = qData.options[index];
-                btn.className = 'choice-btn w-full bg-zinc-800 hover:bg-zinc-700 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
+                const optText = qData.options[index];
+                
+                // 💡 퍼스널 컬러 문제 지원: 선택지가 색상 코드(#)인지 검사
+                const isColorCode = /^#([0-9A-F]{3}){1,2}$/i.test(optText.trim());
+                
+                if (isColorCode) {
+                    // 💡 일반 텍스트 문제 버튼들과 동일한 크기(높이)를 유지하도록 내부 색상 박스 수정 (h-6)
+                    btn.innerHTML = `
+                        <div class="flex items-center justify-center w-full">
+                            <div class="w-full h-6 sm:h-7 rounded-md border border-zinc-600 shadow-sm" style="background-color: ${optText.trim()};"></div>
+                        </div>
+                    `;
+                } else {
+                    btn.innerText = optText;
+                }
+
+                btn.className = 'choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
                 btn.disabled = false;
-                btn.onclick = () => handleAnswer(index + 1, btn);
+                btn.onclick = () => {
+                    btn.blur(); 
+                    handleAnswer(index + 1, btn);
+                };
             });
 
             startTimer();
@@ -974,9 +896,7 @@
 
         function getRank(finalScore) {
             let maxScore = 0;
-            currentQuestions.forEach((_, i) => {
-                maxScore += (400 * scoreMultiplier) + ((i + 1) * 4);
-            });
+            currentQuestions.forEach((_, i) => { maxScore += (400 * scoreMultiplier) + ((i + 1) * 4); });
             if (maxScore === 0) maxScore = 1; 
 
             const ratio = finalScore / maxScore;
