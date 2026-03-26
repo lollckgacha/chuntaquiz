@@ -43,12 +43,10 @@
         ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
     </style>
 </head>
-<!-- 💡 모바일 주소창 대응을 위해 h-[100dvh] 및 전체 오버플로우 방지 적용 -->
 <body class="bg-black text-zinc-100 h-[100dvh] w-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden relative select-none">
 
     <!-- ==================== 로그인 UI (우측 상단, 메인화면에서만 보임) ==================== -->
     <div id="login-section" class="absolute top-4 right-4 z-50 flex items-center gap-2 transition-opacity duration-300">
-        <!-- 비로그인 상태: Google 로그인 버튼 -->
         <button id="btn-google-login" onclick="loginWithGoogle()" class="bg-white hover:bg-zinc-200 text-black font-bold py-1.5 px-4 rounded-full text-sm shadow-lg flex items-center gap-2 transition-transform btn-active">
             <svg class="w-4 h-4" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -59,7 +57,6 @@
             Google 로그인
         </button>
         
-        <!-- 로그인 상태: 프로필 및 로그아웃 버튼 -->
         <div id="user-profile" class="hidden items-center gap-2 bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full shadow-lg">
             <span id="user-name" class="text-white text-xs font-bold truncate max-w-[90px]">User</span>
             <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
@@ -72,11 +69,12 @@
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
-                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+                <img src="logo.webp" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
                     천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
                 <p class="text-zinc-400 mt-4 text-center">현재 버전은 데모 버전이므로 <br> 스트리머 뻐꾸기를 금지합니다.</p>
+                <p class="text-zinc-400 mt-4 text-center">새로고침시 기록이 초기화될 수 있습니다.</p>
                 <p class="text-zinc-400 mt-4 text-center">퀴즈 문제 제공 환영입니다.</p>
             </div>
             
@@ -264,9 +262,9 @@
                 </h2>
             </div>
 
-            <!-- 💡 중앙: 이미지 영역 -->
+            <!-- 중앙: 이미지 영역 -->
             <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2">
-                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+                <img id="game-image" src="logo.webp" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span>
@@ -276,11 +274,20 @@
                 </div>
             </div>
 
-            <!-- 하단: 3개의 선택지 -->
-            <div id="game-options" class="shrink-0 space-y-3 mt-auto pb-2">
-                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
-                <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+            <!-- 하단: 3개의 선택지 및 다음 버튼 영역 -->
+            <!-- 💡 안전한 높이 확보를 위해 pb-2에서 pb-4로 늘림 -->
+            <div class="shrink-0 w-full mt-auto pb-4">
+                <div id="game-options" class="space-y-3">
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                    <button class="choice-btn w-full bg-zinc-800 text-white font-medium py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug"></button>
+                </div>
+                
+                <!-- 다음 문제 넘어가기 버튼 (실루엣 퀴즈 완료 시 나타남) -->
+                <!-- 💡 slide-up 대신 fade-in 사용으로 화면 이탈 방지 -->
+                <button id="btn-next" onclick="nextQuestion()" class="hidden w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 px-6 rounded-xl border border-teal-400 transition duration-200 btn-active text-lg shadow-lg shadow-teal-500/30 fade-in">
+                    다음 문제로 넘어가기 ➔
+                </button>
             </div>
         </div>
 
@@ -321,7 +328,7 @@
         </div>
     </div>
 
-    <!-- 💡 토스트 알림 (모바일에서도 절대 안잘리게 top-12 및 너비 제한 조정) -->
+    <!-- 토스트 알림 -->
     <div id="toast-container" class="fixed top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[99999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
 
     <!-- JavaScript 로직 -->
@@ -340,6 +347,7 @@
         window.copyEmail = copyEmail;
         window.loginWithGoogle = loginWithGoogle;
         window.logoutGoogle = logoutGoogle;
+        window.nextQuestion = nextQuestion; // 전역 바인딩
 
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
@@ -423,11 +431,11 @@
         };
 
         const mockQuizData = [{ question: "데이터 로딩 중...", options: ["...", "...", "..."], answer: 1, group: "", image: "" }];
-        const defaultAchievements = [{ id: "1", name: "버잘알의 기질", desc: "첫 문제의 정답을 맞춘다.", type: "FIRST_RIGHT", target: 0, secret: false }];
+        const defaultAchievements = [{ id: "1", name: "천타잘알의 기질", desc: "첫 문제의 정답을 맞힌다.", type: "FIRST_RIGHT", target: 0, secret: false }];
 
         function preloadImages() {
             const imageUrls = new Set();
-            imageUrls.add('logo2.png');
+            imageUrls.add('logo.webp');
             getValidQuestions().forEach(q => {
                 if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
             });
@@ -462,7 +470,6 @@
             preloadImages(); 
             setupApp();
 
-            await signInAnonymously(auth).catch(() => {});
             history.replaceState({ screen: 'screen-main' }, '', '#screen-main');
         }
 
@@ -485,6 +492,11 @@
                     profile.classList.add('hidden');
                     profile.classList.remove('flex');
                 }
+            } else {
+                btnLogin.classList.remove('hidden');
+                profile.classList.add('hidden');
+                profile.classList.remove('flex');
+                await signInAnonymously(auth).catch(() => {});
             }
         });
 
@@ -495,11 +507,21 @@
                 
                 if (snapshot.exists()) {
                     const parsed = snapshot.val();
-                    userData.highscores = parsed.highscores || userData.highscores;
-                    userData.unlockedAchievements = parsed.unlockedAchievements || userData.unlockedAchievements;
-                    userData.settings = parsed.settings || userData.settings;
-                    userData.totalCorrectAnswers = parsed.totalCorrectAnswers || userData.totalCorrectAnswers;
+                    
+                    userData.highscores.expert = Math.max(userData.highscores.expert || 0, parsed.highscores?.expert || 0);
+                    userData.highscores.challenge = Math.max(userData.highscores.challenge || 0, parsed.highscores?.challenge || 0);
+                    
+                    const mergedAchievements = new Set([...userData.unlockedAchievements, ...(parsed.unlockedAchievements || [])]);
+                    userData.unlockedAchievements = Array.from(mergedAchievements);
+                    
+                    userData.totalCorrectAnswers = Math.max(userData.totalCorrectAnswers || 0, parsed.totalCorrectAnswers || 0);
+                    
                     if (!userData.highscores.groups) userData.highscores.groups = {};
+                    const groupKeys = new Set([...Object.keys(userData.highscores.groups), ...Object.keys(parsed.highscores?.groups || {})]);
+                    groupKeys.forEach(g => {
+                        userData.highscores.groups[g] = Math.max(userData.highscores.groups[g] || 0, parsed.highscores?.groups?.[g] || 0);
+                    });
+                    
                     saveUserData(); 
                 } else {
                     await saveUserDataToFirebase();
@@ -509,7 +531,7 @@
                 setupApp();
             } catch (error) {
                 console.error("Firebase read error", error);
-                showToast("데이터 불러오기에 실패했습니다. 권한 규칙을 확인해주세요.");
+                showToast("데이터 불러오기에 실패했습니다.");
             }
         }
 
@@ -566,7 +588,7 @@
             const provider = new GoogleAuthProvider();
             try {
                 await signInWithPopup(auth, provider);
-                showToast("구글 계정으로 로그인되었습니다! 데이터가 클라우드에 연동됩니다.");
+                showToast("구글 계정으로 로그인되었습니다! 기록이 연동됩니다.");
             } catch (error) {
                 console.error(error);
                 if (error.code === 'auth/popup-closed-by-user') showToast("로그인이 취소되었습니다.");
@@ -578,10 +600,10 @@
             playSound('click');
             try {
                 await signOut(auth);
-                showToast("로그아웃 되었습니다. (오프라인 모드 전환)");
                 userData = { highscores: { expert: 0, challenge: 0, groups: {} }, unlockedAchievements: [], settings: { volume: 0.5 }, totalCorrectAnswers: 0 };
-                saveUserData();
-                await signInAnonymously(auth);
+                localStorage.setItem('soop_quiz_userdata', JSON.stringify(userData));
+                setupApp();
+                showToast("로그아웃 되었습니다. (오프라인 모드 전환)");
             } catch (error) {
                 showToast("로그아웃 오류가 발생했습니다.");
             }
@@ -710,6 +732,19 @@
             navTo('screen-main');
         }
 
+        // 💡 다음 문제 진행 로직 공통 함수화
+        function proceedToNext() {
+            if (health <= 0) endGame(false);
+            else { currentQIndex++; loadQuestion(); }
+        }
+
+        // 💡 실루엣 퀴즈용: 다음 문제 수동 넘어가기
+        function nextQuestion() {
+            playSound('click');
+            document.getElementById('btn-next').classList.add('hidden');
+            proceedToNext();
+        }
+
         function getValidQuestions() {
             if (!quizDatabase) return [];
             const arr = Array.isArray(quizDatabase) ? quizDatabase : Object.values(quizDatabase);
@@ -799,8 +834,15 @@
             document.getElementById('question-number').innerText = `No.${String(currentQIndex + 1).padStart(2, '0')}`;
             document.getElementById('game-question').innerText = qData.question;
             
+            // UI 초기화: 선택지 보이기, 다음 버튼 숨기기
+            document.getElementById('game-options').classList.remove('hidden');
+            document.getElementById('btn-next').classList.add('hidden');
+
             const imgEl = document.getElementById('game-image');
-            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
+            imgEl.style.transition = "none";
+            imgEl.style.opacity = 1;
+            imgEl.style.filter = "none"; // 블러 효과 리셋
+            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo.webp";
 
             document.getElementById('overlay-o').classList.add('hidden');
             document.getElementById('overlay-o').classList.remove('pop-in');
@@ -810,12 +852,9 @@
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach((btn, index) => {
                 const optText = qData.options[index];
-                
-                // 💡 퍼스널 컬러 문제 지원: 선택지가 색상 코드(#)인지 검사
                 const isColorCode = /^#([0-9A-F]{3}){1,2}$/i.test(optText.trim());
                 
                 if (isColorCode) {
-                    // 💡 일반 텍스트 문제 버튼들과 동일한 크기(높이)를 유지하도록 내부 색상 박스 수정 (h-6)
                     btn.innerHTML = `
                         <div class="flex items-center justify-center w-full">
                             <div class="w-full h-6 sm:h-7 rounded-md border border-zinc-600 shadow-sm" style="background-color: ${optText.trim()};"></div>
@@ -843,8 +882,23 @@
 
             const qData = currentQuestions[currentQIndex];
             const isCorrect = (selectedIndex === qData.answer);
+            const isSilhouette = qData.image && qData.image.includes('_sil.');
+            
             const buttons = document.querySelectorAll('.choice-btn');
             buttons.forEach(btn => btn.disabled = true);
+
+            // 💡 실루엣 이미지 정답 공개 시 블러 애니메이션 연출
+            const imgEl = document.getElementById('game-image');
+            if (isSilhouette) {
+                imgEl.style.filter = "blur(8px)";
+                imgEl.style.opacity = 0.6;
+                imgEl.style.transition = "all 0.4s ease-in-out";
+                setTimeout(() => {
+                    imgEl.src = qData.image.replace('_sil.', '.');
+                    imgEl.style.filter = "blur(0px)";
+                    imgEl.style.opacity = 1;
+                }, 300);
+            }
 
             const overlayO = document.getElementById('overlay-o');
             const overlayX = document.getElementById('overlay-x');
@@ -888,10 +942,24 @@
             checkAchievement('PASS_EXPERT', currentQIndex + 1);
             checkAchievement('COMBO', combo);
 
-            setTimeout(() => {
-                if (health <= 0) endGame(false);
-                else { currentQIndex++; loadQuestion(); }
-            }, 1200);
+            // 💡 문제 진행 방식 분기 (실루엣 vs 일반)
+            if (isSilhouette) {
+                // 실루엣인 경우: 1.2초 뒤 O/X와 선택지를 숨기고 '다음 버튼' 노출
+                setTimeout(() => {
+                    overlayO.classList.add('hidden');
+                    overlayX.classList.add('hidden');
+                    
+                    document.getElementById('game-options').classList.add('hidden'); // 선택지 가리기
+                    const btnNext = document.getElementById('btn-next');
+                    btnNext.innerText = (health <= 0) ? "결과 보기 ➔" : "다음 문제로 넘어가기 ➔";
+                    btnNext.classList.remove('hidden');
+                }, 1200);
+            } else {
+                // 일반 문제인 경우: 기존처럼 1.2초 뒤 자동 다음 문제 진행
+                setTimeout(() => {
+                    proceedToNext();
+                }, 1200);
+            }
         }
 
         function getRank(finalScore) {
