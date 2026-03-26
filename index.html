@@ -69,7 +69,7 @@
         <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <div class="flex-1 flex flex-col items-center justify-center mt-8 shrink-0">
-                <img src="logo.webp" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
+                <img src="logo2.png" alt="천타버스 로고" class="h-20 sm:h-24 object-contain mb-2 drop-shadow-[0_0_15px_rgba(45,212,191,0.4)]">
                 <h1 class="text-4xl font-extrabold mb-2 text-white text-center">
                     천타버스 퀴즈<br><span class="text-lg text-teal-400 font-normal">당신의 천타버스 지식을 증명하세요!</span>
                 </h1>
@@ -264,7 +264,7 @@
 
             <!-- 중앙: 이미지 영역 -->
             <div class="flex-1 min-h-[150px] sm:min-h-[200px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2">
-                <img id="game-image" src="logo.webp" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
                 
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10">
                     <span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span>
@@ -435,7 +435,7 @@
 
         function preloadImages() {
             const imageUrls = new Set();
-            imageUrls.add('logo.webp');
+            imageUrls.add('logo2.png');
             getValidQuestions().forEach(q => {
                 if (q.image && q.image.trim() !== "") imageUrls.add(q.image);
             });
@@ -842,7 +842,7 @@
             imgEl.style.transition = "none";
             imgEl.style.opacity = 1;
             imgEl.style.filter = "none"; // 블러 효과 리셋
-            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo.webp";
+            imgEl.src = (qData.image && qData.image.trim() !== "") ? qData.image : "logo2.png";
 
             document.getElementById('overlay-o').classList.add('hidden');
             document.getElementById('overlay-o').classList.remove('pop-in');
