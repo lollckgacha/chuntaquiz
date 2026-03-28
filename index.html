@@ -5,7 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>천타버스 퀴즈</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>.fade-in{animation:fadeIn .3s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.pop-in{animation:popIn .5s cubic-bezier(.175,.885,.32,1.275) forwards}@keyframes popIn{0%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:scale(1)}}.slide-up{animation:slideUp .4s cubic-bezier(.175,.885,.32,1.275) forwards}@keyframes slideUp{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}.btn-active:active{transform:scale(.96)}*{-webkit-tap-highlight-color:transparent}.hidden-screen{display:none!important}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#52525b;border-radius:10px}::-webkit-scrollbar-thumb:hover{background:#2dd4bf}.game-container{width:100%;height:100dvh;margin:0 auto}@media (min-width:640px){.game-container{height:95dvh;width:auto;aspect-ratio:9/16;max-height:95dvh;max-width:calc(100vw - 2rem)}}</style>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+        .slide-up { animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-active:active { transform: scale(0.96); }
+        * { -webkit-tap-highlight-color: transparent; }
+        .hidden-screen { display: none !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+        .game-container { width: 100%; height: 100dvh; margin: 0 auto; }
+        @media (min-width: 640px) { .game-container { height: 95dvh; width: auto; aspect-ratio: 9/16; max-height: 95dvh; max-width: calc(100vw - 2rem); } }
+    </style>
 </head>
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false" class="bg-black text-zinc-100 h-[100dvh] w-screen flex items-center justify-center font-sans selection:bg-teal-400 selection:text-black overflow-hidden select-none">
     <div id="app-container" class="game-container bg-zinc-900 sm:rounded-3xl sm:shadow-[0_0_40px_rgba(45,212,191,0.15)] sm:border border-zinc-800 relative overflow-hidden flex flex-col">
@@ -18,6 +34,8 @@
                 <button onclick="logoutGoogle()" class="text-zinc-400 text-xs ml-1 hover:text-red-400 btn-active">로그아웃</button>
             </div>
         </div>
+        
+        <!-- ==================== 1. 메인 메뉴 화면 ==================== -->
         <div id="screen-main" class="flex-1 flex flex-col p-6 fade-in relative z-10 min-h-0">
             <button onclick="openSettings('screen-main')" class="absolute top-2 left-2 text-zinc-400 hover:text-white text-2xl transition-colors btn-active flex items-center p-2 w-12 h-12 justify-center rounded-lg hover:bg-zinc-800 z-50">⚙️</button>
             <div class="flex-1 flex flex-col items-center justify-center mt-6 shrink-0">
@@ -37,46 +55,79 @@
                 </div>
             </div>
         </div>
+
+        <!-- ==================== 2. 모드 선택 화면 ==================== -->
         <div id="screen-mode" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center text-white shrink-0">모드 선택</h2>
-            <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1">
-                <button onclick="navTo('screen-difficulty')" class="w-full shrink-0 bg-gradient-to-r from-teal-700 to-teal-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">천타버스 모드</h3><p class="text-teal-100 text-sm">모든 멤버의 문제가 무작위로 등장합니다.</p></button>
-                <button onclick="startChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-red-700 to-rose-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">챌린지 모드</h3><p class="text-red-100 text-sm">단 한번뿐인 기회로 명예의 전당 최정상을 노려보세요!</p></button>
-                <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-zinc-700 to-zinc-600 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">멤버 모드</h3><p class="text-zinc-200 text-sm">특정 멤버의 문제만 풉니다.</p></button>
+            <div class="flex-1 space-y-4 overflow-y-auto pb-4 pr-1" id="mode-buttons-container">
+                <button onclick="navTo('screen-difficulty')" class="w-full shrink-0 bg-gradient-to-r from-teal-700 to-teal-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">천타버스 모드</h3><p class="text-teal-100 text-sm">천타버스 크루의 문제가 무작위로 등장합니다.</p></button>
+                <button onclick="startChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-red-700 to-rose-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">챌린지 모드</h3><p class="text-red-100 text-sm">10초의 한계! 명예의 전당 최정상을 노려보세요!</p></button>
+                <button onclick="navTo('screen-group')" class="w-full shrink-0 bg-gradient-to-r from-zinc-700 to-zinc-600 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center"><h3 class="text-2xl font-bold text-white mb-2">멤버 모드</h3><p class="text-zinc-200 text-sm">특정 천타버스 멤버의 문제만 풉니다.</p></button>
+
+                <!-- 특별 모드 구역 -->
+                <div class="my-6 border-t border-zinc-700 pt-6 shrink-0">
+                    <h3 class="text-xl font-bold text-white mb-2">특별 모드</h3>
+                    <p class="text-zinc-400 text-sm mb-4">한달마다 특정 크루의 퀴즈가 추가됩니다.</p>
+                    <div class="space-y-4" id="special-mode-container">
+                        <button onclick="startIntegratedChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-amber-600 to-yellow-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
+                            <h3 class="text-2xl font-bold text-white mb-2">통합 챌린지 모드</h3>
+                            <p class="text-amber-100 text-sm">천타버스를 비롯한 모든 문제가 등장합니다.</p>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- ==================== 3. 난이도 선택 화면 ==================== -->
         <div id="screen-difficulty" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-mode')" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">난이도 선택</h2>
             <div class="flex-1 flex flex-col space-y-4 overflow-y-auto pb-4 pr-1 min-h-0">
-                <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-white mb-2">초보</h3><p class="text-zinc-300 text-sm">총 50문제 출제</p><p class="text-zinc-500 text-xs mt-2">점수 보너스 없음</p></button>
-                <button onclick="startExpertMode('중수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-300 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-300 mb-2">중수</h3><p class="text-zinc-300 text-sm">총 100문제 출제</p><p class="text-teal-300/80 text-xs mt-2 font-bold">+25% 점수 보너스</p></button>
-                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-400 mb-2">고수</h3><p class="text-zinc-300 text-sm">총 200문제 출제</p><p class="text-teal-400/80 text-xs mt-2 font-bold">+50% 점수 보너스</p></button>
+                <button onclick="startExpertMode('초보')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-white mb-2">초보</h3><p class="text-zinc-300 text-sm">총 30문제 출제</p><p class="text-zinc-500 text-xs mt-2">점수 보너스 없음</p></button>
+                <button onclick="startExpertMode('중수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-300 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-300 mb-2">중수</h3><p class="text-zinc-300 text-sm">총 50문제 출제</p><p class="text-teal-300/80 text-xs mt-2 font-bold">+25% 점수 보너스</p></button>
+                <button onclick="startExpertMode('고수')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-400 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-400 mb-2">고수</h3><p class="text-zinc-300 text-sm">총 100문제 출제</p><p class="text-teal-400/80 text-xs mt-2 font-bold">+50% 점수 보너스</p></button>
+                <button onclick="startExpertMode('전문가')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-500 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-500 mb-2">전문가</h3><p class="text-zinc-300 text-sm">총 150문제 출제</p><p class="text-teal-500/80 text-xs mt-2 font-bold">+75% 점수 보너스</p></button>
+                <button onclick="startExpertMode('마스터')" class="w-full shrink-0 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-teal-600 p-6 rounded-2xl btn-active text-center transition-colors"><h3 class="text-3xl font-black text-teal-600 mb-2">마스터</h3><p class="text-zinc-300 text-sm">총 200문제 출제</p><p class="text-teal-600/80 text-xs mt-2 font-bold">+100% 점수 보너스</p></button>
             </div>
         </div>
+
+        <!-- ==================== 4. 멤버 모드 선택 화면 ==================== -->
         <div id="screen-group" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-mode')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 뒤로가기</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">멤버 선택</h2>
             <div id="group-buttons-container" class="flex-1 overflow-y-auto space-y-3 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
+
+        <!-- 업적 화면 -->
         <div id="screen-achievements" class="flex-1 flex flex-col p-6 pb-0 hidden-screen fade-in relative z-10 bg-zinc-900 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-2 text-center shrink-0">🏆 업적 목록</h2>
             <p class="text-zinc-400 text-sm text-center mb-6 shrink-0">숨겨진 히든 업적 해금에 도전해보세요!</p>
             <div id="achievements-container" class="flex-1 overflow-y-auto space-y-3 pb-8 pr-1 min-h-0 content-start"></div>
         </div>
+
+        <!-- 최고 점수 화면 -->
         <div id="screen-highscores" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">🥇 최고 점수</h2>
             <div id="highscores-container" class="flex-1 overflow-y-auto space-y-4 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
+
+        <!-- 명예의 전당 화면 -->
         <div id="screen-halloffame" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-2 text-center shrink-0">👑 명예의 전당</h2>
-            <p class="text-zinc-400 text-sm text-center mb-6 shrink-0">챌린지 모드 Top 50 랭커</p>
+            
+            <div class="flex gap-2 mb-4 shrink-0 bg-zinc-800 p-1 rounded-lg">
+                <button id="tab-challenge" onclick="switchHofTab('challenge')" class="flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors">챌린지</button>
+                <button id="tab-integrated" onclick="switchHofTab('integrated')" class="flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors">통합 챌린지</button>
+            </div>
+            
             <div id="halloffame-container" class="flex-1 overflow-y-auto space-y-3 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
+
+        <!-- 환경 설정 화면 -->
         <div id="screen-settings" class="flex-1 flex flex-col p-6 hidden-screen fade-in relative z-10 min-h-0">
             <button id="settings-back-btn" onclick="closeSettings()" class="self-start text-teal-400 mb-6 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-6 text-center shrink-0">⚙️ 환경 설정</h2>
@@ -116,6 +167,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- ==================== 5. 플레이(게임) 화면 ==================== -->
         <div id="screen-game" class="flex-1 flex flex-col p-4 sm:p-6 hidden-screen bg-black relative z-10 min-h-0">
             <div class="flex justify-between items-center mb-2 shrink-0">
                 <button onclick="openSettings('screen-game')" class="text-zinc-400 hover:text-white text-2xl transition-colors btn-active flex items-center p-1 w-10 h-10 justify-center rounded-lg hover:bg-zinc-800">⚙️</button>
@@ -134,7 +187,7 @@
                 <h2 id="game-question" class="text-xl sm:text-2xl font-bold text-center leading-snug break-words text-white w-full">질문이 여기에 표시됩니다.</h2>
             </div>
             <div id="image-container" class="flex-1 min-h-[80px] sm:min-h-[150px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-4 sm:mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2 transition-colors duration-500">
-                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false">
+                <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false" onerror="if(!this.src.includes('logo2.png'))this.src='logo2.png';">
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10"><span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span></div>
                 <div id="overlay-x" class="absolute inset-0 flex items-center justify-center bg-red-500/20 backdrop-blur-sm hidden z-10"><span class="text-red-500 text-[8rem] font-black drop-shadow-lg">X</span></div>
             </div>
@@ -148,6 +201,8 @@
                 <button id="btn-next" onclick="nextQuestion()" class="hidden w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 px-6 rounded-xl border border-teal-400 transition duration-200 btn-active text-lg shadow-lg shadow-teal-500/30 fade-in">다음 문제로 넘어가기 ➔</button>
             </div>
         </div>
+
+        <!-- ==================== 6. 결과 화면 ==================== -->
         <div id="screen-result" class="flex-1 flex flex-col p-6 hidden-screen fade-in items-center justify-center relative z-10 min-h-0">
             <h2 class="text-2xl font-bold mb-1 text-zinc-400 shrink-0">GAME OVER</h2>
             <h1 id="rank-display" class="text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)] shrink-0">S</h1>
@@ -159,12 +214,851 @@
             <div class="w-full space-y-3 shrink-0"><button onclick="navTo('screen-main')" class="w-full bg-teal-500 hover:bg-teal-400 text-black font-extrabold py-4 rounded-xl btn-active text-lg transition-colors">메인으로 돌아가기</button></div>
         </div>
         <div class="absolute bottom-1 w-full text-center text-[10px] text-zinc-600 z-0 pointer-events-none">Made by SSG_랜더스</div>
+
+        <!-- 각종 모달 -->
         <div id="exit-modal" class="absolute inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in"><div class="bg-zinc-800 p-6 rounded-2xl border border-zinc-700 max-w-xs w-full text-center shadow-2xl"><h3 class="text-xl font-bold text-white mb-2">게임 포기</h3><p class="text-zinc-400 text-sm mb-6">정말 나가시겠습니까?<br>진행 상황은 저장되지 않습니다.</p><div class="flex gap-3"><button onclick="closeExitModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button><button onclick="confirmExit()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">나가기</button></div></div></div>
         <div id="reset-modal" class="absolute inset-0 bg-black/80 z-[9999] hidden flex items-center justify-center px-4 fade-in"><div class="bg-zinc-800 p-6 rounded-2xl border border-red-900/50 max-w-xs w-full text-center shadow-2xl"><h3 class="text-xl font-bold text-red-500 mb-2">데이터 초기화</h3><p class="text-zinc-400 text-sm mb-6">모든 최고 점수와 업적이 삭제됩니다.<br>정말 초기화하시겠습니까?</p><div class="flex gap-3"><button onclick="closeResetModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">취소</button><button onclick="confirmReset()" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition-colors btn-active">초기화</button></div></div></div>
         <div id="nickname-modal" class="absolute inset-0 bg-black/90 z-[99999] hidden flex items-center justify-center px-4 fade-in"><div class="bg-zinc-800 p-6 rounded-2xl border border-teal-500/50 max-w-xs w-full text-center shadow-2xl"><h3 class="text-xl font-bold text-teal-400 mb-2">닉네임 설정</h3><p class="text-zinc-400 text-sm mb-4">명예의 전당에 등록될<br>닉네임을 정해주세요!</p><div class="flex gap-2 mb-4"><input type="text" id="modal-nickname-input" maxlength="10" oninput="resetModalNickValidation()" class="flex-1 bg-black/50 border border-zinc-600 rounded-lg px-3 py-3 text-white text-center outline-none focus:border-teal-400 min-w-0" placeholder="닉네임 (최대 10자)"><button onclick="checkModalNickname()" class="bg-zinc-700 hover:bg-zinc-600 text-white font-bold px-3 py-2 rounded-lg transition-colors btn-active whitespace-nowrap text-sm">중복확인</button></div><div class="flex gap-3"><button onclick="cancelNicknameModal()" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 rounded-xl transition-colors btn-active">로그아웃</button><button id="modal-nickname-btn" onclick="confirmNicknameModal()" disabled class="flex-1 bg-teal-500 hover:bg-teal-400 text-black font-bold py-3 rounded-xl transition-colors btn-active disabled:opacity-50 disabled:cursor-not-allowed">확인</button></div></div></div>
         <div id="toast-container" class="absolute top-12 sm:top-16 left-1/2 transform -translate-x-1/2 z-[999999] flex flex-col items-center space-y-3 w-[90%] sm:w-max max-w-sm pointer-events-none"></div>
     </div>
 
-    <script type="module">import{initializeApp as _iA}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";import{getAuth as _gA,onAuthStateChanged as _oASC,signInAnonymously as _sIA,signInWithPopup as _sIWP,GoogleAuthProvider as _GAP,signOut as _sO}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";import{getDatabase as _gD,ref as _r,set as _s,get as _g}from"https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";document.addEventListener('keydown',e=>{if(e.keyCode===123||(e.ctrlKey&&e.shiftKey&&(e.keyCode===73||e.key==='I'||e.key==='i'))||(e.ctrlKey&&e.shiftKey&&(e.keyCode===74||e.key==='J'||e.key==='j'))||(e.ctrlKey&&e.shiftKey&&(e.keyCode===67||e.key==='C'||e.key==='c'))||(e.ctrlKey&&(e.keyCode===85||e.key==='U'||e.key==='u'))){e.preventDefault();return!1}});setInterval(()=>{try{const t=new Date().getTime();debugger;if(new Date().getTime()-t>100){document.body.innerHTML="<div class='flex items-center justify-center h-screen w-screen bg-black text-teal-400 text-xl font-bold'>개발자 도구가 감지되었습니다. 보안을 위해 화면을 차단합니다.</div>"}console.clear()}catch(e){}},2000);const aCtx=new(window.AudioContext||window.webkitAudioContext)();let sV=0.5,bV=0.5;const bA=new Audio('chunta.mp3');bA.loop=!0;document.body.addEventListener('click',()=>{if(bA.paused&&bV>0)bA.play().catch(e=>0)},{once:!0});function pS(t){if(aCtx.state==='suspended')aCtx.resume();if(sV<=0)return;const o=aCtx.createOscillator(),g=aCtx.createGain();o.connect(g);g.connect(aCtx.destination);const n=aCtx.currentTime;if(t==='click'){o.type='sine';o.frequency.setValueAtTime(400,n);o.frequency.exponentialRampToValueAtTime(600,n+0.05);g.gain.setValueAtTime(sV*0.5,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.1);o.start(n);o.stop(n+0.1)}else if(t==='correct'){o.type='triangle';o.frequency.setValueAtTime(600,n);o.frequency.setValueAtTime(800,n+0.1);g.gain.setValueAtTime(sV*0.5,n);g.gain.linearRampToValueAtTime(sV*0.5,n+0.2);g.gain.exponentialRampToValueAtTime(0.01,n+0.4);o.start(n);o.stop(n+0.4)}else if(t==='wrong'){o.type='sawtooth';o.frequency.setValueAtTime(150,n);o.frequency.exponentialRampToValueAtTime(80,n+0.3);g.gain.setValueAtTime(sV*0.5,n);g.gain.exponentialRampToValueAtTime(0.01,n+0.3);o.start(n);o.stop(n+0.3)}}const fC={apiKey:atob("QUl6YVN5QTFBa0lVMVVqdXhiX0c4dWpJNFFHTlJXNkhjOHRwZnln"),authDomain:atob("ZG9uZ3BhMjAyNi0yZmRhNS5maXJlYmFzZWFwcC5jb20="),databaseURL:atob("aHR0cHM6Ly9kb25ncGEyMDI2LTJmZGE1LWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA="),projectId:atob("ZG9uZ3BhMjAyNi0yZmRhNQ=="),storageBucket:atob("ZG9uZ3BhMjAyNi0yZmRhNS5maXJlYmFzZXN0b3JhZ2UuYXBw"),messagingSenderId:atob("MTAwODI3NTYxNTgwNg=="),appId:atob("MToxMDA4Mjc1NjE1ODA2OndlYjpiMzIzMGEyZDE4YTc3YWVjYjUyMTZm"),measurementId:atob("Ry1QUFhNODA3N1lY")};const app=_iA(fC);const auth=_gA(app);const db=_gD(app);const fU=atob("aHR0cHM6Ly9kb25ncGEyMDI2LTJmZGE1LWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA=");let qD=[],aD=[],cU=null,uD={nickname:"",highscores:{expert:0,challenge:0,groups:{}},unlockedAchievements:[],settings:{sfxVolume:0.5,bgmVolume:0.5},totalCorrectAnswers:0};const mQD=[{question:"다음 멤버의 생일은?",options:["2월 26일","6월 22일","7월 24일"],answer:2,group:"천양",image:"images/chunyang.webp"},{question:"다음 멤버의 생일은?",options:["2월 8일","8월 2일","8월 20일"],answer:3,group:"달타",image:"images/dalta.png"},{question:"다음 멤버의 생일은?",options:["1월 1일","6월 6일","12월 31일"],answer:3,group:"임하밍",image:"images/haming.png"},{question:"다음 멤버의 생일은?",options:["10월 25일","11월 25일","12월 25일"],answer:1,group:"한아밍",image:"images/hanaming.png"},{question:"다음 멤버의 생일은?",options:["1월 2일","1월 22일","2월 2일"],answer:2,group:"카푸",image:"images/kapu.png"},{question:"다음 멤버의 생일은?",options:["8월 8일","9월 9일","10월 10일"],answer:1,group:"캬앙",image:"images/kyang.png"},{question:"다음 멤버의 생일은?",options:["1월 28일","8월 12일","12월 8일"],answer:3,group:"마다옴",image:"images/madaom.png"},{question:"다음 멤버의 MBTI는?",options:["ISTP","INFP","ISFP"],answer:1,group:"나나문",image:"images/nanamoon.png"},{question:"다음 멤버의 MBTI는?",options:["ISTP","INFP","ISFP"],answer:1,group:"파니",image:"images/pani.png"},{question:"다음 멤버의 MBTI는?",options:["INTP","ENTP","ISTP"],answer:1,group:"김웰로",image:"images/wello.png"},{question:"다음 멤버의 반려동물 이름은?",options:["마또","망고","당고"],answer:1,group:"마다옴",image:"images/madaom.png"},{question:"다음 멤버의 반려동물 이름은?",options:["아토","체리","마루"],answer:3,group:"모카",image:"images/moca.png"},{question:"다음 멤버의 반려동물 이름이 아닌것은?",options:["두부","콩이","먼지"],answer:2,group:"김웰로",image:"images/wello.png"},{question:"다음 스트리머의 OGQ 이모티콘 이름이 아닌것은?",options:["처니티콘","민트만두콘","블롭티콘"],answer:3,group:"천양",image:"images/chunyang.webp"},{question:"다음 스트리머의 OGQ 이모티콘 이름은?",options:["달달하이! 난 꿀즙이","달달한 꿀즙이","양봉장의 꿀즙이들"],answer:1,group:"달타",image:"images/dalta.png"},{question:"다음 스트리머의 OGQ 이모티콘 이름이 아닌것은?",options:["귀여운 늑대 울푸의 하루","카푸가 와써요라","귀여운 늑대 울푸의 일상"],answer:1,group:"카푸",image:"images/kapu.png"},{question:"다음 멤버의 SOOP 닉네임은?",options:["나나문","나나문☆","나나문_"],answer:1,group:"나나문",image:"images/nanamoon.png"},{question:"다음 멤버의 SOOP 닉네임은?",options:["파니_","파니","파니:b"],answer:1,group:"파니",image:"images/pani.png"},{question:"다음 멤버의 SOOP 닉네임은?",options:["김웰로_","웰로","김웰로"],answer:3,group:"김웰로",image:"images/wello.png"},{question:"다음 멤버가 소속된 그룹명은?",options:["BLYZ","VLYZ","VLEEZ"],answer:2,group:"문모모",image:"images/moonmomo.png"},{question:"다음 멤버가 소속된 그룹명은?",options:["U:RL","UR:L","URL:"],answer:2,group:"모카",image:"images/moca.png"},{question:"다음 멤버의 오리지널곡이 아닌것은?",options:["닿을 수 있게","Watch Me","여름의 한 조각"],answer:3,group:"문모모",image:"images/moonmomo.png"},{question:"다음 멤버가 릴동파2에서 메달을 딴 종목이 아닌것은?",options:["스키점프","스켈레톤","봅슬레이"],answer:3,group:"문모모",image:"images/moonmomo.png"},{question:"다음 멤버가 릴동파2에서 메달을 딴 종목은?",options:["피겨스케이팅","포인트컬링","봅슬레이"],answer:1,group:"한아밍",image:"images/hanaming.png"},{question:"다음 멤버의 종족은?",options:["검은 고양이","달에서 온 마녀","달의 요정"],answer:2,group:"나나문",image:"images/nanamoon.png"},{question:"다음 멤버의 오리지널곡 이름은?",options:["Stay Tonight","닿을 수 있게","여름의 한 조각"],answer:1,group:"문모모",image:"images/moonmomo.png"}];const dAD=[{id:"1",name:"천타잘알의 기질",desc:"첫 문제의 정답을 맞힌다.",type:"FIRST_RIGHT",target:0,secret:!1},{id:"2",name:"천타알못의 기질",desc:"첫 문제의 정답을 틀린다.",type:"FIRST_WRONG",target:0,secret:!1},{id:"3",name:"천타버스 초보",desc:"버잘알 모드 초보 난이도를 클리어한다.",type:"CLEAR_EASY",target:0,secret:!1},{id:"4",name:"천타버스 중수",desc:"버잘알 모드 중수 난이도를 클리어한다.",type:"CLEAR_NORMAL",target:0,secret:!1},{id:"5",name:"천타버스 고수",desc:"버잘알 모드 고수 난이도를 클리어한다.",type:"CLEAR_HARD",target:0,secret:!1},{id:"6",name:"천타버스 전문가",desc:"버잘알 모드 전문가 난이도를 클리어한다.",type:"CLEAR_EXPERT",target:0,secret:!1},{id:"7",name:"천타버스 마스터",desc:"버잘알 모드 마스터 난이도를 클리어한다.",type:"CLEAR_MASTER",target:0,secret:!1},{id:"8",name:"천타버스 유동",desc:"버잘알 모드에서 10번째 문제를 통과한다.",type:"PASS_EXPERT",target:10,secret:!1},{id:"9",name:"천타버스 애청자",desc:"버잘알 모드에서 30번째 문제를 통과한다.",type:"PASS_EXPERT",target:30,secret:!1},{id:"10",name:"천타버스 팬클럽",desc:"버잘알 모드에서 50번째 문제를 통과한다.",type:"PASS_EXPERT",target:50,secret:!1},{id:"11",name:"천타버스 구독팬",desc:"누적 정답 10회를 달성한다.",type:"TOTAL_CORRECT",target:10,secret:!1},{id:"12",name:"천타버스 열혈팬",desc:"누적 정답 50회를 달성한다.",type:"TOTAL_CORRECT",target:50,secret:!1},{id:"13",name:"천타버스 회장님",desc:"누적 정답 100회를 달성한다.",type:"TOTAL_CORRECT",target:100,secret:!1},{id:"14",name:"5연속 정답!",desc:"버잘알 모드에서 5문제를 연속해서 맞춘다.",type:"COMBO",target:5,secret:!1},{id:"15",name:"천양바라기",desc:"천양 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_천양",target:0,secret:!1},{id:"16",name:"달타바라기",desc:"달타 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_달타",target:0,secret:!1},{id:"17",name:"임하밍바라기",desc:"임하밍 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_임하밍",target:0,secret:!1},{id:"18",name:"한아밍바라기",desc:"한아밍 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_한아밍",target:0,secret:!1},{id:"19",name:"카푸바라기",desc:"카푸 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_카푸",target:0,secret:!1},{id:"20",name:"캬앙바라기",desc:"캬앙 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_캬앙",target:0,secret:!1},{id:"21",name:"마다옴바라기",desc:"마다옴 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_마다옴",target:0,secret:!1},{id:"22",name:"모카바라기",desc:"모카 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_모카",target:0,secret:!1},{id:"23",name:"문모모바라기",desc:"문모모 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_문모모",target:0,secret:!1},{id:"24",name:"나나문바라기",desc:"나나문 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_나나문",target:0,secret:!1},{id:"25",name:"파니바라기",desc:"파니 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_파니",target:0,secret:!1},{id:"26",name:"김웰로바라기",desc:"김웰로 멤버 모드를 클리어한다.",type:"CLEAR_GROUP_김웰로",target:0,secret:!1}];function pI(){const iU=new Set();iU.add('logo2.png');gVQ().forEach(q=>{if(q.image&&q.image.trim()!==""){iU.add(q.image);if(q.image.includes('_sil.'))iU.add(q.image.replace('_sil.','.'));if(q.image.includes('_zoom.'))iU.add(q.image.replace('_zoom.','.'))}});iU.forEach(u=>{const i=new Image();i.src=u})}async function iA(){const lS=localStorage.getItem('soop_quiz_userdata');if(lS){try{const p=JSON.parse(lS);uD={...uD,...p};if(typeof uD.totalCorrectAnswers==='undefined')uD.totalCorrectAnswers=0;if(typeof uD.nickname==='undefined')uD.nickname=""}catch(e){}}uVU();sA();try{const cB=new Date().getTime();const qR=await fetch(`${fU}/QuizData.json?t=${cB}`);const aR=await fetch(`${fU}/AchievementData.json?t=${cB}`);qD=await qR.json()||[];aD=await aR.json()||dAD}catch(e){qD=[...mQD];aD=[...dAD]}pI();sA();history.replaceState({screen:'screen-main'},'','#screen-main')}_oASC(auth,async(u)=>{cU=u;const bL=document.getElementById('btn-google-login'),uP=document.getElementById('user-profile'),uN=document.getElementById('user-name');if(u){if(!u.isAnonymous){bL.classList.add('hidden');uP.classList.remove('hidden');uP.classList.add('flex');uN.innerText=u.displayName||"User";await lDFB(u.uid)}else{bL.classList.remove('hidden');uP.classList.add('hidden');uP.classList.remove('flex')}}else{bL.classList.remove('hidden');uP.classList.add('hidden');uP.classList.remove('flex');await _sIA(auth).catch(()=>0)}});async function lDFB(u){try{const s=await _g(_r(db,'users/'+u+'/saveFile'));if(s.exists()){const p=s.val();uD.nickname=p.nickname||"";uD.highscores.expert=Math.max(uD.highscores.expert||0,p.highscores?.expert||0);uD.highscores.challenge=Math.max(uD.highscores.challenge||0,p.highscores?.challenge||0);uD.unlockedAchievements=Array.from(new Set([...uD.unlockedAchievements,...(p.unlockedAchievements||[])]));uD.totalCorrectAnswers=Math.max(uD.totalCorrectAnswers||0,p.totalCorrectAnswers||0);if(!uD.highscores.groups)uD.highscores.groups={};const gK=new Set([...Object.keys(uD.highscores.groups),...Object.keys(p.highscores?.groups||{})]);gK.forEach(g=>{uD.highscores.groups[g]=Math.max(uD.highscores.groups[g]||0,p.highscores?.groups?.[g]||0)});sUD()}else{await sUDTFB()}uVU();sA();if(cU&&!cU.isAnonymous){if(uD.nickname)document.getElementById('user-name').innerText=uD.nickname;else document.getElementById('nickname-modal').classList.remove('hidden')}}catch(e){sT("데이터 불러오기에 실패했습니다.")}}function sUD(){localStorage.setItem('soop_quiz_userdata',JSON.stringify(uD));sUDTFB()}async function sUDTFB(){if(!cU||cU.isAnonymous)return;try{await _s(_r(db,'users/'+cU.uid+'/saveFile'),uD)}catch(e){}}async function sN(n){n=n.trim();if(!n)return{success:!1,msg:"닉네임을 입력해주세요."};if(n.length>10)return{success:!1,msg:"닉네임은 10자 이내로 입력해주세요."};if(/[\.#$\[\]]/.test(n))return{success:!1,msg:"사용할 수 없는 특수문자가 포함되어 있습니다."};try{const s=await _g(_r(db,'nicknames/'+n));if(s.exists()&&s.val()!==cU.uid)return{success:!1,msg:"이미 사용 중인 닉네임입니다."};const oN=uD.nickname;uD.nickname=n;await _s(_r(db,'users/'+cU.uid+'/saveFile/nickname'),n);await _s(_r(db,'nicknames/'+n),cU.uid);if(oN&&oN!==n)await _s(_r(db,'nicknames/'+oN),null);if(uD.highscores.challenge>0)await _s(_r(db,'leaderboard/challenge/'+cU.uid+'/nickname'),n);sUD();document.getElementById('user-name').innerText=n;return{success:!0,msg:"닉네임이 설정되었습니다."}}catch(e){return{success:!1,msg:"통신 오류가 발생했습니다."}}}async function cND(i,b){pS('click');const n=document.getElementById(i).value.trim();if(!n){sT("닉네임을 입력해주세요.");return}if(n.length>10){sT("닉네임은 10자 이내로 입력해주세요.");return}if(/[\.#$\[\]]/.test(n)){sT("사용할 수 없는 특수문자가 포함되어 있습니다.");return}if(n===uD.nickname){sT("현재 사용 중인 닉네임입니다.");document.getElementById(b).disabled=!1;return}try{const s=await _g(_r(db,'nicknames/'+n));if(s.exists()&&s.val()!==cU.uid){sT("이미 사용 중인 닉네임입니다.");document.getElementById(b).disabled=!0}else{sT("사용 가능한 닉네임입니다! 확인 버튼을 눌러주세요.");document.getElementById(b).disabled=!1}}catch(e){sT("통신 오류가 발생했습니다.")}}window.checkSettingsNickname=()=>cND('settings-nickname-input','settings-nickname-btn');window.checkModalNickname=()=>cND('modal-nickname-input','modal-nickname-btn');window.resetSettingsNickValidation=()=>document.getElementById('settings-nickname-btn').disabled=!0;window.resetModalNickValidation=()=>document.getElementById('modal-nickname-btn').disabled=!0;window.confirmNicknameModal=async()=>{pS('click');const i=document.getElementById('modal-nickname-input').value;const r=await sN(i);if(r.success){document.getElementById('nickname-modal').classList.add('hidden');document.getElementById('modal-nickname-btn').disabled=!0;sT("환영합니다, "+uD.nickname+"님!")}else sT(r.msg)};window.cancelNicknameModal=()=>{pS('click');document.getElementById('nickname-modal').classList.add('hidden');window.logoutGoogle()};window.applyNicknameFromSettings=async()=>{pS('click');if(!cU||cU.isAnonymous){sT("구글 로그인이 필요합니다.");return}const i=document.getElementById('settings-nickname-input').value;const r=await sN(i);sT(r.msg);if(r.success){document.getElementById('settings-nickname-input').value="";document.getElementById('settings-nickname-btn').disabled=!0}};function uVU(){if(uD.settings.volume!==undefined){uD.settings.sfxVolume=uD.settings.volume;uD.settings.bgmVolume=uD.settings.volume;delete uD.settings.volume}if(uD.settings.sfxVolume===undefined)uD.settings.sfxVolume=0.5;if(uD.settings.bgmVolume===undefined)uD.settings.bgmVolume=0.5;sV=uD.settings.sfxVolume;bV=uD.settings.bgmVolume;const bS=document.getElementById('bgm-volume-slider'),sS=document.getElementById('sfx-volume-slider');if(bS){bS.value=bV;bA.volume=bV*0.4;document.getElementById('bgm-volume-text').innerText=`${Math.round(bV*100)}%`;if(!bS.dataset.la){bS.addEventListener('input',e=>{bV=parseFloat(e.target.value);uD.settings.bgmVolume=bV;bA.volume=bV*0.4;document.getElementById('bgm-volume-text').innerText=`${Math.round(bV*100)}%`});bS.addEventListener('change',()=>{sUD();if(bA.paused&&bV>0)bA.play().catch(e=>0)});bS.dataset.la="true"}}if(sS){sS.value=sV;document.getElementById('sfx-volume-text').innerText=`${Math.round(sV*100)}%`;if(!sS.dataset.la){sS.addEventListener('input',e=>{sV=parseFloat(e.target.value);uD.settings.sfxVolume=sV;document.getElementById('sfx-volume-text').innerText=`${Math.round(sV*100)}%`});sS.addEventListener('change',()=>{pS('click');sUD()});sS.dataset.la="true"}}}function sA(){sGB();rA();rH()}window.openResetModal=()=>{pS('click');document.getElementById('reset-modal').classList.remove('hidden')};window.closeResetModal=()=>{pS('click');document.getElementById('reset-modal').classList.add('hidden')};window.confirmReset=async()=>{pS('click');uD={nickname:uD.nickname,highscores:{expert:0,challenge:0,groups:{}},unlockedAchievements:[],settings:{sfxVolume:0.5,bgmVolume:0.5},totalCorrectAnswers:0};localStorage.removeItem('soop_quiz_userdata');if(cU&&!cU.isAnonymous){try{await _s(_r(db,'users/'+cU.uid+'/saveFile'),uD);await _s(_r(db,'leaderboard/challenge/'+cU.uid+'/score'),0)}catch(e){}}sT("데이터가 모두 초기화되었습니다.");document.getElementById('reset-modal').classList.add('hidden');setTimeout(()=>{location.reload()},1000)};window.loginWithGoogle=async()=>{pS('click');if(window.location.protocol==='file:'){sT("⚠️ 로컬 환경에서는 구글 로그인이 불가능합니다. 웹에 배포 후 이용해 주세요.");return}const p=new _GAP();try{await _sIWP(auth,p);sT("구글 계정 연동 중...")}catch(e){if(e.code==='auth/popup-closed-by-user')sT("로그인이 취소되었습니다.");else sT("로그인 오류가 발생했습니다.")}};window.logoutGoogle=async()=>{pS('click');try{await _sO(auth);uD={nickname:"",highscores:{expert:0,challenge:0,groups:{}},unlockedAchievements:[],settings:{sfxVolume:0.5,bgmVolume:0.5},totalCorrectAnswers:0};localStorage.setItem('soop_quiz_userdata',JSON.stringify(uD));sA();sT("로그아웃 되었습니다. (오프라인 모드 전환)")}catch(e){}};let cS='screen-main',cM='',cD='',cG='',cQ=[],cQI=0,h=5,s=0,sM=1.0,c=0,iA_=!1,tI,tL=20,pS_='screen-main';window.openSettings=(f)=>{pS('click');if(f==='screen-game'){if(iA_)return;sT_()}pS_=f;document.getElementById('settings-back-btn').innerText=f==='screen-game'?'← 게임으로 돌아가기':'← 메인으로';window.navTo('screen-settings')};window.closeSettings=()=>{pS('click');if(pS_==='screen-game'){window.navTo('screen-game',!1,!0);if(!iA_)rT()}else window.navTo('screen-main')};window.navTo=(t,iP=!1,r=!1)=>{if(cS==='screen-game'&&t!=='screen-game')sT_();const lS=document.getElementById('login-section');if(lS){if(t==='screen-main')lS.classList.remove('opacity-0','pointer-events-none');else lS.classList.add('opacity-0','pointer-events-none')}document.getElementById(cS).classList.add('hidden-screen');document.getElementById(t).classList.remove('hidden-screen');cS=t;if(!iP){if(r)history.replaceState({screen:t},'',`#${t}`);else history.pushState({screen:t},'',`#${t}`)}if(t==='screen-achievements')rA();if(t==='screen-highscores')rH();if(t==='screen-group')sGB();if(t==='screen-halloffame')rHOF()};window.addEventListener('popstate',e=>{document.getElementById('exit-modal').classList.add('hidden');const tS=(e.state&&e.state.screen)?e.state.screen:'screen-main';if(cS==='screen-game'&&tS!=='screen-game')sT_();if(tS==='screen-game'){if(cS==='screen-settings'&&pS_==='screen-game'){window.navTo('screen-game',!0,!0);if(!iA_)rT();return}window.navTo('screen-main',!0,!0);return}window.navTo(tS,!0)});function uH(){const c=document.getElementById('health-display');c.innerHTML='';const mH=cM==='challenge'?1:5;for(let i=0;i<mH;i++){if(i<h)c.innerHTML+='<span>❤️</span>';else c.innerHTML+='<span class="opacity-30">🤍</span>'}}function uS(){document.getElementById('score-display').innerText=s.toLocaleString();const cE=document.getElementById('combo-display');if(c>1){cE.innerText=`${c} COMBO! (+${c*4})`;cE.classList.remove('opacity-0')}else cE.classList.add('opacity-0')}window.copyEmail=()=>{pS('click');const e='konamp63@gmail.com';if(navigator.clipboard)navigator.clipboard.writeText(e).then(()=>sT("이메일 주소가 복사되었습니다.")).catch(()=>0);else{const tA=document.createElement("textarea");tA.value=e;document.body.appendChild(tA);tA.select();try{document.execCommand('copy');sT("이메일 주소가 복사되었습니다.")}catch(er){}document.body.removeChild(tA)}};function stT(){clearInterval(tI);tL=20;const tB=document.getElementById('timer-bar');tB.style.width='100%';tB.className='bg-teal-400 h-full w-full transition-all duration-100 ease-linear';rT()}function rT(){clearInterval(tI);const tB=document.getElementById('timer-bar');tI=setInterval(()=>{tL-=0.1;const p=(tL/20)*100;tB.style.width=`${p}%`;if(p<30)tB.classList.replace('bg-teal-400','bg-red-500');if(tL<=0){clearInterval(tI);hA(0,null)}},100)}function sT_(){clearInterval(tI)}window.exitGame=()=>{pS('click');if(iA_&&document.getElementById('btn-next').classList.contains('hidden'))return;document.getElementById('exit-modal').classList.remove('hidden')};window.closeExitModal=()=>{pS('click');document.getElementById('exit-modal').classList.add('hidden')};window.confirmExit=()=>{pS('click');document.getElementById('exit-modal').classList.add('hidden');sT_();window.navTo('screen-main',!1,!0)};function pTN(){if(h<=0)eG(!1);else{cQI++;lQ()}}window.nextQuestion=()=>{pS('click');document.getElementById('btn-next').classList.add('hidden');document.getElementById('correct-answer-display').classList.add('hidden');pTN()};function gVQ(){if(!qD)return[];const a=Array.isArray(qD)?qD:Object.values(qD);return a.filter(q=>q&&q.question)}function sF(a){return a.sort(()=>Math.random()-0.5)}window.startExpertMode=d=>{pS('click');cM='expert';cD=d;cG='';let p=gVQ();if(p.length===0){sT("문제가 부족합니다.");return}const bQ=t=>{let r=[];while(r.length<t)r=r.concat(sF([...p]));return r.slice(0,t)};if(d==='초보'){cQ=bQ(50);sM=1.0}else if(d==='중수'){cQ=bQ(100);sM=1.25}else if(d==='고수'){cQ=bQ(200);sM=1.5}sG(5)};window.startChallengeMode=()=>{pS('click');cM='challenge';cD='';cG='';cQ=[];let p=gVQ();for(let i=0;i<45;i++)cQ=cQ.concat(sF([...p]));sM=2.0;sG(1)};window.startGroupMode=g=>{pS('click');cM='group';cD='';cG=g;cQ=gVQ().filter(q=>{if(!q.group)return!1;return String(q.group).split(',').map(x=>x.trim()).includes(g)});sF(cQ);sM=1.0;if(cQ.length===0){sT("문제가 없습니다.");return}sG(5)};function sGB(){const c=document.getElementById('group-buttons-container');c.innerHTML='';let aG=[];gVQ().forEach(q=>{if(q.group)aG=aG.concat(String(q.group).split(',').map(g=>g.trim()).filter(g=>g!==""))});const uG=[...new Set(aG)];if(uG.length===0)c.innerHTML='<p class="text-zinc-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';uG.forEach(g=>{const b=document.createElement('button');b.className='w-full flex items-center justify-between shrink-0 bg-zinc-800 border border-teal-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';b.innerHTML=`<span class="text-lg">${g}</span> <span class="text-teal-400 text-xs bg-teal-500/10 px-3 py-1.5 rounded-lg">도전</span>`;b.onclick=()=>{b.blur();window.startGroupMode(g)};c.appendChild(b)})}function sG(iH){h=iH;s=0;c=0;cQI=0;uH();uS();window.navTo('screen-game',!1,!0);lQ()}function lQ(){iA_=!1;if(cQI>=cQ.length){eG(!0);return}const q=cQ[cQI];document.getElementById('question-number').innerText=`No.${String(cQI+1).padStart(2,'0')}`;document.getElementById('game-question').innerText=q.question;document.getElementById('game-options').classList.remove('hidden');document.getElementById('btn-next').classList.add('hidden');document.getElementById('correct-answer-display').classList.add('hidden');const iE=document.getElementById('game-image'),iC=document.getElementById('image-container');iE.style.transition="none";iE.style.opacity=1;iE.style.filter="none";iE.src=(q.image&&q.image.trim()!=="")?q.image:"logo2.png";const iS=q.image&&q.image.includes('_sil.');if(iS){iC.classList.remove('bg-zinc-900','border-zinc-800');iC.classList.add('bg-zinc-200','border-zinc-300')}else{iC.classList.remove('bg-zinc-200','border-zinc-300');iC.classList.add('bg-zinc-900','border-zinc-800')}document.getElementById('overlay-o').classList.add('hidden');document.getElementById('overlay-o').classList.remove('pop-in');document.getElementById('overlay-x').classList.add('hidden');document.getElementById('overlay-x').classList.remove('pop-in');const bS=document.querySelectorAll('.choice-btn');bS.forEach((b,i)=>{const oT=q.options[i];const iCC=/^#([0-9A-F]{3}){1,2}$/i.test(oT.trim());if(iCC)b.innerHTML=`<div class="flex items-center justify-center w-full"><div class="w-full h-6 sm:h-7 rounded-md border border-zinc-600 shadow-sm" style="background-color: ${oT.trim()};"></div></div>`;else b.innerText=oT;b.className='choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';b.disabled=!1;b.onclick=()=>{b.blur();hA(i+1,b)}});stT()}function hA(sI,sB){if(iA_)return;iA_=!0;sT_();document.getElementById('exit-modal').classList.add('hidden');const q=cQ[cQI],iC=(sI===q.answer),iSP=q.image&&(q.image.includes('_sil.')||q.image.includes('_zoom.')),iS=q.image&&q.image.includes('_sil.');const bS=document.querySelectorAll('.choice-btn');bS.forEach(b=>b.disabled=!0);const iE=document.getElementById('game-image'),iCN=document.getElementById('image-container');if(iSP){iE.style.filter="blur(8px)";iE.style.opacity=0.6;iE.style.transition="all 0.4s ease-in-out";setTimeout(()=>{iE.src=q.image.replace('_sil.','.').replace('_zoom.','.');iE.style.filter="blur(0px)";iE.style.opacity=1;if(iS){iCN.classList.remove('bg-zinc-200','border-zinc-300');iCN.classList.add('bg-zinc-900','border-zinc-800')}},300)}const oO=document.getElementById('overlay-o'),oX=document.getElementById('overlay-x');if(iC){pS('correct');if(sB){sB.classList.replace('bg-zinc-800','bg-teal-500');sB.classList.replace('border-zinc-700','border-teal-400');sB.classList.replace('text-white','text-black')}oO.classList.remove('hidden');oO.classList.add('pop-in');c++;s+=(400*sM)+(c*4);uD.totalCorrectAnswers=(uD.totalCorrectAnswers||0)+1;cA('TOTAL_CORRECT',uD.totalCorrectAnswers);if(cQI===0)cA('FIRST_RIGHT')}else{pS('wrong');if(sB){sB.classList.replace('bg-zinc-800','bg-red-600');sB.classList.replace('border-zinc-700','border-red-400')}if(sI>0&&sI<=3){bS[q.answer-1].classList.replace('bg-zinc-800','bg-teal-900');bS[q.answer-1].classList.add('border-teal-600','opacity-80')}oX.classList.remove('hidden');oX.classList.add('pop-in');h--;c=0;if(cQI===0)cA('FIRST_WRONG')}uH();uS();cA('PASS_EXPERT',cQI+1);cA('COMBO',c);if(iSP){setTimeout(()=>{oO.classList.add('hidden');oX.classList.add('hidden');document.getElementById('game-options').classList.add('hidden');const cT=q.options[q.answer-1],cAD=document.getElementById('correct-answer-display');if(/^#([0-9A-F]{3}){1,2}$/i.test(cT.trim())){cAD.innerHTML=`<span class="text-white">정답:</span> <span class="inline-block w-5 h-5 rounded-sm border border-zinc-500 align-middle ml-1" style="background-color: ${cT.trim()};"></span> ${cT.trim()}`}else{cAD.innerHTML=`<span class="text-white">정답:</span> ${cT}`}cAD.classList.remove('hidden');const bN=document.getElementById('btn-next');bN.innerText=(h<=0)?"결과 보기 ➔":"다음 문제로 넘어가기 ➔";bN.classList.remove('hidden');iA_=!1},1200)}else{setTimeout(()=>{pTN()},1200)}}function gR(fS){let mS=0;cQ.forEach((_,i)=>{mS+=(400*sM)+((i+1)*4)});if(mS===0)mS=1;const r=fS/mS;if(r>=1.0)return{rank:'S',color:'text-teal-400',desc:"최강! 천타버스! 오오오!"};if(r>=0.85)return{rank:'A',color:'text-zinc-100',desc:"이제는 거의 천타버스 매니저"};if(r>=0.70)return{rank:'B',color:'text-zinc-300',desc:"이정도면 천타버스 찐팬"};if(r>=0.50)return{rank:'C',color:'text-zinc-400',desc:"조금씩 천타버스에 천며드는중"};if(r>=0.25)return{rank:'D',color:'text-zinc-500',desc:"갓 유입된 천타버스 뉴비"};return{rank:'F',color:'text-zinc-600',desc:"천타버스에 많은 관심 바랍니다."}}function eG(iC){cA('SCORE_RANK',s);if(iC&&cM==='expert'){if(cD==='초보')cA('CLEAR_EASY');if(cD==='중수')cA('CLEAR_NORMAL');if(cD==='고수')cA('CLEAR_HARD')}if(iC&&cM==='group')cA('CLEAR_GROUP',cG);const fS=Math.floor(s);if(cM==='expert'&&fS>uD.highscores.expert)uD.highscores.expert=fS;if(cM==='challenge'&&fS>(uD.highscores.challenge||0)){uD.highscores.challenge=fS;if(cU&&!cU.isAnonymous&&uD.nickname){_s(_r(db,'leaderboard/challenge/'+cU.uid),{nickname:uD.nickname,score:fS,timestamp:new Date().getTime()}).catch(e=>0)}}if(cM==='group'){if(!uD.highscores.groups[cG]||fS>uD.highscores.groups[cG])uD.highscores.groups[cG]=fS}sUD();window.navTo('screen-result',!1,!0);const rD=gR(fS),rE=document.getElementById('rank-display');rE.innerText=rD.rank;rE.className=`text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_currentColor] ${rD.color} shrink-0`;document.getElementById('final-score').innerText=fS.toLocaleString();document.getElementById('rank-desc').innerText=rD.desc;document.getElementById('rank-desc').className=`font-bold mt-1 ${rD.color}`}function cA(t,v=0){aD.forEach(a=>{if(uD.unlockedAchievements.includes(a.id))return;let iU=!1;if(t==='FIRST_RIGHT'&&a.type==='FIRST_RIGHT')iU=!0;if(t==='FIRST_WRONG'&&a.type==='FIRST_WRONG')iU=!0;if(t==='PASS_EXPERT'&&a.type==='PASS_EXPERT'&&cM==='expert'&&v>=a.target)iU=!0;if(t==='COMBO'&&a.type==='COMBO'&&cM==='expert'&&v>=a.target)iU=!0;if(t==='SCORE_RANK'&&a.type==='SCORE_RANK'&&v>=a.target)iU=!0;if(t==='CLEAR_EASY'&&a.type==='CLEAR_EASY')iU=!0;if(t==='CLEAR_NORMAL'&&a.type==='CLEAR_NORMAL')iU=!0;if(t==='CLEAR_HARD'&&a.type==='CLEAR_HARD')iU=!0;if(t==='TOTAL_CORRECT'&&a.type==='TOTAL_CORRECT'&&v>=a.target)iU=!0;if(t==='CLEAR_GROUP'&&a.type===('CLEAR_GROUP_'+v))iU=!0;if(iU){uD.unlockedAchievements.push(a.id);sUD();sT(`🏆 업적 달성: ${a.name}`);if(cS==='screen-achievements')rA()}})}function rA(){const c=document.getElementById('achievements-container');c.innerHTML='';aD.forEach(a=>{const iU=uD.unlockedAchievements.includes(a.id),e=document.createElement('div');if(iU){const bC=a.secret?'border-yellow-400':'border-teal-400';e.className=`w-full shrink-0 bg-white rounded-xl p-4 shadow-md border-2 ${bC}`;e.innerHTML=`<h4 class="text-black font-bold text-base">${a.name}</h4><p class="text-zinc-600 text-xs mt-1 font-medium">${a.desc}</p>`}else{e.className='w-full shrink-0 bg-zinc-800 rounded-xl p-4 border border-zinc-700 relative flex items-center overflow-hidden';const t=a.secret?"???":a.name,d=a.secret?"숨겨진 히든 업적 해금에 도전해보세요!":a.desc;e.innerHTML=`<div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10"><span class="text-2xl">🔒</span></div><div class="opacity-40 w-full pl-2"><h4 class="text-white font-bold text-base">${t}</h4><p class="text-zinc-400 text-xs mt-1">${d}</p></div>`}c.appendChild(e)})}async function rHOF(){const c=document.getElementById('halloffame-container');c.innerHTML='<p class="text-zinc-500 text-center mt-10">데이터를 불러오는 중...</p>';try{const s=await _g(_r(db,'leaderboard/challenge'));if(s.exists()){const d=s.val(),l=Object.keys(d).map(u=>({uid:u,nickname:d[u].nickname||"익명",score:d[u].score||0})).sort((a,b)=>b.score-a.score).slice(0,50);c.innerHTML='';l.forEach((i,x)=>{let rI=`${x+1}위`,rC='text-zinc-400 text-base';if(x===0){rI='🥇 1위';rC='text-yellow-400 text-lg'}else if(x===1){rI='🥈 2위';rC='text-gray-300 text-lg'}else if(x===2){rI='🥉 3위';rC='text-amber-600 text-lg'}const m=cU&&cU.uid===i.uid,bC=m?'border-teal-500 border-2 bg-zinc-800':'border-zinc-700 border bg-zinc-800/50';c.innerHTML+=`<div class="flex justify-between items-center rounded-xl p-4 ${bC} shrink-0 transition-all"><div class="flex items-center gap-3"><span class="font-bold ${rC} w-14 shrink-0">${rI}</span><span class="text-white font-bold text-base truncate max-w-[130px] sm:max-w-[200px]">${i.nickname}</span></div><span class="text-teal-300 font-black text-xl ml-2">${i.score.toLocaleString()}</span></div>`})}else{c.innerHTML='<p class="text-zinc-500 text-center mt-10">아직 등록된 기록이 없습니다.<br>첫 랭커에 도전하세요!</p>'}}catch(e){c.innerHTML='<p class="text-red-500 text-center mt-10">데이터를 불러오지 못했습니다.</p>'}}function sT(m){const c=document.getElementById('toast-container'),t=document.createElement('div');t.className='bg-teal-500 text-black font-bold px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(45,212,191,0.5)] border border-teal-400 slide-up pointer-events-auto w-full text-center leading-snug text-lg';t.innerText=m;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(-20px)';t.style.transition='all 0.3s';setTimeout(()=>t.remove(),300)},3000)}function rH(){const c=document.getElementById('highscores-container');c.innerHTML=`<div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center"><div class="flex justify-between items-center mb-4"><span class="text-teal-400 font-bold text-xl">천타버스 모드</span><span class="text-white font-black text-2xl">${uD.highscores.expert.toLocaleString()} 점</span></div><div class="flex justify-between items-center mb-4"><span class="text-red-400 font-bold text-xl">챌린지 모드</span><span class="text-white font-black text-2xl">${uD.highscores.challenge.toLocaleString()} 점</span></div><div class="flex justify-between items-center border-t border-zinc-700 pt-4 mt-2"><span class="text-teal-300 font-bold text-sm">총 누적 정답 수</span><span class="text-zinc-300 font-bold text-lg">${(uD.totalCorrectAnswers||0).toLocaleString()} 회</span></div></div><h3 class="text-teal-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>`;const gK=Object.keys(uD.highscores.groups);if(gK.length===0)c.innerHTML+=`<p class="text-zinc-500 text-center py-6 bg-zinc-800 rounded-xl border border-zinc-700 shrink-0">기록이 없습니다.</p>`;else{gK.sort((a,b)=>uD.highscores.groups[b]-uD.highscores.groups[a]).slice(0,3).forEach(g=>{c.innerHTML+=`<div class="flex justify-between items-center bg-zinc-800 rounded-xl p-5 border border-zinc-700 shrink-0"><span class="text-zinc-300 font-bold text-lg">${g}</span><span class="text-white font-black text-xl">${uD.highscores.groups[g].toLocaleString()} 점</span></div>`})}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',iA);else iA();</script>
+    <!-- 내부 자바스크립트: 압축을 해제하여 에러를 완벽하게 방지함 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
+        
+        (function() {
+            // 💡 개발자 도구 및 디버깅 차단 로직 (게임이 끊기지 않도록 여유 있게 조정)
+            document.addEventListener('keydown', e => {
+                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || (e.ctrlKey && e.shiftKey && (e.keyCode === 67 || e.key === 'C' || e.key === 'c')) || (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { e.preventDefault(); return false; }
+            });
+            setInterval(() => {
+                try {
+                    const t = new Date().getTime();
+                    debugger; 
+                    if (new Date().getTime() - t > 300) document.body.innerHTML = "<div class='flex items-center justify-center h-screen w-screen bg-black text-teal-400 text-xl font-bold'>개발자 도구가 감지되었습니다. 보안을 위해 화면을 차단합니다.</div>";
+                    console.clear();
+                } catch(e) {}
+            }, 2000);
+
+            const aCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let sV = 0.5, bV = 0.5;
+            const bA = new Audio('chunta.mp3');
+            bA.loop = true;
+
+            document.body.addEventListener('click', () => {
+                if(bA.paused && bV > 0) bA.play().catch(e => 0);
+            }, {once: true});
+
+            function playSound(t) {
+                if (aCtx.state === 'suspended') aCtx.resume();
+                if (sV <= 0) return;
+                const o = aCtx.createOscillator(), g = aCtx.createGain();
+                o.connect(g); g.connect(aCtx.destination);
+                const n = aCtx.currentTime;
+                if (t === 'click') {
+                    o.type = 'sine'; o.frequency.setValueAtTime(400, n); o.frequency.exponentialRampToValueAtTime(600, n + 0.05);
+                    g.gain.setValueAtTime(sV * 0.5, n); g.gain.exponentialRampToValueAtTime(0.01, n + 0.1);
+                    o.start(n); o.stop(n + 0.1);
+                } else if (t === 'correct') {
+                    o.type = 'triangle'; o.frequency.setValueAtTime(600, n); o.frequency.setValueAtTime(800, n + 0.1);
+                    g.gain.setValueAtTime(sV * 0.5, n); g.gain.linearRampToValueAtTime(sV * 0.5, n + 0.2); g.gain.exponentialRampToValueAtTime(0.01, n + 0.4);
+                    o.start(n); o.stop(n + 0.4);
+                } else if (t === 'wrong') {
+                    o.type = 'sawtooth'; o.frequency.setValueAtTime(150, n); o.frequency.exponentialRampToValueAtTime(80, n + 0.3);
+                    g.gain.setValueAtTime(sV * 0.5, n); g.gain.exponentialRampToValueAtTime(0.01, n + 0.3);
+                    o.start(n); o.stop(n + 0.3);
+                }
+            }
+
+            const fC = {
+                apiKey: atob("QUl6YVN5QTFBa0lVMVVqdXhiX0c4dWpJNFFHTlJXNkhjOHRwZnln"),
+                authDomain: atob("ZG9uZ3BhMjAyNi0yZmRhNS5maXJlYmFzZWFwcC5jb20="),
+                databaseURL: atob("aHR0cHM6Ly9kb25ncGEyMDI2LTJmZGE1LWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA="),
+                projectId: atob("ZG9uZ3BhMjAyNi0yZmRhNQ=="),
+                storageBucket: atob("ZG9uZ3BhMjAyNi0yZmRhNS5maXJlYmFzZXN0b3JhZ2UuYXBw"),
+                messagingSenderId: atob("MTAwODI3NTYxNTgwNg=="),
+                appId: atob("MToxMDA4Mjc1NjE1ODA2OndlYjpiMzIzMGEyZDE4YTc3YWVjYjUyMTZm"),
+                measurementId: atob("Ry1QUFhNODA3N1lY")
+            };
+
+            const app = initializeApp(fC);
+            const auth = getAuth(app);
+            const db = getDatabase(app);
+            const fU = atob("aHR0cHM6Ly9kb25ncGEyMDI2LTJmZGE1LWRlZmF1bHQtcnRkYi5hc2lhLXNvdXRoZWFzdDEuZmlyZWJhc2VkYXRhYmFzZS5hcHA=");
+
+            let qD = [], aD = [], cU = null;
+            let uD = {
+                nickname: "",
+                highscores: { expert: 0, challenge: 0, integratedChallenge: 0, groups: {} },
+                unlockedAchievements: [],
+                settings: { sfxVolume: 0.5, bgmVolume: 0.5 },
+                totalCorrectAnswers: 0 
+            };
+
+            const mQD = [
+                { question: "다음 멤버의 생일은?", options: ["2월 26일", "6월 22일", "7월 24일"], answer: 2, group: "천양", image: "images/chunyang.webp", crew: "천타버스" },
+                { question: "다음 멤버의 생일은?", options: ["2월 8일", "8월 2일", "8월 20일"], answer: 3, group: "달타", image: "images/dalta.png", crew: "천타버스" },
+                { question: "테스트 크루의 리더는?", options: ["A", "B", "C"], answer: 1, group: "", image: "", crew: "테스트크루", color: "#ec4899" }
+            ];
+
+            const dAD = [
+                { id: "1", name: "천타잘알의 기질", desc: "첫 문제의 정답을 맞힌다.", type: "FIRST_RIGHT", target: 0, secret: false },
+                { id: "2", name: "천타알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false }
+            ];
+
+            // 💡 크루(Crew) 필터링 함수 강화 (공백 문제 해결)
+            function gVQ(filter = null) {
+                if(!qD) return [];
+                const arr = Array.isArray(qD) ? qD : Object.values(qD);
+                let valid = arr.filter(q => q && q.question);
+                
+                valid = valid.map(q => {
+                    // 스프레드시트에서 띄어쓰기를 실수로 넣었을 경우를 완벽 방지
+                    if(!q.crew || String(q.crew).trim() === "") q.crew = "천타버스";
+                    else q.crew = String(q.crew).trim();
+                    return q;
+                });
+
+                if(filter === "ALL") return valid;
+                if(filter) return valid.filter(q => q.crew === filter.trim());
+                return valid.filter(q => q.crew === "천타버스");
+            }
+
+            function pI() {
+                const iU = new Set();
+                iU.add('logo2.png');
+                gVQ("ALL").forEach(q => {
+                    const qImg = (q.image && typeof q.image === 'string') ? q.image : "";
+                    if (qImg.trim() !== "") {
+                        iU.add(qImg);
+                        if (qImg.includes('_sil.')) iU.add(qImg.replace('_sil.', '.'));
+                        if (qImg.includes('_zoom.')) iU.add(qImg.replace('_zoom.', '.'));
+                        if (qImg.includes('_mosaic.')) iU.add(qImg.replace('_mosaic.', '.'));
+                        if (qImg.includes('_bw.')) iU.add(qImg.replace('_bw.', '.'));
+                        if (qImg.includes('_invert.')) iU.add(qImg.replace('_invert.', '.'));
+                        if (qImg.includes('_flip.')) iU.add(qImg.replace('_flip.', '.'));
+                    }
+                });
+                iU.forEach(u => { const i = new Image(); i.src = u; });
+            }
+
+            async function iA() {
+                const lS = localStorage.getItem('soop_quiz_userdata');
+                if (lS) {
+                    try {
+                        const p = JSON.parse(lS);
+                        uD.nickname = p.nickname || "";
+                        uD.totalCorrectAnswers = p.totalCorrectAnswers || 0;
+                        uD.settings = p.settings || uD.settings;
+                        uD.unlockedAchievements = p.unlockedAchievements || [];
+                        // 💡 구버전 저장데이터 병합 오류 방지
+                        if (p.highscores) {
+                            uD.highscores.expert = p.highscores.expert || 0;
+                            uD.highscores.challenge = p.highscores.challenge || 0;
+                            uD.highscores.integratedChallenge = p.highscores.integratedChallenge || 0;
+                            uD.highscores.groups = p.highscores.groups || {};
+                        }
+                    } catch(e) {}
+                }
+                uVU(); sA();
+
+                try {
+                    const cB = new Date().getTime();
+                    const qR = await fetch(`${fU}/QuizData.json?t=${cB}`);
+                    const aR = await fetch(`${fU}/AchievementData.json?t=${cB}`);
+                    qD = await qR.json() || [];
+                    aD = await aR.json() || dAD;
+                } catch (e) {
+                    qD = [...mQD]; aD = [...dAD];
+                }
+                pI(); sA();
+                // 💡 로컬 환경(샌드박스 등)에서 history 에러를 부드럽게 무시
+                try { history.replaceState({ screen: 'screen-main' }, '', '#screen-main'); } catch(err) {}
+            }
+
+            onAuthStateChanged(auth, async (u) => {
+                cU = u;
+                const bL = document.getElementById('btn-google-login'), uP = document.getElementById('user-profile'), uN = document.getElementById('user-name');
+                if (u) {
+                    if (!u.isAnonymous) {
+                        bL.classList.add('hidden'); uP.classList.remove('hidden'); uP.classList.add('flex'); uN.innerText = u.displayName || "User";
+                        await lDFB(u.uid);
+                    } else {
+                        bL.classList.remove('hidden'); uP.classList.add('hidden'); uP.classList.remove('flex');
+                    }
+                } else {
+                    bL.classList.remove('hidden'); uP.classList.add('hidden'); uP.classList.remove('flex');
+                    await signInAnonymously(auth).catch(() => 0);
+                }
+            });
+
+            async function lDFB(u) {
+                try {
+                    const s = await get(ref(db, 'users/' + u + '/saveFile'));
+                    if (s.exists()) {
+                        const p = s.val();
+                        uD.nickname = p.nickname || ""; 
+                        uD.highscores.expert = Math.max(uD.highscores.expert || 0, p.highscores?.expert || 0);
+                        uD.highscores.challenge = Math.max(uD.highscores.challenge || 0, p.highscores?.challenge || 0);
+                        uD.highscores.integratedChallenge = Math.max(uD.highscores.integratedChallenge || 0, p.highscores?.integratedChallenge || 0);
+                        
+                        uD.unlockedAchievements = Array.from(new Set([...uD.unlockedAchievements, ...(p.unlockedAchievements || [])]));
+                        uD.totalCorrectAnswers = Math.max(uD.totalCorrectAnswers || 0, p.totalCorrectAnswers || 0);
+                        
+                        if (!uD.highscores.groups) uD.highscores.groups = {};
+                        const gK = new Set([...Object.keys(uD.highscores.groups), ...Object.keys(p.highscores?.groups || {})]);
+                        gK.forEach(g => { uD.highscores.groups[g] = Math.max(uD.highscores.groups[g] || 0, p.highscores?.groups?.[g] || 0); });
+                        
+                        sUD(); 
+                    } else {
+                        await sUDTFB();
+                    }
+                    uVU(); sA();
+                    if (cU && !cU.isAnonymous) {
+                        if (uD.nickname) document.getElementById('user-name').innerText = uD.nickname;
+                        else document.getElementById('nickname-modal').classList.remove('hidden');
+                    }
+                } catch (e) { sT("데이터 불러오기에 실패했습니다."); }
+            }
+
+            function sUD() { localStorage.setItem('soop_quiz_userdata', JSON.stringify(uD)); sUDTFB(); }
+            async function sUDTFB() {
+                if (!cU || cU.isAnonymous) return;
+                try { await set(ref(db, 'users/' + cU.uid + '/saveFile'), uD); } catch (e) {}
+            }
+
+            async function sN(n) {
+                n = n.trim();
+                if(!n) return {success: false, msg: "닉네임을 입력해주세요."};
+                if(n.length > 10) return {success: false, msg: "닉네임은 10자 이내로 입력해주세요."};
+                if(/[\.#$\[\]]/.test(n)) return {success: false, msg: "사용할 수 없는 특수문자가 포함되어 있습니다."};
+                
+                try {
+                    const s = await get(ref(db, 'nicknames/' + n));
+                    if(s.exists() && s.val() !== cU.uid) return {success: false, msg: "이미 사용 중인 닉네임입니다."};
+                    
+                    const oN = uD.nickname; uD.nickname = n;
+                    await set(ref(db, 'users/' + cU.uid + '/saveFile/nickname'), n);
+                    await set(ref(db, 'nicknames/' + n), cU.uid);
+                    if (oN && oN !== n) await set(ref(db, 'nicknames/' + oN), null); 
+                    
+                    if (uD.highscores.challenge > 0) await set(ref(db, 'leaderboard/challenge/' + cU.uid + '/nickname'), n);
+                    if (uD.highscores.integratedChallenge > 0) await set(ref(db, 'leaderboard/integratedChallenge/' + cU.uid + '/nickname'), n);
+                    
+                    sUD(); document.getElementById('user-name').innerText = n; return {success: true, msg: "닉네임이 설정되었습니다."};
+                } catch(e) { return {success: false, msg: "통신 오류가 발생했습니다."}; }
+            }
+
+            async function cND(i, b) {
+                playSound('click'); const n = document.getElementById(i).value.trim();
+                if(!n) { sT("닉네임을 입력해주세요."); return; }
+                if(n.length > 10) { sT("닉네임은 10자 이내로 입력해주세요."); return; }
+                if(/[\.#$\[\]]/.test(n)) { sT("사용할 수 없는 특수문자가 포함되어 있습니다."); return; }
+                if(n === uD.nickname) { sT("현재 사용 중인 닉네임입니다."); document.getElementById(b).disabled = false; return; }
+
+                try {
+                    const s = await get(ref(db, 'nicknames/' + n));
+                    if(s.exists() && s.val() !== cU.uid) { sT("이미 사용 중인 닉네임입니다."); document.getElementById(b).disabled = true; }
+                    else { sT("사용 가능한 닉네임입니다! 확인 버튼을 눌러주세요."); document.getElementById(b).disabled = false; }
+                } catch(e) { sT("통신 오류가 발생했습니다."); }
+            }
+
+            window.checkSettingsNickname = () => cND('settings-nickname-input', 'settings-nickname-btn');
+            window.checkModalNickname = () => cND('modal-nickname-input', 'modal-nickname-btn');
+            window.resetSettingsNickValidation = () => document.getElementById('settings-nickname-btn').disabled = true;
+            window.resetModalNickValidation = () => document.getElementById('modal-nickname-btn').disabled = true;
+
+            window.confirmNicknameModal = async () => {
+                playSound('click'); const i = document.getElementById('modal-nickname-input').value;
+                const r = await sN(i);
+                if (r.success) { document.getElementById('nickname-modal').classList.add('hidden'); document.getElementById('modal-nickname-btn').disabled = true; sT("환영합니다, " + uD.nickname + "님!"); }
+                else sT(r.msg);
+            };
+
+            window.cancelNicknameModal = () => { playSound('click'); document.getElementById('nickname-modal').classList.add('hidden'); window.logoutGoogle(); };
+
+            window.applyNicknameFromSettings = async () => {
+                playSound('click');
+                if (!cU || cU.isAnonymous) { sT("구글 로그인이 필요합니다."); return; }
+                const i = document.getElementById('settings-nickname-input').value;
+                const r = await sN(i); sT(r.msg);
+                if (r.success) { document.getElementById('settings-nickname-input').value = ""; document.getElementById('settings-nickname-btn').disabled = true; }
+            };
+
+            function uVU() {
+                if (uD.settings.sfxVolume === undefined) uD.settings.sfxVolume = 0.5;
+                if (uD.settings.bgmVolume === undefined) uD.settings.bgmVolume = 0.5;
+                sV = uD.settings.sfxVolume; bV = uD.settings.bgmVolume;
+                
+                const bS = document.getElementById('bgm-volume-slider'), sS = document.getElementById('sfx-volume-slider');
+                if(bS) {
+                    bS.value = bV; bA.volume = bV * 0.4; document.getElementById('bgm-volume-text').innerText = `${Math.round(bV * 100)}%`;
+                    if (!bS.dataset.la) {
+                        bS.addEventListener('input', e => { bV = parseFloat(e.target.value); uD.settings.bgmVolume = bV; bA.volume = bV * 0.4; document.getElementById('bgm-volume-text').innerText = `${Math.round(bV * 100)}%`; });
+                        bS.addEventListener('change', () => { sUD(); if(bA.paused && bV > 0) bA.play().catch(e=>0); });
+                        bS.dataset.la = "true";
+                    }
+                }
+                if(sS) {
+                    sS.value = sV; document.getElementById('sfx-volume-text').innerText = `${Math.round(sV * 100)}%`;
+                    if (!sS.dataset.la) {
+                        sS.addEventListener('input', e => { sV = parseFloat(e.target.value); uD.settings.sfxVolume = sV; document.getElementById('sfx-volume-text').innerText = `${Math.round(sV * 100)}%`; });
+                        sS.addEventListener('change', () => { playSound('click'); sUD(); });
+                        sS.dataset.la = "true";
+                    }
+                }
+            }
+
+            function sA() { sGB(); sSM(); rA(); rH(); }
+
+            window.openResetModal = () => { playSound('click'); document.getElementById('reset-modal').classList.remove('hidden'); };
+            window.closeResetModal = () => { playSound('click'); document.getElementById('reset-modal').classList.add('hidden'); };
+            
+            window.confirmReset = async () => {
+                playSound('click');
+                uD = { nickname: uD.nickname, highscores: { expert: 0, challenge: 0, integratedChallenge: 0, groups: {} }, unlockedAchievements: [], settings: { sfxVolume: 0.5, bgmVolume: 0.5 }, totalCorrectAnswers: 0 };
+                localStorage.removeItem('soop_quiz_userdata');
+                if (cU && !cU.isAnonymous) {
+                    try {
+                        await set(ref(db, 'users/' + cU.uid + '/saveFile'), uD);
+                        await set(ref(db, 'leaderboard/challenge/' + cU.uid + '/score'), 0);
+                        await set(ref(db, 'leaderboard/integratedChallenge/' + cU.uid + '/score'), 0);
+                    } catch(e) {}
+                }
+                sT("데이터가 모두 초기화되었습니다.");
+                document.getElementById('reset-modal').classList.add('hidden');
+                setTimeout(() => { location.reload(); }, 1000);
+            };
+
+            window.loginWithGoogle = async () => {
+                playSound('click');
+                if (window.location.protocol === 'file:') { sT("⚠️ 로컬 환경에서는 구글 로그인이 불가능합니다."); return; }
+                const p = new GoogleAuthProvider();
+                try { await signInWithPopup(auth, p); sT("구글 계정 연동 중..."); }
+                catch (e) { if (e.code === 'auth/popup-closed-by-user') sT("로그인이 취소되었습니다."); else sT("로그인 오류가 발생했습니다."); }
+            };
+
+            window.logoutGoogle = async () => {
+                playSound('click');
+                try {
+                    await signOut(auth);
+                    uD = { nickname: "", highscores: { expert: 0, challenge: 0, integratedChallenge: 0, groups: {} }, unlockedAchievements: [], settings: { sfxVolume: 0.5, bgmVolume: 0.5 }, totalCorrectAnswers: 0 };
+                    localStorage.setItem('soop_quiz_userdata', JSON.stringify(uD));
+                    sA(); sT("로그아웃 되었습니다. (오프라인 모드 전환)");
+                } catch (e) {}
+            };
+
+            let cS = 'screen-main', cM = '', cD = '', cG = '', cQ = [], cQI = 0, h = 5, s = 0, sM = 1.0, c = 0, iA_ = false, tI, tL = 20, pS_ = 'screen-main';
+
+            window.openSettings = (f) => {
+                playSound('click');
+                if (f === 'screen-game') { if (iA_) return; sT_(); }
+                pS_ = f; document.getElementById('settings-back-btn').innerText = f === 'screen-game' ? '← 게임으로 돌아가기' : '← 메인으로';
+                window.navTo('screen-settings');
+            };
+
+            window.closeSettings = () => {
+                playSound('click');
+                if (pS_ === 'screen-game') { window.navTo('screen-game', false, true); if (!iA_) rT(); } 
+                else window.navTo('screen-main');
+            };
+
+            // 💡 치명적 에러 해결: history API 에러 방어 (try-catch) 적용
+            window.navTo = (t, iP = false, r = false) => {
+                if (cS === 'screen-game' && t !== 'screen-game') sT_();
+                const lS = document.getElementById('login-section');
+                if (lS) {
+                    if (t === 'screen-main') lS.classList.remove('opacity-0', 'pointer-events-none');
+                    else lS.classList.add('opacity-0', 'pointer-events-none');
+                }
+                document.getElementById(cS).classList.add('hidden-screen');
+                document.getElementById(t).classList.remove('hidden-screen');
+                cS = t;
+                
+                if (!iP) { 
+                    try {
+                        if (r) history.replaceState({ screen: t }, '', `#${t}`); 
+                        else history.pushState({ screen: t }, '', `#${t}`); 
+                    } catch(err) {
+                        // 로컬 환경이나 보안 샌드박스에서 막히더라도 에러 없이 무시하고 넘어갑니다!
+                    }
+                }
+                
+                if (t === 'screen-achievements') rA();
+                if (t === 'screen-highscores') rH();
+                if (t === 'screen-group') sGB();
+                if (t === 'screen-halloffame') rHOF();
+            };
+
+            window.addEventListener('popstate', e => {
+                document.getElementById('exit-modal').classList.add('hidden');
+                const tS = (e.state && e.state.screen) ? e.state.screen : 'screen-main';
+                if (cS === 'screen-game' && tS !== 'screen-game') sT_();
+                if (tS === 'screen-game') {
+                    if (cS === 'screen-settings' && pS_ === 'screen-game') { window.navTo('screen-game', true, true); if (!iA_) rT(); return; }
+                    window.navTo('screen-main', true, true); return;
+                }
+                window.navTo(tS, true);
+            });
+
+            function uH() {
+                const c = document.getElementById('health-display'); c.innerHTML = '';
+                const mH = (cM === 'challenge' || cM === 'integratedChallenge') ? 1 : 5;
+                for (let i = 0; i < mH; i++) {
+                    if (i < h) c.innerHTML += '<span>❤️</span>';
+                    else c.innerHTML += '<span class="opacity-30">🤍</span>';
+                }
+            }
+
+            function uS() {
+                document.getElementById('score-display').innerText = s.toLocaleString();
+                const cE = document.getElementById('combo-display');
+                if (c > 1) { cE.innerText = `${c} COMBO! (+${c * 4})`; cE.classList.remove('opacity-0'); }
+                else cE.classList.add('opacity-0');
+            }
+
+            window.copyEmail = () => {
+                playSound('click'); const e = 'konamp63@gmail.com';
+                if (navigator.clipboard) navigator.clipboard.writeText(e).then(() => sT("이메일 주소가 복사되었습니다.")).catch(() => 0);
+                else {
+                    const tA = document.createElement("textarea"); tA.value = e; document.body.appendChild(tA); tA.select();
+                    try { document.execCommand('copy'); sT("이메일 주소가 복사되었습니다."); } catch (er) {}
+                    document.body.removeChild(tA);
+                }
+            };
+
+            function stT() {
+                clearInterval(tI); 
+                tL = (cM === 'challenge' || cM === 'integratedChallenge') ? 10 : 20;
+                const tB = document.getElementById('timer-bar');
+                tB.style.width = '100%'; tB.className = 'bg-teal-400 h-full w-full transition-all duration-100 ease-linear';
+                rT();
+            }
+
+            function rT() {
+                clearInterval(tI);
+                const tB = document.getElementById('timer-bar');
+                const mT = (cM === 'challenge' || cM === 'integratedChallenge') ? 10 : 20;
+                tI = setInterval(() => {
+                    tL -= 0.1; const p = (tL / mT) * 100;
+                    tB.style.width = `${p}%`;
+                    if (p < 30) tB.classList.replace('bg-teal-400', 'bg-red-500');
+                    if (tL <= 0) { clearInterval(tI); hA(0, null); }
+                }, 100);
+            }
+
+            function sT_() { clearInterval(tI); }
+
+            window.exitGame = () => {
+                playSound('click');
+                if (iA_ && document.getElementById('btn-next').classList.contains('hidden')) return;
+                document.getElementById('exit-modal').classList.remove('hidden');
+            };
+
+            window.closeExitModal = () => { playSound('click'); document.getElementById('exit-modal').classList.add('hidden'); };
+            window.confirmExit = () => { playSound('click'); document.getElementById('exit-modal').classList.add('hidden'); sT_(); window.navTo('screen-main', false, true); };
+
+            function pTN() { if (h <= 0) eG(false); else { cQI++; lQ(); } }
+
+            window.nextQuestion = () => {
+                playSound('click');
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('correct-answer-display').classList.add('hidden');
+                pTN();
+            };
+
+            function sF(a) { return a.sort(() => Math.random() - 0.5); }
+
+            // 💡 초보, 중수, 고수, 전문가, 마스터 5단계 난이도 완벽 복구
+            window.startExpertMode = d => {
+                playSound('click'); cM = 'expert'; cD = d; cG = '';
+                let p = gVQ("천타버스");
+                if (p.length === 0) { sT("문제가 부족합니다."); return; }
+                const bQ = t => { let r = []; while (r.length < t) r = r.concat(sF([...p])); return r.slice(0, t); };
+                
+                if (d === '초보') { cQ = bQ(30); sM = 1.0; }
+                else if (d === '중수') { cQ = bQ(50); sM = 1.25; }
+                else if (d === '고수') { cQ = bQ(100); sM = 1.5; }
+                else if (d === '전문가') { cQ = bQ(150); sM = 1.75; }
+                else if (d === '마스터') { cQ = bQ(200); sM = 2.0; }
+                
+                sG(5);
+            };
+
+            window.startChallengeMode = () => {
+                playSound('click'); cM = 'challenge'; cD = ''; cG = ''; cQ = [];
+                let p = gVQ("천타버스");
+                if (p.length === 0) { sT("해당 크루의 문제가 부족합니다."); return; }
+                while (cQ.length < 500) cQ = cQ.concat(sF([...p]));
+                sM = 2.0; sG(1);
+            };
+
+            window.startIntegratedChallengeMode = () => {
+                playSound('click'); cM = 'integratedChallenge'; cD = ''; cG = ''; cQ = [];
+                let p = gVQ("ALL");
+                if (p.length === 0) { sT("문제가 부족합니다."); return; }
+                while (cQ.length < 500) cQ = cQ.concat(sF([...p]));
+                sM = 2.0; sG(1);
+            };
+
+            window.startSpecialCrewMode = (crewName) => {
+                playSound('click'); cM = 'specialCrew'; cD = ''; cG = crewName;
+                cQ = gVQ(crewName);
+                if (cQ.length === 0) { sT("문제가 부족합니다."); return; }
+                sF(cQ); sM = 1.0;
+                sG(5);
+            };
+
+            window.startGroupMode = g => {
+                playSound('click'); cM = 'group'; cD = ''; cG = g;
+                cQ = gVQ("천타버스").filter(q => q.group && String(q.group).split(',').map(x => x.trim()).includes(g));
+                if (cQ.length === 0) { sT("문제가 부족합니다."); return; }
+                sF(cQ); sM = 1.0;
+                sG(5);
+            };
+
+            function sGB() {
+                const c = document.getElementById('group-buttons-container'); c.innerHTML = '';
+                let aG = [];
+                gVQ("천타버스").forEach(q => { if (q.group) aG = aG.concat(String(q.group).split(',').map(g => g.trim()).filter(g => g !== "")); });
+                const uG = [...new Set(aG)];
+                if (uG.length === 0) c.innerHTML = '<p class="text-zinc-500 text-center w-full mt-4">생성된 멤버가 없습니다.</p>';
+                uG.forEach(g => {
+                    const b = document.createElement('button');
+                    b.className = 'w-full flex items-center justify-between shrink-0 bg-zinc-800 border border-teal-500/30 text-white font-bold p-4 rounded-xl btn-active transition-colors shadow-sm';
+                    b.innerHTML = `<span class="text-lg">${g}</span> <span class="text-teal-400 text-xs bg-teal-500/10 px-3 py-1.5 rounded-lg">도전</span>`;
+                    b.onclick = () => { b.blur(); window.startGroupMode(g); };
+                    c.appendChild(b);
+                });
+            }
+
+            // 💡 특별 모드 버튼 생성: 스프레드시트의 I열 색상 코드를 배경색으로 적용
+            function sSM() {
+                const c = document.getElementById('special-mode-container');
+                const dbs = c.querySelectorAll('.dynamic-crew-btn');
+                dbs.forEach(b => b.remove());
+                
+                let cMap = {};
+                const arr = Array.isArray(qD) ? qD : Object.values(qD);
+                arr.forEach(q => {
+                    if(q && q.question) {
+                        const cr = q.crew && String(q.crew).trim() !== "" ? String(q.crew).trim() : "천타버스";
+                        if(cr !== "천타버스") {
+                            if(!cMap[cr]) cMap[cr] = q.color || ""; // I열 색상 코드 저장
+                        }
+                    }
+                });
+                
+                Object.keys(cMap).forEach(cr => {
+                    const b = document.createElement('button');
+                    const btnColor = cMap[cr] && /^#([0-9A-F]{3}){1,2}$/i.test(cMap[cr].trim()) ? cMap[cr].trim() : null;
+                    
+                    if (btnColor) {
+                        b.className = 'dynamic-crew-btn w-full shrink-0 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center';
+                        b.style.backgroundColor = btnColor;
+                    } else {
+                        b.className = 'dynamic-crew-btn w-full shrink-0 bg-gradient-to-r from-purple-700 to-indigo-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center';
+                    }
+                    
+                    b.innerHTML = `<h3 class="text-2xl font-bold text-white mb-2">${cr} 모드</h3><p class="text-white/80 text-sm">${cr}의 문제만 등장합니다.</p>`;
+                    b.onclick = () => { b.blur(); window.startSpecialCrewMode(cr); };
+                    c.appendChild(b);
+                });
+            }
+
+            function sG(iH) {
+                h = iH; s = 0; c = 0; cQI = 0;
+                uH(); uS(); window.navTo('screen-game', false, true); lQ();
+            }
+
+            function lQ() {
+                iA_ = false;
+                if (cQI >= cQ.length) { eG(true); return; }
+                const q = cQ[cQI];
+                
+                document.getElementById('question-number').innerText = `No.${String(cQI + 1).padStart(2, '0')}`;
+                document.getElementById('game-question').innerText = q.question || "질문 오류";
+                document.getElementById('game-options').classList.remove('hidden');
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('correct-answer-display').classList.add('hidden');
+                
+                const iE = document.getElementById('game-image'), iC = document.getElementById('image-container');
+                const qImg = (q.image && typeof q.image === 'string') ? q.image : "";
+                
+                const isBW = qImg.includes('_bw.');
+                const isInvert = qImg.includes('_invert.');
+                const isFlip = qImg.includes('_flip.');
+                let iF = "none", iT = "none";
+                if (isBW) iF = "grayscale(100%)";
+                if (isInvert) iF = "invert(100%)";
+                if (isFlip) iT = "scaleX(-1)";
+                
+                iE.style.transition = "none"; iE.style.opacity = 1; iE.style.filter = iF; iE.style.transform = iT;
+                iE.src = (qImg.trim() !== "") ? qImg : "logo2.png";
+                
+                const iS = qImg.includes('_sil.');
+                if (iS) { iC.classList.remove('bg-zinc-900', 'border-zinc-800'); iC.classList.add('bg-zinc-200', 'border-zinc-300'); } 
+                else { iC.classList.remove('bg-zinc-200', 'border-zinc-300'); iC.classList.add('bg-zinc-900', 'border-zinc-800'); }
+                
+                document.getElementById('overlay-o').classList.add('hidden'); document.getElementById('overlay-o').classList.remove('pop-in');
+                document.getElementById('overlay-x').classList.add('hidden'); document.getElementById('overlay-x').classList.remove('pop-in');
+                
+                const bS = document.querySelectorAll('.choice-btn');
+                bS.forEach((b, i) => {
+                    const rawOpt = (q.options && q.options[i] !== undefined) ? String(q.options[i]) : "보기 없음";
+                    const oT = rawOpt.trim();
+                    const iCC = /^#([0-9A-F]{3}){1,2}$/i.test(oT);
+                    if (iCC) b.innerHTML = `<div class="flex items-center justify-center w-full"><div class="w-full h-6 sm:h-7 rounded-md border border-zinc-600 shadow-sm" style="background-color: ${oT};"></div></div>`;
+                    else b.innerText = oT;
+                    b.className = 'choice-btn w-full bg-zinc-800 text-white font-medium py-3 sm:py-4 px-6 rounded-xl border border-zinc-700 transition duration-200 btn-active text-base sm:text-lg break-words leading-snug';
+                    b.disabled = false;
+                    b.onclick = () => { b.blur(); hA(i + 1, b); };
+                });
+                stT();
+            }
+
+            function hA(sI, sB) {
+                if (iA_) return; iA_ = true; sT_();
+                document.getElementById('exit-modal').classList.add('hidden');
+                
+                const q = cQ[cQI];
+                const ansNum = parseInt(q.answer) || 1;
+                const iC = (sI === ansNum);
+                
+                const qImg = (q.image && typeof q.image === 'string') ? q.image : "";
+                const iSP = qImg.includes('_sil.') || qImg.includes('_zoom.') || qImg.includes('_mosaic.') || qImg.includes('_bw.') || qImg.includes('_invert.') || qImg.includes('_flip.');
+                const iS = qImg.includes('_sil.');
+                
+                const bS = document.querySelectorAll('.choice-btn');
+                bS.forEach(b => b.disabled = true);
+                const iE = document.getElementById('game-image'), iCN = document.getElementById('image-container');
+                
+                if (iSP) {
+                    iE.style.transition = "all 0.4s ease-in-out";
+                    if (qImg.includes('_sil.') || qImg.includes('_mosaic.')) { iE.style.filter = "blur(8px)"; iE.style.opacity = 0.6; }
+                    setTimeout(() => {
+                        iE.src = qImg.replace('_sil.', '.').replace('_zoom.', '.').replace('_mosaic.', '.').replace('_bw.', '.').replace('_invert.', '.').replace('_flip.', '.');
+                        iE.style.filter = "none"; iE.style.transform = "none"; iE.style.opacity = 1;
+                        if (iS) { iCN.classList.remove('bg-zinc-200', 'border-zinc-300'); iCN.classList.add('bg-zinc-900', 'border-zinc-800'); }
+                    }, 300);
+                }
+
+                const oO = document.getElementById('overlay-o'), oX = document.getElementById('overlay-x');
+                if (iC) {
+                    playSound('correct');
+                    if (sB) { sB.classList.replace('bg-zinc-800', 'bg-teal-500'); sB.classList.replace('border-zinc-700', 'border-teal-400'); sB.classList.replace('text-white', 'text-black'); }
+                    oO.classList.remove('hidden'); oO.classList.add('pop-in');
+                    c++; s += (400 * sM) + (c * 4);
+                    uD.totalCorrectAnswers = (uD.totalCorrectAnswers || 0) + 1;
+                    cA('TOTAL_CORRECT', uD.totalCorrectAnswers);
+                    if (cQI === 0) cA('FIRST_RIGHT');
+                } else {
+                    playSound('wrong');
+                    if (sB) { sB.classList.replace('bg-zinc-800', 'bg-red-600'); sB.classList.replace('border-zinc-700', 'border-red-400'); }
+                    if (sI > 0 && sI <= 3) { 
+                        const correctBtn = bS[ansNum - 1];
+                        if(correctBtn) {
+                            correctBtn.classList.replace('bg-zinc-800', 'bg-teal-900'); 
+                            correctBtn.classList.add('border-teal-600', 'opacity-80'); 
+                        }
+                    }
+                    oX.classList.remove('hidden'); oX.classList.add('pop-in');
+                    h--; c = 0;
+                    if (cQI === 0) cA('FIRST_WRONG');
+                }
+
+                uH(); uS(); cA('PASS_EXPERT', cQI + 1); cA('COMBO', c);
+
+                if (iSP) {
+                    setTimeout(() => {
+                        oO.classList.add('hidden'); oX.classList.add('hidden');
+                        document.getElementById('game-options').classList.add('hidden');
+                        
+                        const ansIdx = ansNum - 1;
+                        const rawAns = (q.options && q.options[ansIdx] !== undefined) ? String(q.options[ansIdx]) : "정답 표기 불가";
+                        const cT = rawAns.trim();
+                        const cAD = document.getElementById('correct-answer-display');
+                        
+                        if (/^#([0-9A-F]{3}){1,2}$/i.test(cT)) cAD.innerHTML = `<span class="text-white">정답:</span> <span class="inline-block w-5 h-5 rounded-sm border border-zinc-500 align-middle ml-1" style="background-color: ${cT};"></span> ${cT}`;
+                        else cAD.innerHTML = `<span class="text-white">정답:</span> ${cT}`;
+                        
+                        cAD.classList.remove('hidden');
+                        const bN = document.getElementById('btn-next');
+                        bN.innerText = (h <= 0) ? "결과 보기 ➔" : "다음 문제로 넘어가기 ➔";
+                        bN.classList.remove('hidden'); iA_ = false;
+                    }, 1200);
+                } else { setTimeout(() => { pTN(); }, 1200); }
+            }
+
+            function gR(fS) {
+                let mS = 0; cQ.forEach((_, i) => { mS += (400 * sM) + ((i + 1) * 4); });
+                if (mS === 0) mS = 1;
+                const r = fS / mS;
+                if (r >= 1.0) return { rank: 'S', color: 'text-teal-400', desc: "최강! 천타버스! 오오오!" };
+                if (r >= 0.85) return { rank: 'A', color: 'text-zinc-100', desc: "이제는 거의 천타버스 매니저" };
+                if (r >= 0.70) return { rank: 'B', color: 'text-zinc-300', desc: "이정도면 천타버스 찐팬" };
+                if (r >= 0.50) return { rank: 'C', color: 'text-zinc-400', desc: "조금씩 천타버스에 천며드는중" };
+                if (r >= 0.25) return { rank: 'D', color: 'text-zinc-500', desc: "갓 유입된 천타버스 뉴비" };
+                return { rank: 'F', color: 'text-zinc-600', desc: "천타버스에 많은 관심 바랍니다." };
+            }
+
+            function eG(iC) {
+                cA('SCORE_RANK', s);
+                if (iC && cM === 'expert') {
+                    if (cD === '초보') cA('CLEAR_EASY'); 
+                    if (cD === '중수') cA('CLEAR_NORMAL'); 
+                    if (cD === '고수') cA('CLEAR_HARD');
+                    if (cD === '전문가') cA('CLEAR_EXPERT');
+                    if (cD === '마스터') cA('CLEAR_MASTER');
+                }
+                if (iC && cM === 'group') cA('CLEAR_GROUP', cG);
+                
+                const fS = Math.floor(s);
+                if (cM === 'expert' && fS > uD.highscores.expert) uD.highscores.expert = fS;
+                
+                if (cM === 'challenge' && fS > (uD.highscores.challenge || 0)) {
+                    uD.highscores.challenge = fS;
+                    if (cU && !cU.isAnonymous && uD.nickname) {
+                        set(ref(db, 'leaderboard/challenge/' + cU.uid), { nickname: uD.nickname, score: fS, timestamp: new Date().getTime() }).catch(e => 0);
+                    }
+                }
+                
+                if (cM === 'integratedChallenge' && fS > (uD.highscores.integratedChallenge || 0)) {
+                    uD.highscores.integratedChallenge = fS;
+                    if (cU && !cU.isAnonymous && uD.nickname) {
+                        set(ref(db, 'leaderboard/integratedChallenge/' + cU.uid), { nickname: uD.nickname, score: fS, timestamp: new Date().getTime() }).catch(e => 0);
+                    }
+                }
+
+                if (cM === 'group') {
+                    if (!uD.highscores.groups[cG] || fS > uD.highscores.groups[cG]) uD.highscores.groups[cG] = fS;
+                }
+                
+                sUD(); window.navTo('screen-result', false, true);
+                const rD = gR(fS), rE = document.getElementById('rank-display');
+                rE.innerText = rD.rank; rE.className = `text-[8rem] font-black leading-none mb-2 drop-shadow-[0_0_20px_currentColor] ${rD.color} shrink-0`;
+                document.getElementById('final-score').innerText = fS.toLocaleString();
+                document.getElementById('rank-desc').innerText = rD.desc; document.getElementById('rank-desc').className = `font-bold mt-1 ${rD.color}`;
+            }
+
+            function cA(t, v = 0) {
+                aD.forEach(a => {
+                    if (uD.unlockedAchievements.includes(a.id)) return;
+                    let iU = false;
+                    if (t === 'FIRST_RIGHT' && a.type === 'FIRST_RIGHT') iU = true;
+                    if (t === 'FIRST_WRONG' && a.type === 'FIRST_WRONG') iU = true;
+                    if (t === 'PASS_EXPERT' && a.type === 'PASS_EXPERT' && cM === 'expert' && v >= a.target) iU = true;
+                    if (t === 'COMBO' && a.type === 'COMBO' && cM === 'expert' && v >= a.target) iU = true;
+                    if (t === 'SCORE_RANK' && a.type === 'SCORE_RANK' && v >= a.target) iU = true;
+                    if (t === 'CLEAR_EASY' && a.type === 'CLEAR_EASY') iU = true;
+                    if (t === 'CLEAR_NORMAL' && a.type === 'CLEAR_NORMAL') iU = true;
+                    if (t === 'CLEAR_HARD' && a.type === 'CLEAR_HARD') iU = true;
+                    if (t === 'CLEAR_EXPERT' && a.type === 'CLEAR_EXPERT') iU = true;
+                    if (t === 'CLEAR_MASTER' && a.type === 'CLEAR_MASTER') iU = true;
+                    if (t === 'TOTAL_CORRECT' && a.type === 'TOTAL_CORRECT' && v >= a.target) iU = true;
+                    if (t === 'CLEAR_GROUP' && a.type === ('CLEAR_GROUP_' + v)) iU = true;
+
+                    if (iU) {
+                        uD.unlockedAchievements.push(a.id); sUD(); sT(`🏆 업적 달성: ${a.name}`);
+                        if (cS === 'screen-achievements') rA();
+                    }
+                });
+            }
+
+            function rA() {
+                const c = document.getElementById('achievements-container'); c.innerHTML = '';
+                aD.forEach(a => {
+                    const iU = uD.unlockedAchievements.includes(a.id), e = document.createElement('div');
+                    if (iU) {
+                        const bC = a.secret ? 'border-yellow-400' : 'border-teal-400';
+                        e.className = `w-full shrink-0 bg-white rounded-xl p-4 shadow-md border-2 ${bC}`;
+                        e.innerHTML = `<h4 class="text-black font-bold text-base">${a.name}</h4><p class="text-zinc-600 text-xs mt-1 font-medium">${a.desc}</p>`;
+                    } else {
+                        e.className = 'w-full shrink-0 bg-zinc-800 rounded-xl p-4 border border-zinc-700 relative flex items-center overflow-hidden';
+                        const t = a.secret ? "???" : a.name, d = a.secret ? "숨겨진 히든 업적 해금에 도전해보세요!" : a.desc;
+                        e.innerHTML = `<div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10"><span class="text-2xl">🔒</span></div><div class="opacity-40 w-full pl-2"><h4 class="text-white font-bold text-base">${t}</h4><p class="text-zinc-400 text-xs mt-1">${d}</p></div>`;
+                    }
+                    c.appendChild(e);
+                });
+            }
+
+            let cHofTab = 'challenge';
+            window.switchHofTab = (t) => {
+                playSound('click');
+                cHofTab = t;
+                const tab1 = document.getElementById('tab-challenge');
+                const tab2 = document.getElementById('tab-integrated');
+                
+                if(t === 'challenge') {
+                    tab1.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                    tab2.className = 'flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors';
+                } else {
+                    tab1.className = 'flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors';
+                    tab2.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                }
+                rHOF();
+            };
+
+            async function rHOF() {
+                const c = document.getElementById('halloffame-container');
+                c.innerHTML = '<p class="text-zinc-500 text-center mt-10">데이터를 불러오는 중...</p>';
+                try {
+                    const dbPath = cHofTab === 'integrated' ? 'leaderboard/integratedChallenge' : 'leaderboard/challenge';
+                    const s = await get(ref(db, dbPath));
+                    if (s.exists()) {
+                        const d = s.val(), l = Object.keys(d).map(u => ({ uid: u, nickname: d[u].nickname || "익명", score: d[u].score || 0 })).sort((a, b) => b.score - a.score).slice(0, 50);
+                        c.innerHTML = '';
+                        l.forEach((i, x) => {
+                            let rI = `${x + 1}위`, rC = 'text-zinc-400 text-base';
+                            if (x === 0) { rI = '🥇 1위'; rC = 'text-yellow-400 text-lg'; }
+                            else if (x === 1) { rI = '🥈 2위'; rC = 'text-gray-300 text-lg'; }
+                            else if (x === 2) { rI = '🥉 3위'; rC = 'text-amber-600 text-lg'; }
+                            const m = cU && cU.uid === i.uid, bC = m ? 'border-teal-500 border-2 bg-zinc-800' : 'border-zinc-700 border bg-zinc-800/50';
+                            c.innerHTML += `<div class="flex justify-between items-center rounded-xl p-4 ${bC} shrink-0 transition-all"><div class="flex items-center gap-3"><span class="font-bold ${rC} w-14 shrink-0">${rI}</span><span class="text-white font-bold text-base truncate max-w-[130px] sm:max-w-[200px]">${i.nickname}</span></div><span class="text-teal-300 font-black text-xl ml-2">${i.score.toLocaleString()}</span></div>`;
+                        });
+                    } else c.innerHTML = '<p class="text-zinc-500 text-center mt-10">아직 등록된 기록이 없습니다.<br>첫 랭커에 도전하세요!</p>';
+                } catch (e) { c.innerHTML = '<p class="text-red-500 text-center mt-10">데이터를 불러오지 못했습니다.</p>'; }
+            }
+
+            function sT(m) {
+                const c = document.getElementById('toast-container'), t = document.createElement('div');
+                t.className = 'bg-teal-500 text-black font-bold px-6 py-4 rounded-2xl shadow-[0_10px_30px_rgba(45,212,191,0.5)] border border-teal-400 slide-up pointer-events-auto w-full text-center leading-snug text-lg';
+                t.innerText = m; c.appendChild(t);
+                setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px)'; t.style.transition = 'all 0.3s'; setTimeout(() => t.remove(), 300); }, 3000);
+            }
+
+            function rH() {
+                const c = document.getElementById('highscores-container');
+                c.innerHTML = `
+                    <div class="bg-zinc-800 rounded-xl p-6 border border-zinc-700 shrink-0 flex flex-col justify-center">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-teal-400 font-bold text-xl">천타버스 모드</span><span class="text-white font-black text-2xl">${uD.highscores.expert.toLocaleString()} 점</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-red-400 font-bold text-xl">챌린지 모드</span><span class="text-white font-black text-2xl">${uD.highscores.challenge.toLocaleString()} 점</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4 border-t border-zinc-700 pt-4">
+                            <span class="text-amber-400 font-bold text-xl">통합 챌린지 모드</span><span class="text-white font-black text-2xl">${(uD.highscores.integratedChallenge || 0).toLocaleString()} 점</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-zinc-700 pt-4 mt-2">
+                            <span class="text-teal-300 font-bold text-sm">총 누적 정답 수</span><span class="text-zinc-300 font-bold text-lg">${(uD.totalCorrectAnswers || 0).toLocaleString()} 회</span>
+                        </div>
+                    </div>
+                    <h3 class="text-teal-400 font-bold text-lg mb-2 mt-4 pl-2 shrink-0 self-end">개별 모드 기록 (Top 3)</h3>
+                `;
+                const gK = Object.keys(uD.highscores.groups);
+                if (gK.length === 0) c.innerHTML += `<p class="text-zinc-500 text-center py-6 bg-zinc-800 rounded-xl border border-zinc-700 shrink-0">기록이 없습니다.</p>`;
+                else {
+                    gK.sort((a, b) => uD.highscores.groups[b] - uD.highscores.groups[a]).slice(0, 3).forEach(g => {
+                        c.innerHTML += `<div class="flex justify-between items-center bg-zinc-800 rounded-xl p-5 border border-zinc-700 shrink-0"><span class="text-zinc-300 font-bold text-lg">${g}</span><span class="text-white font-black text-xl">${uD.highscores.groups[g].toLocaleString()} 점</span></div>`;
+                    });
+                }
+            }
+
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iA); else iA();
+        })();
+    </script>
 </body>
 </html>
