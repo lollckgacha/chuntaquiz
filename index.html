@@ -68,7 +68,7 @@
                 <!-- 특별 모드 구역 -->
                 <div class="my-6 border-t border-zinc-700 pt-6 shrink-0">
                     <h3 class="text-xl font-bold text-white mb-2">특별 모드</h3>
-                    <p class="text-zinc-400 text-sm mb-4">매주 하나의 그룹/크루 퀴즈가 추가됩니다.</p>
+                    <p class="text-zinc-400 text-sm mb-4">일정 주기로 다른 그룹/크루의 퀴즈가 추가됩니다.</p>
                     <div class="space-y-4" id="special-mode-container">
                         <button onclick="startIntegratedChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-amber-600 to-yellow-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
                             <h3 class="text-2xl font-bold text-white mb-2">통합 챌린지 모드</h3>
@@ -229,7 +229,7 @@
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
         
         (function() {
-            // 💡 개발자 도구 및 디버깅 차단 로직 (게임이 끊기지 않도록 여유 있게 조정)
+            // 안티 디버깅
             document.addEventListener('keydown', e => {
                 if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.key === 'I' || e.key === 'i')) || (e.ctrlKey && e.shiftKey && (e.keyCode === 74 || e.key === 'J' || e.key === 'j')) || (e.ctrlKey && e.shiftKey && (e.keyCode === 67 || e.key === 'C' || e.key === 'c')) || (e.ctrlKey && (e.keyCode === 85 || e.key === 'U' || e.key === 'u'))) { e.preventDefault(); return false; }
             });
@@ -299,8 +299,7 @@
 
             const mQD = [
                 { question: "다음 멤버의 생일은?", options: ["2월 26일", "6월 22일", "7월 24일"], answer: 2, group: "천양", image: "images/chunyang.webp", crew: "천타버스" },
-                { question: "다음 멤버의 생일은?", options: ["2월 8일", "8월 2일", "8월 20일"], answer: 3, group: "달타", image: "images/dalta.png", crew: "천타버스" },
-                { question: "테스트 크루의 리더는?", options: ["A", "B", "C"], answer: 1, group: "", image: "", crew: "테스트크루", color: "#ec4899" }
+                { question: "다음 멤버의 생일은?", options: ["2월 8일", "8월 2일", "8월 20일"], answer: 3, group: "달타", image: "images/dalta.png", crew: "천타버스" }
             ];
 
             const dAD = [
@@ -308,14 +307,12 @@
                 { id: "2", name: "천타알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false }
             ];
 
-            // 💡 크루(Crew) 필터링 함수 강화 (공백 문제 해결)
             function gVQ(filter = null) {
                 if(!qD) return [];
                 const arr = Array.isArray(qD) ? qD : Object.values(qD);
                 let valid = arr.filter(q => q && q.question);
                 
                 valid = valid.map(q => {
-                    // 스프레드시트에서 띄어쓰기를 실수로 넣었을 경우를 완벽 방지
                     if(!q.crew || String(q.crew).trim() === "") q.crew = "천타버스";
                     else q.crew = String(q.crew).trim();
                     return q;
@@ -353,7 +350,6 @@
                         uD.totalCorrectAnswers = p.totalCorrectAnswers || 0;
                         uD.settings = p.settings || uD.settings;
                         uD.unlockedAchievements = p.unlockedAchievements || [];
-                        // 💡 구버전 저장데이터 병합 오류 방지
                         if (p.highscores) {
                             uD.highscores.expert = p.highscores.expert || 0;
                             uD.highscores.challenge = p.highscores.challenge || 0;
@@ -374,7 +370,6 @@
                     qD = [...mQD]; aD = [...dAD];
                 }
                 pI(); sA();
-                // 💡 로컬 환경(샌드박스 등)에서 history 에러를 부드럽게 무시
                 try { history.replaceState({ screen: 'screen-main' }, '', '#screen-main'); } catch(err) {}
             }
 
@@ -565,7 +560,6 @@
                 else window.navTo('screen-main');
             };
 
-            // 💡 치명적 에러 해결: history API 에러 방어 (try-catch) 적용
             window.navTo = (t, iP = false, r = false) => {
                 if (cS === 'screen-game' && t !== 'screen-game') sT_();
                 const lS = document.getElementById('login-section');
@@ -581,9 +575,7 @@
                     try {
                         if (r) history.replaceState({ screen: t }, '', `#${t}`); 
                         else history.pushState({ screen: t }, '', `#${t}`); 
-                    } catch(err) {
-                        // 로컬 환경이나 보안 샌드박스에서 막히더라도 에러 없이 무시하고 넘어갑니다!
-                    }
+                    } catch(err) { }
                 }
                 
                 if (t === 'screen-achievements') rA();
@@ -671,51 +663,74 @@
 
             function sF(a) { return a.sort(() => Math.random() - 0.5); }
 
-            // 💡 초보, 중수, 고수, 전문가, 마스터 5단계 난이도 완벽 복구
+            // 💡 첫 문제 실루엣 강제 배치 로직 공통 함수
+            const buildQuestions = (targetCount, pool) => {
+                let silPool = pool.filter(q => (q.image && q.image.includes('_sil.')) || (q.group && String(q.group).includes('실루엣')));
+                let firstQ = silPool.length > 0 ? silPool[Math.floor(Math.random() * silPool.length)] : null;
+
+                let r = [];
+                while (r.length < targetCount) {
+                    r = r.concat(sF([...pool]));
+                }
+                
+                if (firstQ) {
+                    const idx = r.indexOf(firstQ);
+                    if (idx > -1) r.splice(idx, 1);
+                    r.unshift(firstQ);
+                }
+                return r.slice(0, targetCount);
+            };
+
+            // 💡 천타버스(Expert) 모드 적용
             window.startExpertMode = d => {
                 playSound('click'); cM = 'expert'; cD = d; cG = '';
                 let p = gVQ("천타버스");
                 if (p.length === 0) { sT("문제가 부족합니다."); return; }
-                const bQ = t => { let r = []; while (r.length < t) r = r.concat(sF([...p])); return r.slice(0, t); };
                 
-                if (d === '초보') { cQ = bQ(30); sM = 1.0; }
-                else if (d === '중수') { cQ = bQ(50); sM = 1.25; }
-                else if (d === '고수') { cQ = bQ(100); sM = 1.5; }
-                else if (d === '전문가') { cQ = bQ(150); sM = 1.75; }
-                else if (d === '마스터') { cQ = bQ(200); sM = 2.0; }
+                if (d === '초보') { cQ = buildQuestions(30, p); sM = 1.0; }
+                else if (d === '중수') { cQ = buildQuestions(50, p); sM = 1.25; }
+                else if (d === '고수') { cQ = buildQuestions(100, p); sM = 1.5; }
+                else if (d === '전문가') { cQ = buildQuestions(150, p); sM = 1.75; }
+                else if (d === '마스터') { cQ = buildQuestions(200, p); sM = 2.0; }
                 
                 sG(5);
             };
 
+            // 💡 챌린지 모드 적용
             window.startChallengeMode = () => {
                 playSound('click'); cM = 'challenge'; cD = ''; cG = ''; cQ = [];
                 let p = gVQ("천타버스");
                 if (p.length === 0) { sT("해당 크루의 문제가 부족합니다."); return; }
-                while (cQ.length < 500) cQ = cQ.concat(sF([...p]));
+                
+                cQ = buildQuestions(500, p);
                 sM = 2.0; sG(1);
             };
 
+            // 💡 통합 챌린지 모드 적용
             window.startIntegratedChallengeMode = () => {
                 playSound('click'); cM = 'integratedChallenge'; cD = ''; cG = ''; cQ = [];
                 let p = gVQ("ALL");
                 if (p.length === 0) { sT("문제가 부족합니다."); return; }
-                while (cQ.length < 500) cQ = cQ.concat(sF([...p]));
+                
+                cQ = buildQuestions(500, p);
                 sM = 2.0; sG(1);
             };
 
             window.startSpecialCrewMode = (crewName) => {
                 playSound('click'); cM = 'specialCrew'; cD = ''; cG = crewName;
-                cQ = gVQ(crewName);
-                if (cQ.length === 0) { sT("문제가 부족합니다."); return; }
-                sF(cQ); sM = 1.0;
+                let p = gVQ(crewName);
+                if (p.length === 0) { sT("문제가 부족합니다."); return; }
+                cQ = buildQuestions(p.length, p); // 특별 모드는 개수만큼 전부 풀게
+                sM = 1.0;
                 sG(5);
             };
 
             window.startGroupMode = g => {
                 playSound('click'); cM = 'group'; cD = ''; cG = g;
-                cQ = gVQ("천타버스").filter(q => q.group && String(q.group).split(',').map(x => x.trim()).includes(g));
-                if (cQ.length === 0) { sT("문제가 부족합니다."); return; }
-                sF(cQ); sM = 1.0;
+                let p = gVQ("천타버스").filter(q => q.group && String(q.group).split(',').map(x => x.trim()).includes(g));
+                if (p.length === 0) { sT("문제가 부족합니다."); return; }
+                cQ = buildQuestions(p.length, p);
+                sM = 1.0;
                 sG(5);
             };
 
@@ -734,7 +749,6 @@
                 });
             }
 
-            // 💡 특별 모드 버튼 생성: 스프레드시트의 I열 색상 코드를 배경색으로 적용
             function sSM() {
                 const c = document.getElementById('special-mode-container');
                 const dbs = c.querySelectorAll('.dynamic-crew-btn');
@@ -746,7 +760,7 @@
                     if(q && q.question) {
                         const cr = q.crew && String(q.crew).trim() !== "" ? String(q.crew).trim() : "천타버스";
                         if(cr !== "천타버스") {
-                            if(!cMap[cr]) cMap[cr] = q.color || ""; // I열 색상 코드 저장
+                            if(!cMap[cr]) cMap[cr] = q.color || ""; 
                         }
                     }
                 });
