@@ -68,7 +68,7 @@
                 <!-- 특별 모드 구역 -->
                 <div class="my-6 border-t border-zinc-700 pt-6 shrink-0">
                     <h3 class="text-xl font-bold text-white mb-2">특별 모드</h3>
-                    <p class="text-zinc-400 text-sm mb-4">일정 주기로 다른 그룹/크루의 퀴즈가 추가됩니다.</p>
+                    <p class="text-zinc-400 text-sm mb-4">한달마다 특정 크루의 퀴즈가 추가됩니다.</p>
                     <div class="space-y-4" id="special-mode-container">
                         <button onclick="startIntegratedChallengeMode()" class="w-full shrink-0 bg-gradient-to-r from-amber-600 to-yellow-500 p-6 rounded-2xl btn-active text-left shadow-lg overflow-hidden flex flex-col justify-center">
                             <h3 class="text-2xl font-bold text-white mb-2">통합 챌린지 모드</h3>
@@ -119,10 +119,13 @@
             <button onclick="navTo('screen-main')" class="self-start text-teal-400 mb-4 px-2 py-1 hover:text-white font-bold shrink-0">← 메인으로</button>
             <h2 class="text-2xl font-bold mb-2 text-center shrink-0">👑 명예의 전당</h2>
             
-            <div class="flex gap-2 mb-4 shrink-0 bg-zinc-800 p-1 rounded-lg">
-                <button id="tab-challenge" onclick="switchHofTab('challenge')" class="flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors">챌린지</button>
-                <button id="tab-integrated" onclick="switchHofTab('integrated')" class="flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors">통합 챌린지</button>
+            <div class="flex gap-1 sm:gap-2 mb-2 shrink-0 bg-zinc-800 p-1 rounded-lg">
+                <button id="tab-members" onclick="switchHofTab('members')" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-md bg-teal-500 text-black transition-colors">멤버 기록</button>
+                <button id="tab-challenge" onclick="switchHofTab('challenge')" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors">챌린지</button>
+                <button id="tab-integrated" onclick="switchHofTab('integrated')" class="flex-1 py-2 text-xs sm:text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors">통합 챌린지</button>
             </div>
+            
+            <p id="hof-subtitle" class="text-zinc-400 text-sm text-center mb-4 shrink-0">천타버스 멤버들의 기록입니다.</p>
             
             <div id="halloffame-container" class="flex-1 overflow-y-auto space-y-3 pb-4 pr-1 min-h-0 content-start"></div>
         </div>
@@ -305,6 +308,18 @@
             const dAD = [
                 { id: "1", name: "천타잘알의 기질", desc: "첫 문제의 정답을 맞힌다.", type: "FIRST_RIGHT", target: 0, secret: false },
                 { id: "2", name: "천타알못의 기질", desc: "첫 문제의 정답을 틀린다.", type: "FIRST_WRONG", target: 0, secret: false }
+            ];
+
+            // 💡 멤버 공식 기록 데이터 (여기에 닉네임과 점수를 입력하세요!)
+            const memberScores = [
+                { nickname: "김웰로 최고기록", score: 14212 },
+                { nickname: "김웰로 1트", score: 10244 },
+                { nickname: "한아밍 최고기록", score: 10908 },
+                { nickname: "한아밍 1트", score: 1620 },
+                { nickname: "천양 최고기록", score: 10420 },
+                { nickname: "천양 1트", score: 8136 },
+                { nickname: "카푸 최고기록", score: 8096 },
+                { nickname: "카푸 1트", score: 7516 }
             ];
 
             function gVQ(filter = null) {
@@ -663,9 +678,12 @@
 
             function sF(a) { return a.sort(() => Math.random() - 0.5); }
 
-            // 💡 첫 문제 실루엣 강제 배치 로직 공통 함수
             const buildQuestions = (targetCount, pool) => {
-                let silPool = pool.filter(q => (q.image && q.image.includes('_sil.')) || (q.group && String(q.group).includes('실루엣')));
+                let silPool = pool.filter(q => {
+                    const imgValid = q.image && typeof q.image === 'string' && q.image.includes('_sil.');
+                    const groupValid = q.group && typeof q.group === 'string' && q.group.includes('실루엣');
+                    return imgValid || groupValid;
+                });
                 let firstQ = silPool.length > 0 ? silPool[Math.floor(Math.random() * silPool.length)] : null;
 
                 let r = [];
@@ -681,7 +699,6 @@
                 return r.slice(0, targetCount);
             };
 
-            // 💡 천타버스(Expert) 모드 적용
             window.startExpertMode = d => {
                 playSound('click'); cM = 'expert'; cD = d; cG = '';
                 let p = gVQ("천타버스");
@@ -696,7 +713,6 @@
                 sG(5);
             };
 
-            // 💡 챌린지 모드 적용
             window.startChallengeMode = () => {
                 playSound('click'); cM = 'challenge'; cD = ''; cG = ''; cQ = [];
                 let p = gVQ("천타버스");
@@ -706,7 +722,6 @@
                 sM = 2.0; sG(1);
             };
 
-            // 💡 통합 챌린지 모드 적용
             window.startIntegratedChallengeMode = () => {
                 playSound('click'); cM = 'integratedChallenge'; cD = ''; cG = ''; cQ = [];
                 let p = gVQ("ALL");
@@ -720,7 +735,7 @@
                 playSound('click'); cM = 'specialCrew'; cD = ''; cG = crewName;
                 let p = gVQ(crewName);
                 if (p.length === 0) { sT("문제가 부족합니다."); return; }
-                cQ = buildQuestions(p.length, p); // 특별 모드는 개수만큼 전부 풀게
+                cQ = buildQuestions(p.length, p);
                 sM = 1.0;
                 sG(5);
             };
@@ -998,26 +1013,56 @@
                 });
             }
 
-            let cHofTab = 'challenge';
+            // 💡 탭의 초기 상태를 members로 설정
+            let cHofTab = 'members';
             window.switchHofTab = (t) => {
                 playSound('click');
                 cHofTab = t;
                 const tab1 = document.getElementById('tab-challenge');
                 const tab2 = document.getElementById('tab-integrated');
+                const tab3 = document.getElementById('tab-members');
+                const sub = document.getElementById('hof-subtitle');
                 
+                [tab1, tab2, tab3].forEach(tab => {
+                    if(tab) tab.className = 'flex-1 py-2 text-xs sm:text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors';
+                });
+
                 if(t === 'challenge') {
-                    tab1.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
-                    tab2.className = 'flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors';
-                } else {
-                    tab1.className = 'flex-1 py-2 text-sm font-bold rounded-md text-zinc-400 hover:text-white transition-colors';
-                    tab2.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                    if (tab1) tab1.className = 'flex-1 py-2 text-xs sm:text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                    if (sub) sub.innerText = '챌린지 모드 Top 50 랭커';
+                } else if(t === 'integrated') {
+                    if (tab2) tab2.className = 'flex-1 py-2 text-xs sm:text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                    if (sub) sub.innerText = '통합 챌린지 모드 Top 50 랭커';
+                } else if(t === 'members') {
+                    if (tab3) tab3.className = 'flex-1 py-2 text-xs sm:text-sm font-bold rounded-md bg-teal-500 text-black transition-colors';
+                    if (sub) sub.innerText = '천타버스 멤버들의 기록입니다.';
                 }
+                
                 rHOF();
             };
 
             async function rHOF() {
                 const c = document.getElementById('halloffame-container');
                 c.innerHTML = '<p class="text-zinc-500 text-center mt-10">데이터를 불러오는 중...</p>';
+                
+                if (cHofTab === 'members') {
+                    if (memberScores.length === 0) {
+                        c.innerHTML = '<p class="text-zinc-500 text-center mt-10">천타버스 멤버들의 플레이 기록이<br>곧 업데이트될 예정입니다!</p>';
+                    } else {
+                        c.innerHTML = '';
+                        const sortedMembers = [...memberScores].sort((a, b) => b.score - a.score);
+                        sortedMembers.forEach((i, x) => {
+                            let rI = `${x + 1}위`, rC = 'text-zinc-400 text-base';
+                            if (x === 0) { rI = '🥇 1위'; rC = 'text-yellow-400 text-lg'; }
+                            else if (x === 1) { rI = '🥈 2위'; rC = 'text-gray-300 text-lg'; }
+                            else if (x === 2) { rI = '🥉 3위'; rC = 'text-amber-600 text-lg'; }
+                            const bC = 'border-zinc-700 border bg-zinc-800/50';
+                            c.innerHTML += `<div class="flex justify-between items-center rounded-xl p-4 ${bC} shrink-0 transition-all"><div class="flex items-center gap-3"><span class="font-bold ${rC} w-14 shrink-0">${rI}</span><span class="text-white font-bold text-base truncate max-w-[130px] sm:max-w-[200px]">${i.nickname}</span></div><span class="text-teal-300 font-black text-xl ml-2">${i.score.toLocaleString()}</span></div>`;
+                        });
+                    }
+                    return;
+                }
+
                 try {
                     const dbPath = cHofTab === 'integrated' ? 'leaderboard/integratedChallenge' : 'leaderboard/challenge';
                     const s = await get(ref(db, dbPath));
