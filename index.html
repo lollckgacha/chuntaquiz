@@ -172,7 +172,8 @@
         </div>
 
         <!-- ==================== 5. 플레이(게임) 화면 ==================== -->
-        <div id="screen-game" class="flex-1 flex flex-col p-4 sm:p-6 hidden-screen bg-black relative z-10 min-h-0">
+        <!-- 💡 overflow-y-auto 클래스 추가 및 구조 최적화 적용 -->
+        <div id="screen-game" class="flex-1 flex flex-col p-4 sm:p-6 hidden-screen bg-black relative z-10 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar">
             <div class="flex justify-between items-center mb-2 shrink-0">
                 <button onclick="openSettings('screen-game')" class="text-zinc-400 hover:text-white text-2xl transition-colors btn-active flex items-center p-1 w-10 h-10 justify-center rounded-lg hover:bg-zinc-800">⚙️</button>
                 <button onclick="exitGame()" class="text-zinc-400 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg text-sm transition-colors btn-active flex items-center gap-1 border border-zinc-700"><span>🚪</span> 나가기</button>
@@ -189,7 +190,7 @@
             <div class="shrink-0 min-h-[4rem] max-h-[15vh] sm:max-h-[20vh] overflow-y-auto flex items-center justify-center mb-4 px-2 pr-1 custom-scrollbar">
                 <h2 id="game-question" class="text-xl sm:text-2xl font-bold text-center leading-snug break-words text-white w-full">질문이 여기에 표시됩니다.</h2>
             </div>
-            <div id="image-container" class="flex-1 min-h-[80px] sm:min-h-[150px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-4 sm:mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2 transition-colors duration-500">
+            <div id="image-container" class="flex-1 min-h-[80px] sm:min-h-[150px] relative w-full bg-zinc-900 rounded-xl overflow-hidden mb-4 sm:mb-6 shadow-inner border border-zinc-800 flex items-center justify-center p-2 transition-colors duration-500 shrink-0">
                 <img id="game-image" src="logo2.png" alt="Question Image" class="w-full h-full object-contain" draggable="false" onerror="if(!this.src.includes('logo2.png'))this.src='logo2.png';">
                 <div id="overlay-o" class="absolute inset-0 flex items-center justify-center bg-teal-500/20 backdrop-blur-sm hidden z-10"><span class="text-teal-400 text-[8rem] font-black drop-shadow-lg">O</span></div>
                 <div id="overlay-x" class="absolute inset-0 flex items-center justify-center bg-red-500/20 backdrop-blur-sm hidden z-10"><span class="text-red-500 text-[8rem] font-black drop-shadow-lg">X</span></div>
@@ -1013,7 +1014,6 @@
                 });
             }
 
-            // 💡 탭의 초기 상태를 members로 설정
             let cHofTab = 'members';
             window.switchHofTab = (t) => {
                 playSound('click');
