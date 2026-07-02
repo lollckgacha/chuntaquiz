@@ -329,7 +329,13 @@
                 if(!qD) return [];
                 const arr = Array.isArray(qD) ? qD : Object.values(qD);
                 let valid = arr.filter(q => q && q.question);
-                
+
+                valid = valid.filter(q => {
+                    if (!q.group) return true;
+                    const groups = String(q.group).split(',').map(g => g.trim());
+                    return !groups.includes('파니') && !groups.includes('한아밍');
+                });
+
                 valid = valid.map(q => {
                     if(!q.crew || String(q.crew).trim() === "") q.crew = "천타버스";
                     else q.crew = String(q.crew).trim();
